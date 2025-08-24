@@ -1,5 +1,7 @@
 # noVNC Ubuntu with Prism Launcher
 
+A small Docker-based setup that provides an Ubuntu 22.04 XFCE desktop exposed over noVNC and pre-installs the Prism Launcher AppImage (if available). Use this to share a reproducible environment for launching Minecraft via Prism.
+
 This repository contains a Docker setup to run an Ubuntu 22.04 desktop exposed over noVNC. It includes a lightweight Xfce session, x11vnc, and noVNC. The Prism Launcher AppImage is downloaded at build time if available, and you can place it at `/home/developer/PrismLauncher.AppImage` inside the container to run it.
 
 Files:
@@ -30,6 +32,25 @@ docker exec -it novnc-ubuntu chown developer:developer /home/developer/PrismLaun
 
 ```bash
 ./PrismLauncher.AppImage
+```
+
+Sharing this repository
+
+1. Push this repo to GitHub (example):
+
+```bash
+# create remote
+git remote add origin git@github.com:<your-username>/vmtest.git
+git push -u origin main
+```
+
+2. Your friends can then clone and run:
+
+```bash
+git clone https://github.com/<your-username>/vmtest.git
+cd vmtest
+docker compose up --build -d
+open http://localhost:8080/vnc.html
 ```
 
 Notes and caveats:

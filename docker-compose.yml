@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  novnc-ubuntu:
+    build: .
+    container_name: novnc-ubuntu
+    ports:
+      - "8080:8080"
+      - "5900:5900"
+    volumes:
+      - ./data/minecraft:/home/developer/.minecraft
+      - ./data/localshare:/home/developer/.local/share
+    shm_size: '1gb'
+    restart: unless-stopped

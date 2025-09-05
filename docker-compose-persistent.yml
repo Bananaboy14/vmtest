@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  minecraft-novnc:
+    container_name: minecraft-novnc
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"   # noVNC web interface (persistent)
+      - "5901:5901"   # VNC server direct access
+    environment:
+      # Display and VNC settings
+      - DISPLAY=:1
+      - SCREEN_RES=1920x1080
+      - SCREEN_DEPTH=24
+      # Performance tuning
+      - N_CACHE_SIZE=200
+      - TURBOVNC_JPEG_QUALITY=90
+      - TURBOVNC_COMPRESSION=0
+      # Enable persistence features
+      - ENABLE_SESSION_KEEPER=true
+      - ENABLE_AUTO_RECONNECT=true
+      - MAX_RECONNECT_ATTEMPTS=999
+    volumes:
+      - ./data:/data
+      - vnc_data:/home/developer
+      - vnc_logs:/var/log
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+        reservations:
+          memory: 2G
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/vnc.html"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  vnc_data:
+    driver: local
+  vnc_logs:
+    driver: local
+
+# Network configuration for optimal performance
+networks:
+  default:
+    driver: bridge

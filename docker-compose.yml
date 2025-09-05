@@ -1,0 +1,30 @@
+services:
+  novnc-ubuntu:
+    build: .
+    container_name: novnc-ubuntu
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "8080:8080"
+      - "5900:5900"
+    volumes:
+      - ./data/minecraft:/home/developer/.minecraft
+      - ./data/localshare:/home/developer/.local/share
+    # Allow larger core dumps and ptrace for debugging TurboVNC crashes
+    # Note: kernel-level sysctls like kernel.yama.ptrace_scope are not namespaced on
+    # some hosts and cannot be set per-container; therefore we avoid setting them
+    # here. We keep ulimits and capabilities which are supported.
+    ulimits:
+      core: -1
+    # add CAP_SYS_PTRACE to allow attaching debuggers to processes inside the container
+    cap_add:
+      - SYS_PTRACE
+    shm_size: 1gb
+    restart: unless-stopped
+    healthcheck:
+      # consider healthy if either the web proxy (:8080) or the VNC port (:5901) are listening
+      test: ["CMD-SHELL", "ss -ltn | grep -q ':8080' || ss -ltn | grep -q ':5901' || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s

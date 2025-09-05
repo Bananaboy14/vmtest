@@ -1,0 +1,11 @@
+{
+  "name": "novnc-proxy",
+  "version": "1.0.0",
+  "main": "index.js",
+  "description": "Small fallback static + websocket proxy for noVNC",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.21.2",
+    "express-ws": "^5.0.2"
+  }
+}

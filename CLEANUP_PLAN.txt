@@ -1,0 +1,19 @@
+# Remove unnecessary scripts and files for minimal TigerVNC+XFCE+noVNC setup
+# Keep only:
+# - Dockerfile
+# - entrypoint.sh
+# - xorg-dummy.conf
+# - noVNC/ (official, unmodified)
+# - novnc_proxy/index.js (if you want the Node proxy)
+# - README.md, LICENSE
+# - lunarclient.AppImage, PrismLauncher.AppImage (if present)
+# - vnc.html, noVNC_index.html (main web entrypoints)
+# - supervisord.conf (if used)
+# - data/, backups/, logs/ (user data)
+# Remove:
+# - scripts/ (all helpers, unless you want a specific one)
+# - novnc_static/
+# - any duplicate or legacy files
+# - old compose files (docker-compose.gpu.yml if not needed)
+#
+# This script is a plan. Please review before running destructive deletes!

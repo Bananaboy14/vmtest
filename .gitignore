@@ -1,0 +1,7 @@
+# Ignore runtime data and large binaries
+data/
+*.AppImage
+.env
+.vscode/
+__pycache__/
+.DS_Store

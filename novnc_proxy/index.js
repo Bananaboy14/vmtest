@@ -2,128 +2,331 @@ const express = require('express');
 const expressWs = require('express-ws');
 const net = require('net');
 const path = require('path');
+const fs = require('fs');
 
+// Enhanced configuration for ultimate persistence
 const NOVNC_DIR = process.env.NOVNC_DIR || '/opt/noVNC';
 const PORT = parseInt(process.env.NOVNC_PORT || '8080', 10);
 const VNC_HOST = process.env.VNC_HOST || '127.0.0.1';
 const VNC_PORT = parseInt(process.env.VNC_PORT || '5901', 10);
 
+// Persistence configuration
+const MAX_RECONNECT_ATTEMPTS = 999;
+const BASE_RECONNECT_DELAY = 1000;
+const MAX_RECONNECT_DELAY = 30000;
+const HEALTH_CHECK_INTERVAL = 5000;
+const UPTIME_LOG_INTERVAL = 60000;
+
+// Global state tracking
+const serverStats = {
+    startTime: Date.now(),
+    connections: 0,
+    totalConnections: 0,
+    reconnectionAttempts: 0,
+    lastHealthCheck: Date.now(),
+    vncServerHealthy: false,
+    errors: []
+};
+
 const app = express();
 expressWs(app);
 
-// Log incoming HTTP requests (helps debug reverse-proxy / 502 issues)
+// Enhanced logging
+function logWithTimestamp(level, message, ...args) {
+  const timestamp = new Date().toISOString();
+  const fullMessage = `[${timestamp}] [${level}] [novnc-proxy] ${message}`;
+  console.log(fullMessage, ...args);
+  
+  try {
+    const logEntry = `${fullMessage} ${args.map(arg => 
+      typeof arg === 'object' ? JSON.stringify(arg) : String(arg)
+    ).join(' ')}\n`;
+    fs.appendFileSync('/var/log/novnc_proxy.log', logEntry);
+  } catch (e) {
+    // Ignore file logging errors
+  }
+}
+
+// Health monitoring
+function checkVncServerHealth() {
+  return new Promise((resolve) => {
+    const socket = new net.Socket();
+    const timeout = setTimeout(() => {
+      socket.destroy();
+      resolve(false);
+    }, 3000);
+    
+    socket.connect(VNC_PORT, VNC_HOST, () => {
+      clearTimeout(timeout);
+      socket.destroy();
+      resolve(true);
+    });
+    
+    socket.on('error', () => {
+      clearTimeout(timeout);
+      resolve(false);
+    });
+  });
+}
+
+async function performHealthCheck() {
+  const healthy = await checkVncServerHealth();
+  serverStats.vncServerHealthy = healthy;
+  serverStats.lastHealthCheck = Date.now();
+  
+  if (!healthy) {
+    logWithTimestamp('WARN', 'VNC server health check failed');
+    serverStats.errors.push({
+      timestamp: Date.now(),
+      error: 'VNC server unreachable'
+    });
+    if (serverStats.errors.length > 10) {
+      serverStats.errors = serverStats.errors.slice(-10);
+    }
+  }
+  
+  return healthy;
+}
+
+// Start health monitoring
+setInterval(performHealthCheck, HEALTH_CHECK_INTERVAL);
+
+// Log server statistics periodically
+setInterval(() => {
+  const uptime = Date.now() - serverStats.startTime;
+  const uptimeMinutes = Math.floor(uptime / 60000);
+  logWithTimestamp('INFO', `Server stats: uptime=${uptimeMinutes}m, active_connections=${serverStats.connections}, total_connections=${serverStats.totalConnections}, reconnect_attempts=${serverStats.reconnectionAttempts}, vnc_healthy=${serverStats.vncServerHealthy}`);
+}, UPTIME_LOG_INTERVAL);
+
+// Enhanced middleware
 app.use((req, res, next) => {
   try {
-    console.log('[novnc-proxy] HTTP', req.method, req.url, 'Host:', req.headers && req.headers.host);
-  } catch (e) {}
+    logWithTimestamp('HTTP', `${req.method} ${req.url}`, {
+      ip: req.ip || req.connection.remoteAddress,
+      userAgent: req.get('User-Agent'),
+      host: req.get('Host')
+    });
+  } catch (e) {
+    logWithTimestamp('ERROR', 'Request logging failed', e.message);
+  }
   next();
 });
 
-// Basic error handler to capture unexpected errors and return 502 to clients
 app.use((err, req, res, next) => {
-  console.error('[novnc-proxy] HTTP error', err && err.stack || err);
-  try { res.status(502).send('Proxy error'); } catch (e) {}
+  logWithTimestamp('ERROR', 'HTTP error', {
+    error: err.message,
+    url: req.url,
+    method: req.method,
+    ip: req.ip
+  });
+  
+  serverStats.errors.push({
+    timestamp: Date.now(),
+    error: err.message,
+    url: req.url
+  });
+  
+  try { 
+    res.status(502).json({
+      error: 'Proxy error',
+      message: 'WebSocket proxy encountered an error',
+      timestamp: new Date().toISOString()
+    });
+  } catch (e) {
+    logWithTimestamp('ERROR', 'Failed to send error response', e.message);
+  }
 });
 
-// Redirect root to /vnc.html for convenience
-app.get('/', (req, res) => res.redirect('/vnc.html'));
-app.get('/vnc.html', (req, res) => {
-  res.sendFile(path.join(NOVNC_DIR, 'vnc.html'));
+// Health endpoint
+app.get('/health', (req, res) => {
+  const uptime = Date.now() - serverStats.startTime;
+  const health = {
+    status: serverStats.vncServerHealthy ? 'healthy' : 'degraded',
+    uptime: uptime,
+    uptimeHuman: `${Math.floor(uptime / 60000)}m ${Math.floor((uptime % 60000) / 1000)}s`,
+    connections: serverStats.connections,
+    totalConnections: serverStats.totalConnections,
+    reconnectionAttempts: serverStats.reconnectionAttempts,
+    vncServerHealthy: serverStats.vncServerHealthy,
+    lastHealthCheck: new Date(serverStats.lastHealthCheck).toISOString(),
+    errors: serverStats.errors.slice(-5),
+    version: 'Ultimate Persistent VNC Proxy v1.0'
+  };
+  
+  res.json(health);
 });
+
+// Statistics endpoint
+app.get('/stats', (req, res) => {
+  res.json(serverStats);
+});
+
+// Redirect root to enhanced VNC client
+app.get('/', (req, res) => res.redirect('/vnc.html'));
+
+app.get('/vnc.html', (req, res) => {
+  const enhancedVncPath = '/workspaces/vmtest/vnc.html';
+  if (fs.existsSync(enhancedVncPath)) {
+    res.sendFile(enhancedVncPath);
+  } else {
+    res.sendFile(path.join(NOVNC_DIR, 'vnc.html'));
+  }
+});
+
 // Serve static noVNC files
 app.use('/', express.static(NOVNC_DIR));
 
-// Proxy websocket endpoint used by noVNC (/websockify)
+// Enhanced WebSocket proxy with ultimate persistence
 app.ws('/websockify', function(ws, req) {
-  console.log('[novnc-proxy] ws connection from', req.socket.remoteAddress);
+  serverStats.connections++;
+  serverStats.totalConnections++;
+  const connectionId = serverStats.totalConnections;
+  
+  logWithTimestamp('INFO', `WebSocket connection #${connectionId} established from ${req.socket.remoteAddress}`);
 
-  // Reconnect/backoff state
   let vnc = null;
-  let closing = false; // true when ws closed by client
+  let closing = false;
   let reconnectAttempts = 0;
-  const MAX_BACKOFF = 16000; // ms
+  const connectionStartTime = Date.now();
 
-  // Activity/keepalive timers (kept while ws is open)
   let lastActivity = Date.now();
-  const LOG_INTERVAL = 30000;
-  const PING_INTERVAL = 15000;
+  let bytesReceived = 0;
+  let bytesSent = 0;
+  
   const monitorTimer = setInterval(() => {
     try {
       const age = Date.now() - lastActivity;
-      if (age > 60000) {
-        console.log('[novnc-proxy] connection idle for %d ms from %s', age, req.socket.remoteAddress);
-      }
-    } catch (e) {}
-  }, LOG_INTERVAL);
+      const uptime = Date.now() - connectionStartTime;
+      const uptimeMinutes = Math.floor(uptime / 60000);
+      
+      logWithTimestamp('DEBUG', `Connection #${connectionId} stats: uptime=${uptimeMinutes}m, idle=${Math.floor(age/1000)}s, bytes_rx=${bytesReceived}, bytes_tx=${bytesSent}, reconnect_attempts=${reconnectAttempts}`);
+    } catch (e) {
+      logWithTimestamp('ERROR', `Monitor timer error for connection #${connectionId}`, e.message);
+    }
+  }, 30000);
+  
   const pingTimer = setInterval(() => {
-    try { if (ws && ws.readyState === ws.OPEN) ws.ping(); } catch (e) { console.error('[novnc-proxy] ping error:', e && e.stack || e); }
-  }, PING_INTERVAL);
+    try { 
+      if (ws && ws.readyState === ws.OPEN) {
+        ws.ping();
+      }
+    } catch (e) { 
+      logWithTimestamp('ERROR', `Ping error for connection #${connectionId}`, e.message);
+    }
+  }, 15000);
 
-  ws.on('pong', () => { lastActivity = Date.now(); });
+  ws.on('pong', () => { 
+    lastActivity = Date.now();
+  });
 
-  // Buffer outgoing client->VNC messages while disconnected (bounded)
+  // Enhanced message buffering
   const messageBuffer = [];
   let bufferedBytes = 0;
-  const MAX_BUFFER_BYTES = 1 * 1024 * 1024; // 1MB
+  const MAX_BUFFER_BYTES = 2 * 1024 * 1024;
 
   function flushBuffer() {
-    if (!vnc || !vnc.writable) return;
-    while (messageBuffer.length) {
+    if (!vnc || !vnc.writable || messageBuffer.length === 0) return;
+    
+    let flushedMessages = 0;
+    while (messageBuffer.length > 0) {
       const b = messageBuffer.shift();
       bufferedBytes -= b.length;
-      try { vnc.write(b); } catch (e) { console.error('[novnc-proxy] flush write error', e && e.stack || e); break; }
+      try { 
+        vnc.write(b);
+        flushedMessages++;
+      } catch (e) { 
+        logWithTimestamp('ERROR', `Buffer flush error for connection #${connectionId}`, e.message);
+        break;
+      }
+    }
+    
+    if (flushedMessages > 0) {
+      logWithTimestamp('INFO', `Flushed ${flushedMessages} buffered messages for connection #${connectionId}`);
     }
   }
 
   function createVncSocket() {
     if (closing) return;
-    if (vnc) try { vnc.destroy(); } catch (e) {}
+    
+    if (vnc) {
+      try { vnc.destroy(); } catch (e) {}
+      vnc = null;
+    }
+    
+    reconnectAttempts++;
+    serverStats.reconnectionAttempts++;
+    
+    if (reconnectAttempts > MAX_RECONNECT_ATTEMPTS) {
+      logWithTimestamp('ERROR', `Connection #${connectionId} exceeded maximum reconnection attempts (${MAX_RECONNECT_ATTEMPTS})`);
+      return;
+    }
+    
+    logWithTimestamp('INFO', `Creating VNC socket for connection #${connectionId}, attempt ${reconnectAttempts}/${MAX_RECONNECT_ATTEMPTS}`);
+    
     vnc = net.connect({ host: VNC_HOST, port: VNC_PORT });
 
     vnc.on('connect', () => {
-      reconnectAttempts = 0;
+      const connectionTime = Date.now() - connectionStartTime;
+      logWithTimestamp('INFO', `VNC connection #${connectionId} established (attempt ${reconnectAttempts}, time=${connectionTime}ms)`);
+      
       lastActivity = Date.now();
-      console.log('[novnc-proxy] connected to VNC %s:%s', VNC_HOST, VNC_PORT);
-      try { if (typeof vnc.setKeepAlive === 'function') vnc.setKeepAlive(true, 20000); if (typeof vnc.setNoDelay === 'function') vnc.setNoDelay(true); } catch (e) { console.error('[novnc-proxy] failed to configure vnc socket keepalive:', e && e.stack || e); }
-      // flush any buffered client frames
+      
+      try { 
+        if (typeof vnc.setKeepAlive === 'function') vnc.setKeepAlive(true, 20000);
+        if (typeof vnc.setNoDelay === 'function') vnc.setNoDelay(true);
+      } catch (e) { 
+        logWithTimestamp('ERROR', `Failed to configure VNC socket for connection #${connectionId}`, e.message);
+      }
+      
       flushBuffer();
     });
 
     vnc.on('data', (data) => {
       lastActivity = Date.now();
+      bytesReceived += data.length;
+      
       try {
-        if (data && data.length) {
-          const prefix = data.slice(0, Math.min(32, data.length)).toString('hex');
-          console.log('[novnc-proxy] vnc->ws data len=%d prefix=%s', data.length, prefix);
+        if (ws && ws.readyState === ws.OPEN) {
+          ws.send(data);
+          bytesSent += data.length;
         }
-        if (ws && ws.readyState === ws.OPEN) ws.send(data);
-      } catch (e) { console.error('[novnc-proxy] error sending to websocket:', e && e.stack || e); }
+      } catch (e) { 
+        logWithTimestamp('ERROR', `Error sending VNC data to WebSocket #${connectionId}`, e.message);
+      }
     });
 
     vnc.on('end', () => {
-      console.log('[novnc-proxy] VNC socket ended');
+      logWithTimestamp('INFO', `VNC socket ended for connection #${connectionId}`);
     });
 
     vnc.on('close', (hadError) => {
-      console.log('[novnc-proxy] VNC socket closed hadError=%s', !!hadError);
-      if (closing) return; // ws already closed
+      logWithTimestamp('INFO', `VNC socket closed for connection #${connectionId}, hadError=${!!hadError}`);
+      if (closing) return;
       scheduleReconnect();
     });
 
     vnc.on('error', (err) => {
-      console.error('[novnc-proxy] VNC socket error', err && err.stack || err);
+      logWithTimestamp('ERROR', `VNC socket error for connection #${connectionId}`, err.message);
       if (closing) return;
       scheduleReconnect();
     });
   }
 
   function scheduleReconnect() {
-    reconnectAttempts += 1;
-    const backoff = Math.min(1000 * Math.pow(2, Math.max(0, reconnectAttempts - 1)), MAX_BACKOFF);
-    console.log('[novnc-proxy] scheduling VNC reconnect attempt=%d backoff=%dms', reconnectAttempts, backoff);
+    if (reconnectAttempts >= MAX_RECONNECT_ATTEMPTS) {
+      logWithTimestamp('ERROR', `Connection #${connectionId} exceeded maximum reconnection attempts`);
+      return;
+    }
+    
+    const backoff = Math.min(
+      BASE_RECONNECT_DELAY * Math.pow(2, Math.max(0, reconnectAttempts - 1)), 
+      MAX_RECONNECT_DELAY
+    );
+    
+    logWithTimestamp('INFO', `Scheduling VNC reconnect for connection #${connectionId}: attempt=${reconnectAttempts + 1}/${MAX_RECONNECT_ATTEMPTS}, backoff=${backoff}ms`);
+    
     setTimeout(() => {
       if (closing) return;
-      console.log('[novnc-proxy] attempting VNC reconnect attempt=%d', reconnectAttempts);
       createVncSocket();
     }, backoff);
   }
@@ -133,43 +336,50 @@ app.ws('/websockify', function(ws, req) {
     try {
       const isBuffer = Buffer.isBuffer(msg);
       const buf = isBuffer ? msg : Buffer.from(String(msg), 'utf8');
-      console.log('[novnc-proxy] ws->vnc message: type=%s len=%d', isBuffer ? 'Buffer' : typeof msg, buf.length);
+      
       if (vnc && vnc.writable) {
         vnc.write(buf);
       } else {
-        // buffer while disconnected, drop oldest if exceeding limit
         messageBuffer.push(buf);
         bufferedBytes += buf.length;
         while (bufferedBytes > MAX_BUFFER_BYTES) {
           const dropped = messageBuffer.shift();
           bufferedBytes -= dropped.length;
-          console.log('[novnc-proxy] dropping buffered client data, new bufferedBytes=%d', bufferedBytes);
+          logWithTimestamp('WARN', `Dropping buffered client data for connection #${connectionId}, bufferedBytes=${bufferedBytes}`);
         }
       }
-    } catch (e) { console.error('[novnc-proxy] error handling ws message', e && e.stack || e); }
+    } catch (e) { 
+      logWithTimestamp('ERROR', `Error handling WebSocket message for connection #${connectionId}`, e.message);
+    }
   });
 
   const teardown = () => {
     closing = true;
+    serverStats.connections--;
     clearInterval(monitorTimer);
     clearInterval(pingTimer);
     try { if (vnc) vnc.destroy(); } catch (e) {}
+    
+    const sessionTime = Date.now() - connectionStartTime;
+    logWithTimestamp('INFO', `Connection #${connectionId} closed after ${Math.floor(sessionTime/1000)}s, ${reconnectAttempts} reconnection attempts`);
   };
 
   ws.on('close', (code, reason) => {
-    console.log('[novnc-proxy] ws closed', code, reason && reason.toString ? reason.toString() : reason);
+    logWithTimestamp('INFO', `WebSocket #${connectionId} closed: code=${code}, reason=${reason && reason.toString ? reason.toString() : reason}`);
     teardown();
   });
 
   ws.on('error', (err) => {
-    console.error('[novnc-proxy] ws error', err && err.stack || err);
+    logWithTimestamp('ERROR', `WebSocket #${connectionId} error`, err.message);
     teardown();
   });
 
-  // start initial connection
+  // Start initial connection
   createVncSocket();
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`novnc-proxy listening on ${PORT}, forwarding to ${VNC_HOST}:${VNC_PORT}`);
+  logWithTimestamp('INFO', `Ultimate Persistent VNC Proxy listening on port ${PORT}, forwarding to ${VNC_HOST}:${VNC_PORT}`);
+  logWithTimestamp('INFO', `Health endpoint available at /health`);
+  logWithTimestamp('INFO', `Statistics endpoint available at /stats`);
 });

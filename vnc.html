@@ -1,416 +1,724 @@
 <!DOCTYPE html>
 <html lang="en" class="noVNC_loading">
 <head>
-
-    <!--
-    noVNC example: simple example using default UI
-    Copyright (C) 2019 The noVNC authors
-    noVNC is licensed under the MPL 2.0 (see LICENSE.txt)
-    This file is licensed under the 2-Clause BSD license (see LICENSE.txt).
-
-    Connect parameters are provided in query string:
-        http://example.com/?host=HOST&port=PORT&encrypt=1
-    or the fragment:
-        http://example.com/#host=HOST&port=PORT&encrypt=1
-    -->
-    <title>noVNC</title>
-
+    <title>🖥️ Minecraft VNC Desktop - Ultimate Persistent Setup</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="app/images/icons/novnc.ico">
-    <meta name="theme-color" content="#313131">
-
-    <!-- Apple iOS Safari settings -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
-    <!-- @2x -->
-    <link rel="apple-touch-icon" sizes="40x40" type="image/png" href="app/images/icons/novnc-ios-40.png">
-    <link rel="apple-touch-icon" sizes="58x58" type="image/png" href="app/images/icons/novnc-ios-58.png">
-    <link rel="apple-touch-icon" sizes="80x80" type="image/png" href="app/images/icons/novnc-ios-80.png">
-    <link rel="apple-touch-icon" sizes="120x120" type="image/png" href="app/images/icons/novnc-ios-120.png">
-    <link rel="apple-touch-icon" sizes="152x152" type="image/png" href="app/images/icons/novnc-ios-152.png">
-    <link rel="apple-touch-icon" sizes="167x167" type="image/png" href="app/images/icons/novnc-ios-167.png">
-    <!-- @3x -->
-    <link rel="apple-touch-icon" sizes="60x60" type="image/png" href="app/images/icons/novnc-ios-60.png">
-    <link rel="apple-touch-icon" sizes="87x87" type="image/png" href="app/images/icons/novnc-ios-87.png">
-    <link rel="apple-touch-icon" sizes="120x120" type="image/png" href="app/images/icons/novnc-ios-120.png">
-    <link rel="apple-touch-icon" sizes="180x180" type="image/png" href="app/images/icons/novnc-ios-180.png">
-
-    <!-- Stylesheets -->
-    <link rel="stylesheet" href="app/styles/constants.css">
     <link rel="stylesheet" href="app/styles/base.css">
     <link rel="stylesheet" href="app/styles/input.css">
-
-    <!-- Images that will later appear via CSS -->
-    <link rel="preload" as="image" href="app/images/info.svg">
-    <link rel="preload" as="image" href="app/images/error.svg">
-    <link rel="preload" as="image" href="app/images/warning.svg">
-
-    <script type="module" crossorigin="anonymous" src="app/error-handler.js"></script>
+    <style>
+        /* Professional UI Styles */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .connection-dashboard {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            z-index: 1000;
+            min-width: 400px;
+            max-width: 500px;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        
+        .connection-dashboard h1 {
+            margin: 0 0 20px 0;
+            color: #333;
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .status-indicator.connecting {
+            background: #ffa726;
+        }
+        
+        .status-indicator.connected {
+            background: #4caf50;
+        }
+        
+        .status-indicator.error {
+            background: #f44336;
+        }
+        
+        .connection-button {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            border: none;
+            color: white;
+            padding: 16px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            font-weight: 600;
+            margin: 8px 4px;
+            cursor: pointer;
+            border-radius: 8px;
+            min-width: 150px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(76, 175, 80, 0.4);
+        }
+        
+        .connection-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(76, 175, 80, 0.6);
+        }
+        
+        .connection-button:disabled {
+            background: linear-gradient(135deg, #cccccc, #999999);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .connection-button.disconnect {
+            background: linear-gradient(135deg, #f44336, #da190b);
+            box-shadow: 0 4px 16px rgba(244, 67, 54, 0.4);
+        }
+        
+        .connection-button.disconnect:hover {
+            box-shadow: 0 8px 24px rgba(244, 67, 54, 0.6);
+        }
+        
+        .status-message {
+            margin: 20px 0;
+            padding: 16px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .status-message.info {
+            background: rgba(33, 150, 243, 0.1);
+            color: #1976d2;
+            border: 1px solid rgba(33, 150, 243, 0.3);
+        }
+        
+        .status-message.success {
+            background: rgba(76, 175, 80, 0.1);
+            color: #388e3c;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+        
+        .status-message.error {
+            background: rgba(244, 67, 54, 0.1);
+            color: #d32f2f;
+            border: 1px solid rgba(244, 67, 54, 0.3);
+        }
+        
+        .progress-container {
+            margin: 20px 0;
+            background: rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            height: 8px;
+            position: relative;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #45a049);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 8px;
+        }
+        
+        .connection-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .stat-card {
+            background: rgba(255,255,255,0.6);
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .retry-info {
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            color: #f57c00;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 16px 0;
+            font-size: 14px;
+        }
+        
+        .system-status {
+            margin: 24px 0;
+            padding: 20px;
+            background: rgba(255,255,255,0.6);
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        
+        .system-status h3 {
+            margin: 0 0 16px 0;
+            color: #333;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .service-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 8px 0;
+            padding: 8px;
+            background: rgba(255,255,255,0.4);
+            border-radius: 6px;
+        }
+        
+        .service-name {
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .service-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #4caf50;
+        }
+        
+        .service-indicator.warning {
+            background: #ff9800;
+        }
+        
+        .service-indicator.error {
+            background: #f44336;
+        }
+        
+        /* VNC Container Styles */
+        #noVNC_container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000000 !important;
+            overflow: hidden !important;
+            display: none;
+        }
+        
+        #noVNC_container.connected {
+            display: block !important;
+        }
+        
+        #noVNC_container canvas {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: fill !important;
+        }
+        
+        /* Control Panel */
+        .control-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 16px;
+            border-radius: 8px;
+            z-index: 9999;
+            display: none;
+            min-width: 200px;
+        }
+        
+        .control-panel.connected {
+            display: block;
+        }
+        
+        .control-button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 16px;
+            margin: 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+        
+        .control-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .uptime-display {
+            font-size: 14px;
+            color: #ccc;
+            margin-bottom: 8px;
+        }
+        
+        /* Hide noVNC UI elements */
+        .noVNC_status, .noVNC_panel, .noVNC_logo, .noVNC_control_bar,
+        .noVNC_status_button, .noVNC_status_normal, .noVNC_status_error,
+        .noVNC_status_warn, .noVNC_button, .noVNC_connect_button,
+        .noVNC_status_bar, .noVNC_expander, .noVNC_resizer {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="connection-dashboard" id="dashboard">
+        <h1>🖥️ VNC Desktop</h1>
+        
+        <div class="status-message" id="statusMessage">
+            <span class="status-indicator connecting" id="statusIndicator"></span>
+            <span id="statusText">Ready to connect</span>
+        </div>
+        
+        <div class="progress-container" id="progressContainer" style="display: none;">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        
+        <div class="connection-stats" id="connectionStats" style="display: none;">
+            <div class="stat-card">
+                <div class="stat-value" id="attemptCount">0</div>
+                <div class="stat-label">Attempts</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="uptime">00:00</div>
+                <div class="stat-label">Uptime</div>
+            </div>
+        </div>
+        
+        <div class="retry-info" id="retryInfo" style="display: none;">
+            <strong>Auto-Recovery Active:</strong><br>
+            <span id="retryText">Attempting reconnection...</span>
+        </div>
+        
+        <div>
+            <button class="connection-button" id="connectBtn">🚀 Connect</button>
+            <button class="connection-button disconnect" id="disconnectBtn" style="display: none;">🔌 Disconnect</button>
+        </div>
+        
+        <div class="system-status" id="systemStatus">
+            <h3>📊 System Health</h3>
+            <div class="service-status">
+                <span class="service-name">VNC Server</span>
+                <div class="service-indicator error" id="vncStatus"></div>
+            </div>
+            <div class="service-status">
+                <span class="service-name">WebSocket Proxy</span>
+                <div class="service-indicator error" id="proxyStatus"></div>
+            </div>
+            <div class="service-status">
+                <span class="service-name">Desktop Session</span>
+                <div class="service-indicator error" id="desktopStatus"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="noVNC_container"></div>
+    
+    <div class="control-panel" id="controlPanel">
+        <div class="uptime-display" id="uptimeDisplay">Uptime: 00:00:00</div>
+        <button class="control-button" id="fullscreenBtn">⛶ Fullscreen</button>
+        <button class="control-button" id="clipboardBtn">📋 Clipboard</button>
+        <button class="control-button" id="healthBtn">🏥 Health</button>
+    </div>
 
     <script type="module">
-        import UI from "./app/ui.js";
-        import * as Log from './core/util/logging.js';
-
-        let response;
-
-        let defaults = {};
-        let mandatory = {};
-
-        // Default settings will be loaded from defaults.json. Mandatory
-        // settings will be loaded from mandatory.json, which the user
-        // cannot change.
-
-        try {
-            response = await fetch('./defaults.json');
-            if (!response.ok) {
-                throw Error("" + response.status + " " + response.statusText);
+        import RFB from './core/rfb.js';
+        
+        class PersistentVNCClient {
+            constructor() {
+                this.rfb = null;
+                this.connected = false;
+                this.connectionAttempts = 0;
+                this.maxAttempts = 999; // Ultimate persistence
+                this.baseDelay = 1000; // 1 second
+                this.maxDelay = 30000; // 30 seconds
+                this.connectionStartTime = null;
+                this.uptimeInterval = null;
+                this.healthCheckInterval = null;
+                this.sessionStartTime = null;
+                
+                this.initializeElements();
+                this.bindEvents();
+                this.startHealthChecks();
+                this.autoConnect();
             }
-
-            defaults = await response.json();
-        } catch (err) {
-            Log.Error("Couldn't fetch defaults.json: " + err);
-        }
-
-        try {
-            response = await fetch('./mandatory.json');
-            if (!response.ok) {
-                throw Error("" + response.status + " " + response.statusText);
+            
+            initializeElements() {
+                this.dashboard = document.getElementById('dashboard');
+                this.connectBtn = document.getElementById('connectBtn');
+                this.disconnectBtn = document.getElementById('disconnectBtn');
+                this.statusMessage = document.getElementById('statusMessage');
+                this.statusIndicator = document.getElementById('statusIndicator');
+                this.statusText = document.getElementById('statusText');
+                this.progressContainer = document.getElementById('progressContainer');
+                this.progressBar = document.getElementById('progressBar');
+                this.connectionStats = document.getElementById('connectionStats');
+                this.attemptCount = document.getElementById('attemptCount');
+                this.uptime = document.getElementById('uptime');
+                this.retryInfo = document.getElementById('retryInfo');
+                this.retryText = document.getElementById('retryText');
+                this.container = document.getElementById('noVNC_container');
+                this.controlPanel = document.getElementById('controlPanel');
+                this.uptimeDisplay = document.getElementById('uptimeDisplay');
+                
+                // System status elements
+                this.vncStatus = document.getElementById('vncStatus');
+                this.proxyStatus = document.getElementById('proxyStatus');
+                this.desktopStatus = document.getElementById('desktopStatus');
             }
-
-            mandatory = await response.json();
-        } catch (err) {
-            Log.Error("Couldn't fetch mandatory.json: " + err);
+            
+            bindEvents() {
+                this.connectBtn.addEventListener('click', () => this.connect());
+                this.disconnectBtn.addEventListener('click', () => this.disconnect());
+                
+                document.getElementById('fullscreenBtn').addEventListener('click', () => this.toggleFullscreen());
+                document.getElementById('clipboardBtn').addEventListener('click', () => this.showClipboard());
+                document.getElementById('healthBtn').addEventListener('click', () => this.showHealthReport());
+            }
+            
+            showStatus(message, type = 'info', showProgress = false) {
+                this.statusText.textContent = message;
+                this.statusMessage.className = `status-message ${type}`;
+                this.statusIndicator.className = `status-indicator ${type}`;
+                
+                this.progressContainer.style.display = showProgress ? 'block' : 'none';
+                if (showProgress) {
+                    const progress = Math.min((this.connectionAttempts / this.maxAttempts) * 100, 100);
+                    this.progressBar.style.width = `${progress}%`;
+                }
+            }
+            
+            updateConnectionStats() {
+                this.attemptCount.textContent = this.connectionAttempts;
+                
+                if (this.sessionStartTime) {
+                    const uptime = Date.now() - this.sessionStartTime;
+                    this.uptime.textContent = this.formatUptime(uptime);
+                    this.uptimeDisplay.textContent = `Uptime: ${this.formatUptime(uptime, true)}`;
+                }
+            }
+            
+            formatUptime(ms, detailed = false) {
+                const seconds = Math.floor(ms / 1000);
+                const minutes = Math.floor(seconds / 60);
+                const hours = Math.floor(minutes / 60);
+                
+                if (detailed) {
+                    return `${hours.toString().padStart(2, '0')}:${(minutes % 60).toString().padStart(2, '0')}:${(seconds % 60).toString().padStart(2, '0')}`;
+                } else {
+                    return `${minutes.toString().padStart(2, '0')}:${(seconds % 60).toString().padStart(2, '0')}`;
+                }
+            }
+            
+            async connect() {
+                if (this.connected) return;
+                
+                this.connectionAttempts++;
+                this.connectBtn.disabled = true;
+                this.connectionStats.style.display = 'grid';
+                
+                this.showStatus(`Attempting connection (${this.connectionAttempts}/${this.maxAttempts})...`, 'info', true);
+                
+                try {
+                    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+                    const wsUrl = `${protocol}//localhost:8080/websockify`;
+                    
+                    console.log(`[VNC] Connection attempt ${this.connectionAttempts}: ${wsUrl}`);
+                    
+                    this.rfb = new RFB(this.container, wsUrl, {
+                        credentials: {},
+                        focusOnClick: false,
+                        clipViewport: false,
+                        scaleViewport: true,
+                        resizeSession: false
+                    });
+                    
+                    this.setupRFBEvents();
+                    this.updateConnectionStats();
+                    
+                } catch (error) {
+                    console.error('[VNC] Connection error:', error);
+                    this.handleConnectionFailure(error.message);
+                }
+            }
+            
+            setupRFBEvents() {
+                this.rfb.addEventListener("connect", () => {
+                    console.log('[VNC] Connected successfully');
+                    this.handleConnectionSuccess();
+                });
+                
+                this.rfb.addEventListener("disconnect", (e) => {
+                    console.log('[VNC] Disconnected:', e.detail);
+                    this.handleDisconnection(e.detail);
+                });
+                
+                this.rfb.addEventListener("credentialsrequired", (e) => {
+                    console.log('[VNC] Credentials required:', e.detail);
+                    this.showStatus('No password required for this VNC server', 'info');
+                });
+                
+                this.rfb.addEventListener("securityfailure", (e) => {
+                    console.log('[VNC] Security failure:', e.detail);
+                    this.handleConnectionFailure(`Security failure: ${e.detail.reason}`);
+                });
+            }
+            
+            handleConnectionSuccess() {
+                this.connected = true;
+                this.sessionStartTime = Date.now();
+                this.connectionAttempts = 0; // Reset on successful connection
+                
+                this.dashboard.style.display = 'none';
+                this.container.classList.add('connected');
+                this.controlPanel.classList.add('connected');
+                
+                this.connectBtn.style.display = 'none';
+                this.disconnectBtn.style.display = 'inline-block';
+                
+                this.showStatus('Connected successfully! 🎉', 'success');
+                
+                // Start uptime tracking
+                this.startUptimeTracking();
+                
+                // Update service statuses
+                this.updateServiceStatus('vnc', 'connected');
+                this.updateServiceStatus('proxy', 'connected');
+                this.updateServiceStatus('desktop', 'connected');
+                
+                setTimeout(() => {
+                    this.optimizeDisplay();
+                }, 1000);
+            }
+            
+            handleConnectionFailure(reason) {
+                this.connectBtn.disabled = false;
+                
+                if (this.connectionAttempts >= this.maxAttempts) {
+                    this.showStatus(`Connection failed after ${this.maxAttempts} attempts: ${reason}`, 'error');
+                    this.retryInfo.style.display = 'none';
+                    return;
+                }
+                
+                // Calculate exponential backoff delay
+                const delay = Math.min(
+                    this.baseDelay * Math.pow(2, Math.min(this.connectionAttempts - 1, 5)),
+                    this.maxDelay
+                );
+                
+                this.showStatus(`Connection failed: ${reason}`, 'error', true);
+                this.retryInfo.style.display = 'block';
+                this.retryText.innerHTML = `Retrying in ${delay/1000}s... (Attempt ${this.connectionAttempts + 1}/${this.maxAttempts})<br><small>Progressive delay: ${delay/1000}s → max 30s</small>`;
+                
+                this.updateConnectionStats();
+                
+                // Schedule reconnection
+                setTimeout(() => {
+                    if (!this.connected) {
+                        this.connect();
+                    }
+                }, delay);
+            }
+            
+            handleDisconnection(detail) {
+                this.connected = false;
+                
+                this.dashboard.style.display = 'block';
+                this.container.classList.remove('connected');
+                this.controlPanel.classList.remove('connected');
+                
+                this.connectBtn.style.display = 'inline-block';
+                this.connectBtn.disabled = false;
+                this.disconnectBtn.style.display = 'none';
+                
+                this.stopUptimeTracking();
+                
+                if (detail.clean) {
+                    this.showStatus('Disconnected by user', 'info');
+                    this.retryInfo.style.display = 'none';
+                    this.connectionAttempts = 0; // Reset attempts on clean disconnect
+                } else {
+                    this.showStatus(`Connection lost: ${detail.reason || 'Unknown error'}`, 'error');
+                    // Auto-reconnect on unexpected disconnection
+                    setTimeout(() => this.connect(), 2000);
+                }
+                
+                this.updateServiceStatuses();
+            }
+            
+            disconnect() {
+                if (this.rfb) {
+                    this.rfb.disconnect();
+                }
+            }
+            
+            startUptimeTracking() {
+                this.uptimeInterval = setInterval(() => {
+                    this.updateConnectionStats();
+                }, 1000);
+            }
+            
+            stopUptimeTracking() {
+                if (this.uptimeInterval) {
+                    clearInterval(this.uptimeInterval);
+                    this.uptimeInterval = null;
+                }
+            }
+            
+            async startHealthChecks() {
+                this.healthCheckInterval = setInterval(async () => {
+                    await this.checkSystemHealth();
+                }, 5000); // Check every 5 seconds
+                
+                // Initial health check
+                setTimeout(() => this.checkSystemHealth(), 1000);
+            }
+            
+            async checkSystemHealth() {
+                try {
+                    // Check VNC server health
+                    const vncHealthy = await this.checkPort(5901);
+                    this.updateServiceStatus('vnc', vncHealthy ? 'connected' : 'error');
+                    
+                    // Check WebSocket proxy health
+                    const proxyHealthy = await this.checkPort(8080);
+                    this.updateServiceStatus('proxy', proxyHealthy ? 'connected' : 'error');
+                    
+                    // Desktop session health (simplified check)
+                    this.updateServiceStatus('desktop', this.connected ? 'connected' : 'warning');
+                    
+                } catch (error) {
+                    console.error('[Health] Check failed:', error);
+                }
+            }
+            
+            async checkPort(port) {
+                try {
+                    const response = await fetch(`http://localhost:${port}`, {
+                        method: 'HEAD',
+                        timeout: 2000
+                    });
+                    return response.ok || response.status < 500;
+                } catch (error) {
+                    return false;
+                }
+            }
+            
+            updateServiceStatus(service, status) {
+                const statusElement = document.getElementById(`${service}Status`);
+                if (statusElement) {
+                    statusElement.className = `service-indicator ${status}`;
+                }
+            }
+            
+            updateServiceStatuses() {
+                // Update all service statuses when disconnected
+                this.updateServiceStatus('vnc', 'error');
+                this.updateServiceStatus('proxy', 'warning');
+                this.updateServiceStatus('desktop', 'error');
+            }
+            
+            optimizeDisplay() {
+                if (this.rfb && this.connected) {
+                    const canvas = this.container.querySelector('canvas');
+                    if (canvas) {
+                        canvas.style.width = '100%';
+                        canvas.style.height = '100%';
+                        canvas.style.display = 'block';
+                        console.log('[VNC] Display optimized');
+                    }
+                }
+            }
+            
+            toggleFullscreen() {
+                if (document.fullscreenElement) {
+                    document.exitFullscreen();
+                } else {
+                    document.documentElement.requestFullscreen();
+                }
+            }
+            
+            showClipboard() {
+                // Implement clipboard functionality
+                console.log('[VNC] Clipboard feature not yet implemented');
+            }
+            
+            showHealthReport() {
+                const report = {
+                    connectionAttempts: this.connectionAttempts,
+                    connected: this.connected,
+                    uptime: this.sessionStartTime ? Date.now() - this.sessionStartTime : 0,
+                    maxAttempts: this.maxAttempts
+                };
+                
+                alert(`🏥 Health Report\\n\\nConnection Attempts: ${report.connectionAttempts}\\nConnected: ${report.connected}\\nUptime: ${this.formatUptime(report.uptime, true)}\\nMax Attempts: ${report.maxAttempts}`);
+            }
+            
+            autoConnect() {
+                // Auto-connect after page load
+                console.log('[VNC] Auto-connecting in 2 seconds...');
+                setTimeout(() => {
+                    this.connect();
+                }, 2000);
+            }
         }
-
-        // You can also override any defaults you need here:
-        //
-        // defaults['host'] = 'vnc.example.com';
-
-        // Or force a specific setting, preventing the user from
-        // changing it:
-        //
-        // mandatory['view_only'] = true;
-
-        // See docs/EMBEDDING.md for a list of possible settings.
-
-        UI.start({ settings: { defaults: defaults,
-                               mandatory: mandatory } });
+        
+        // Initialize the persistent VNC client
+        window.addEventListener('load', () => {
+            new PersistentVNCClient();
+        });
     </script>
-</head>
-
-<body>
-
-    <div id="noVNC_fallback_error" class="noVNC_center">
-        <div>
-            <div>noVNC encountered an error:</div>
-            <br>
-            <div id="noVNC_fallback_errormsg"></div>
-        </div>
-    </div>
-
-    <!-- noVNC control bar -->
-    <div id="noVNC_control_bar_anchor" class="noVNC_vcenter">
-
-        <div id="noVNC_control_bar">
-            <div id="noVNC_control_bar_handle" title="Hide/Show the control bar"><div></div></div>
-
-            <div class="noVNC_scroll">
-
-            <h1 class="noVNC_logo" translate="no"><span>no</span><br>VNC</h1>
-
-            <hr>
-
-            <!-- Drag/Pan the viewport -->
-            <input type="image" alt="Drag" src="app/images/drag.svg"
-                id="noVNC_view_drag_button" class="noVNC_button noVNC_hidden"
-                title="Move/Drag viewport">
-
-            <!--noVNC touch device only buttons-->
-            <div id="noVNC_mobile_buttons">
-                <input type="image" alt="Keyboard" src="app/images/keyboard.svg"
-                    id="noVNC_keyboard_button" class="noVNC_button" title="Show keyboard">
-            </div>
-
-            <!-- Extra manual keys -->
-            <input type="image" alt="Extra keys" src="app/images/toggleextrakeys.svg"
-                id="noVNC_toggle_extra_keys_button" class="noVNC_button"
-                title="Show extra keys">
-            <div class="noVNC_vcenter">
-            <div id="noVNC_modifiers" class="noVNC_panel">
-                <input type="image" alt="Ctrl" src="app/images/ctrl.svg"
-                    id="noVNC_toggle_ctrl_button" class="noVNC_button"
-                    title="Toggle Ctrl">
-                <input type="image" alt="Alt" src="app/images/alt.svg"
-                    id="noVNC_toggle_alt_button" class="noVNC_button"
-                    title="Toggle Alt">
-                <input type="image" alt="Windows" src="app/images/windows.svg"
-                    id="noVNC_toggle_windows_button" class="noVNC_button"
-                    title="Toggle Windows">
-                <input type="image" alt="Tab" src="app/images/tab.svg"
-                    id="noVNC_send_tab_button" class="noVNC_button"
-                    title="Send Tab">
-                <input type="image" alt="Esc" src="app/images/esc.svg"
-                    id="noVNC_send_esc_button" class="noVNC_button"
-                    title="Send Escape">
-                <input type="image" alt="Ctrl+Alt+Del" src="app/images/ctrlaltdel.svg"
-                    id="noVNC_send_ctrl_alt_del_button" class="noVNC_button"
-                    title="Send Ctrl-Alt-Del">
-            </div>
-            </div>
-
-            <!-- Shutdown/Reboot -->
-            <input type="image" alt="Shutdown/Reboot" src="app/images/power.svg"
-                id="noVNC_power_button" class="noVNC_button"
-                title="Shutdown/Reboot...">
-            <div class="noVNC_vcenter">
-            <div id="noVNC_power" class="noVNC_panel">
-                <div class="noVNC_heading">
-                    <img alt="" src="app/images/power.svg"> Power
-                </div>
-                <input type="button" id="noVNC_shutdown_button" value="Shutdown">
-                <input type="button" id="noVNC_reboot_button" value="Reboot">
-                <input type="button" id="noVNC_reset_button" value="Reset">
-            </div>
-            </div>
-
-            <!-- Clipboard -->
-            <input type="image" alt="Clipboard" src="app/images/clipboard.svg"
-                id="noVNC_clipboard_button" class="noVNC_button"
-                title="Clipboard">
-            <div class="noVNC_vcenter">
-            <div id="noVNC_clipboard" class="noVNC_panel">
-                <div class="noVNC_heading">
-                    <img alt="" src="app/images/clipboard.svg"> Clipboard
-                </div>
-                <p class="noVNC_subheading">
-                    Edit clipboard content in the textarea below.
-                </p>
-                <textarea id="noVNC_clipboard_text" rows=5></textarea>
-            </div>
-            </div>
-
-            <!-- Toggle fullscreen -->
-            <input type="image" alt="Full screen" src="app/images/fullscreen.svg"
-                id="noVNC_fullscreen_button" class="noVNC_button noVNC_hidden"
-                title="Full screen">
-
-            <!-- Settings -->
-            <input type="image" alt="Settings" src="app/images/settings.svg"
-                id="noVNC_settings_button" class="noVNC_button"
-                title="Settings">
-            <div class="noVNC_vcenter">
-            <div id="noVNC_settings" class="noVNC_panel">
-                <div class="noVNC_heading">
-                    <img alt="" src="app/images/settings.svg"> Settings
-                </div>
-                <ul>
-                    <li>
-                        <label>
-                            <input id="noVNC_setting_shared" type="checkbox"
-                                   class="toggle">
-                            Shared mode
-                        </label>
-                    </li>
-                    <li>
-                        <label>
-                            <input id="noVNC_setting_view_only" type="checkbox"
-                                   class="toggle">
-                            View only
-                        </label>
-                    </li>
-                    <li><hr></li>
-                    <li>
-                        <label>
-                            <input id="noVNC_setting_view_clip" type="checkbox"
-                                   class="toggle">
-                            Clip to window
-                        </label>
-                    </li>
-                    <li>
-                        <label for="noVNC_setting_resize">Scaling mode:</label>
-                        <select id="noVNC_setting_resize" name="vncResize">
-                            <option value="off">None</option>
-                            <option value="scale">Local scaling</option>
-                            <option value="remote">Remote resizing</option>
-                        </select>
-                    </li>
-                    <li><hr></li>
-                    <li>
-                        <div class="noVNC_expander">Advanced</div>
-                        <div><ul>
-                            <li>
-                                <label for="noVNC_setting_quality">Quality:</label>
-                                <input id="noVNC_setting_quality" type="range" min="0" max="9" value="6">
-                            </li>
-                            <li>
-                                <label for="noVNC_setting_compression">Compression level:</label>
-                                <input id="noVNC_setting_compression" type="range" min="0" max="9" value="2">
-                            </li>
-                            <li><hr></li>
-                            <li>
-                                <label for="noVNC_setting_repeaterID">Repeater ID:</label>
-                                <input id="noVNC_setting_repeaterID" type="text" value="">
-                            </li>
-                            <li>
-                                <div class="noVNC_expander">WebSocket</div>
-                                <div><ul>
-                                    <li>
-                                        <label>
-                                            <input id="noVNC_setting_encrypt" type="checkbox"
-                                                   class="toggle">
-                                            Encrypt
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label for="noVNC_setting_host">Host:</label>
-                                        <input id="noVNC_setting_host">
-                                    </li>
-                                    <li>
-                                        <label for="noVNC_setting_port">Port:</label>
-                                        <input id="noVNC_setting_port" type="number">
-                                    </li>
-                                    <li>
-                                        <label for="noVNC_setting_path">Path:</label>
-                                        <input id="noVNC_setting_path" type="text" value="websockify">
-                                    </li>
-                                </ul></div>
-                            </li>
-                            <li><hr></li>
-                            <li>
-                                <label>
-                                    <input id="noVNC_setting_reconnect" type="checkbox"
-                                           class="toggle">
-                                    Automatic reconnect
-                                </label>
-                            </li>
-                            <li>
-                                <label for="noVNC_setting_reconnect_delay">Reconnect delay (ms):</label>
-                                <input id="noVNC_setting_reconnect_delay" type="number">
-                            </li>
-                            <li><hr></li>
-                            <li>
-                                <label>
-                                    <input id="noVNC_setting_show_dot" type="checkbox"
-                                           class="toggle">
-                                    Show dot when no cursor
-                                </label>
-                            </li>
-                            <li><hr></li>
-                            <!-- Logging selection dropdown -->
-                            <li>
-                                <label>Logging:
-                                    <select id="noVNC_setting_logging" name="vncLogging">
-                                    </select>
-                                </label>
-                            </li>
-                        </ul></div>
-                    </li>
-                    <li class="noVNC_version_separator"><hr></li>
-                    <li class="noVNC_version_wrapper">
-                        <span>Version:</span>
-                        <span class="noVNC_version"></span>
-                    </li>
-                </ul>
-            </div>
-            </div>
-
-            <!-- Connection controls -->
-            <input type="image" alt="Disconnect" src="app/images/disconnect.svg"
-                id="noVNC_disconnect_button" class="noVNC_button"
-                title="Disconnect">
-
-            </div>
-        </div>
-
-    </div> <!-- End of noVNC_control_bar -->
-
-    <div id="noVNC_hint_anchor" class="noVNC_vcenter">
-        <div id="noVNC_control_bar_hint">
-        </div>
-    </div>
-
-    <!-- Status dialog -->
-    <div id="noVNC_status"></div>
-
-    <!-- Connect button -->
-    <div class="noVNC_center">
-        <div id="noVNC_connect_dlg">
-            <p class="noVNC_logo" translate="no"><span>no</span>VNC</p>
-            <div>
-                <button id="noVNC_connect_button">
-                    <img alt="" src="app/images/connect.svg"> Connect
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Server key verification dialog -->
-    <div class="noVNC_center noVNC_connect_layer">
-    <div id="noVNC_verify_server_dlg" class="noVNC_panel"><form>
-        <div class="noVNC_heading">
-            Server identity
-        </div>
-        <div>
-            The server has provided the following identifying information:
-        </div>
-        <div id="noVNC_fingerprint_block">
-            Fingerprint:
-            <span id="noVNC_fingerprint"></span>
-        </div>
-        <div>
-            Please verify that the information is correct and press
-            "Approve". Otherwise press "Reject".
-        </div>
-        <div class="button_row">
-            <input id="noVNC_approve_server_button" type="submit" value="Approve">
-            <input id="noVNC_reject_server_button" type="button" value="Reject">
-        </div>
-    </form></div>
-    </div>
-
-    <!-- Password dialog -->
-    <div class="noVNC_center noVNC_connect_layer">
-    <div id="noVNC_credentials_dlg" class="noVNC_panel"><form>
-        <div class="noVNC_heading">
-            Credentials
-        </div>
-        <div id="noVNC_username_block">
-            <label for="noVNC_username_input">Username:</label>
-            <input id="noVNC_username_input">
-        </div>
-        <div id="noVNC_password_block">
-            <label for="noVNC_password_input">Password:</label>
-            <input id="noVNC_password_input" type="password">
-        </div>
-        <div class="button_row">
-            <input id="noVNC_credentials_button" type="submit" value="Send credentials">
-        </div>
-    </form></div>
-    </div>
-
-    <!-- Transition screens -->
-    <div id="noVNC_transition">
-        <div id="noVNC_transition_text"></div>
-        <div>
-        <input type="button" id="noVNC_cancel_reconnect_button" value="Cancel">
-        </div>
-        <div class="noVNC_spinner"></div>
-    </div>
-
-    <!-- This is where the RFB elements will attach -->
-    <div id="noVNC_container">
-        <!-- Note that Google Chrome on Android doesn't respect any of these,
-             html attributes which attempt to disable text suggestions on the
-             on-screen keyboard. Let's hope Chrome implements the ime-mode
-             style for example -->
-        <textarea id="noVNC_keyboardinput" autocapitalize="off"
-            autocomplete="off" spellcheck="false" tabindex="-1"></textarea>
-    </div>
-
-    <audio id="noVNC_bell">
-        <source src="app/sounds/bell.oga" type="audio/ogg">
-        <source src="app/sounds/bell.mp3" type="audio/mpeg">
-    </audio>
- </body>
+</body>
 </html>

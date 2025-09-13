@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en" class="noVNC_loading">
+<head>
+    <title>noVNC</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="app/images/icons/novnc.ico">
+    <link rel="stylesheet" href="app/styles/base.css">
+    <link rel="stylesheet" href="app/styles/input.css">
+    <style>
+        .simple-connect {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            text-align: center;
+            z-index: 1000;
+            font-family: Arial, sans-serif;
+        }
+        .simple-connect h2 {
+            margin-top: 0;
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .simple-connect button {
+            background: #4CAF50;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+            min-width: 120px;
+        }
+        .simple-connect button:hover {
+            background: #45a049;
+        }
+        .simple-connect button:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+        }
+        .simple-connect .status {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+        .simple-connect .status.error {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef5350;
+        }
+        .simple-connect .status.success {
+            background: #e8f5e8;
+            color: #2e7d32;
+            border: 1px solid #4caf50;
+        }
+        .simple-connect .status.info {
+            background: #e3f2fd;
+            color: #1565c0;
+            border: 1px solid #2196f3;
+        }
+        #noVNC_container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+        }
+
+        /* Fullscreen button */
+        .fullscreen-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            z-index: 9999;
+            display: none;
+        }
+        .fullscreen-btn:hover {
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        /* Clipboard panel */
+        .clipboard-panel {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            max-width: 300px;
+            z-index: 9998;
+            display: none;
+        }
+        .clipboard-panel h4 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+        }
+        .clipboard-panel textarea {
+            width: 100%;
+            height: 80px;
+            background: #333;
+            color: white;
+            border: 1px solid #555;
+            border-radius: 4px;
+            padding: 8px;
+            font-size: 12px;
+            resize: vertical;
+        }
+        .clipboard-panel .buttons {
+            margin-top: 10px;
+            text-align: right;
+        }
+        .clipboard-panel button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+        .clipboard-panel button:hover {
+            background: #45a049;
+        }
+
+        body.connected .simple-connect {
+            display: none;
+        }
+        body.connected #noVNC_container {
+            display: block;
+        }
+        body.connected .fullscreen-btn {
+            display: block;
+        }
+        body.connected .clipboard-panel {
+            display: block;
+        }
+
+        /* Hide controls in fullscreen */
+        body.in-fullscreen .clipboard-panel,
+        body.in-fullscreen .fullscreen-btn {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="simple-connect" id="connectDialog">
+        <h2>🖥️ Connect to VNC Desktop</h2>
+        <button id="connectBtn">Connect to Desktop</button>
+        <button id="disconnectBtn" style="display:none; background:#f44336;">Disconnect</button>
+        <div id="statusMsg" class="status"></div>
+    </div>
+    
+    <div id="noVNC_container"></div>
+    
+    <button class="fullscreen-btn" id="fullscreenBtn">⛶ Fullscreen</button>
+    
+    <div class="clipboard-panel" id="clipboardPanel">
+        <h4>📋 Clipboard Sync</h4>
+        <textarea id="clipboardText" placeholder="Paste text here to send to desktop, or copy text from desktop..."></textarea>
+        <div class="buttons">
+            <button id="clipboardSend">Send →</button>
+            <button id="clipboardClear">Clear</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import RFB from './core/rfb.js';
+        
+        let rfb;
+        let connected = false;
+        
+        const connectBtn = document.getElementById('connectBtn');
+        const disconnectBtn = document.getElementById('disconnectBtn');
+        const statusMsg = document.getElementById('statusMsg');
+        const container = document.getElementById('noVNC_container');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const clipboardPanel = document.getElementById('clipboardPanel');
+        const clipboardText = document.getElementById('clipboardText');
+        const clipboardSend = document.getElementById('clipboardSend');
+        const clipboardClear = document.getElementById('clipboardClear');
+        
+        function showStatus(msg, type = 'info') {
+            statusMsg.textContent = msg;
+            statusMsg.className = 'status ' + type;
+            statusMsg.style.display = 'block';
+        }
+        
+        function hideStatus() {
+            statusMsg.style.display = 'none';
+        }
+        
+        function connect() {
+            if (connected) return;
+            
+            connectBtn.disabled = true;
+            showStatus('Connecting to VNC desktop...', 'info');
+            
+            try {
+                const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+                const wsUrl = protocol + '//' + window.location.host + '/websockify';
+                
+                console.log('Connecting to:', wsUrl);
+                
+                rfb = new RFB(container, wsUrl, {
+                    credentials: {},
+                    focusOnClick: true,
+                    clipViewport: true,
+                    scaleViewport: true,
+                    resizeSession: true
+                });
+                
+                rfb.addEventListener("connect", () => {
+                    console.log('VNC Connected');
+                    connected = true;
+                    document.body.classList.add('connected');
+                    connectBtn.style.display = 'none';
+                    disconnectBtn.style.display = 'inline-block';
+                    showStatus('Connected successfully!', 'success');
+                    
+                    setTimeout(() => {
+                        hideStatus();
+                    }, 3000);
+                });
+                
+                rfb.addEventListener("disconnect", (e) => {
+                    console.log('VNC Disconnected:', e.detail);
+                    connected = false;
+                    document.body.classList.remove('connected');
+                    document.body.classList.remove('in-fullscreen');
+                    connectBtn.style.display = 'inline-block';
+                    connectBtn.disabled = false;
+                    disconnectBtn.style.display = 'none';
+                    exitFullscreen();
+                    
+                    if (e.detail.clean) {
+                        showStatus('Disconnected', 'info');
+                    } else {
+                        showStatus('Connection lost: ' + (e.detail.reason || 'Unknown error'), 'error');
+                    }
+                    
+                    if (rfb) {
+                        rfb = null;
+                    }
+                });
+                
+                rfb.addEventListener("credentialsrequired", (e) => {
+                    console.log('Credentials required:', e.detail);
+                    showStatus('No password required for this VNC server', 'info');
+                });
+                
+                rfb.addEventListener("securityfailure", (e) => {
+                    console.log('Security failure:', e.detail);
+                    showStatus('Security failure: ' + e.detail.reason, 'error');
+                    connectBtn.disabled = false;
+                });
+                
+                rfb.addEventListener("clipboard", (e) => {
+                    console.log('Clipboard received:', e.detail.text);
+                    clipboardText.value = e.detail.text;
+                });
+                
+            } catch (exc) {
+                console.error('Connection error:', exc);
+                showStatus('Error: ' + exc.message, 'error');
+                connectBtn.disabled = false;
+            }
+        }
+        
+        function disconnect() {
+            if (rfb) {
+                rfb.disconnect();
+            }
+        }
+        
+        function toggleFullscreen() {
+            if (isInFullscreen()) {
+                exitFullscreen();
+            } else {
+                enterFullscreen();
+            }
+        }
+        
+        function enterFullscreen() {
+            const element = document.documentElement;
+            if (element.requestFullscreen) {
+                element.requestFullscreen();
+            } else if (element.webkitRequestFullscreen) {
+                element.webkitRequestFullscreen();
+            } else if (element.mozRequestFullScreen) {
+                element.mozRequestFullScreen();
+            } else if (element.msRequestFullscreen) {
+                element.msRequestFullscreen();
+            }
+        }
+        
+        function exitFullscreen() {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+        }
+        
+        function handleFullscreenChange() {
+            const fullscreen = isInFullscreen();
+            document.body.classList.toggle('in-fullscreen', fullscreen);
+        }
+        
+        function isInFullscreen() {
+            return document.fullscreenElement ||
+                   document.webkitFullscreenElement ||
+                   document.mozFullScreenElement ||
+                   document.msFullscreenElement;
+        }
+        
+        function sendClipboard() {
+            if (rfb && clipboardText.value) {
+                rfb.clipboardPasteFrom(clipboardText.value);
+                console.log('📋 Sent clipboard to desktop');
+            }
+        }
+        
+        function clearClipboard() {
+            clipboardText.value = '';
+        }
+        
+        // Event listeners
+        connectBtn.addEventListener('click', connect);
+        disconnectBtn.addEventListener('click', disconnect);
+        fullscreenBtn.addEventListener('click', toggleFullscreen);
+        clipboardSend.addEventListener('click', sendClipboard);
+        clipboardClear.addEventListener('click', clearClipboard);
+        
+        // Fullscreen change events
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+        document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+        document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && isInFullscreen()) {
+                exitFullscreen();
+            }
+        });
+        
+        // Auto-connect after a short delay
+        window.addEventListener('load', () => {
+            console.log('Page loaded, auto-connecting in 1 second...');
+            setTimeout(() => {
+                connect();
+            }, 1000);
+        });
+        
+        // Handle page unload
+        window.addEventListener('beforeunload', () => {
+            if (rfb) {
+                rfb.disconnect();
+            }
+        });
+        
+        // Give Minecraft permission to lock mouse (but don't auto-lock)
+        container.addEventListener('click', () => {
+            if (connected && rfb) {
+                // Request pointer lock for Minecraft
+                rfb.grab(true);
+                console.log('Pointer lock requested for Minecraft');
+            }
+        });
+    </script>
+</body>
+</html>

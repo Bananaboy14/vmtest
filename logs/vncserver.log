@@ -181,3 +181,13 @@ Use xtigervncviewer -SecurityTypes None codespaces-aa6e47:1 to connect to the VN
 New Xtigervnc server 'codespaces-aa6e47:1 (codespace)' on port 5901 for display :1.
 Use xtigervncviewer -SecurityTypes None codespaces-aa6e47:1 to connect to the VNC server.
 
+Cleaning stale pidfile '/home/codespace/.vnc/codespaces-aa6e47:1.pid'!
+
+New Xtigervnc server 'codespaces-aa6e47:1 (codespace)' on port 5901 for display :1.
+Use xtigervncviewer -SecurityTypes None codespaces-aa6e47:1 to connect to the VNC server.
+
+Cleaning stale pidfile '/home/codespace/.vnc/codespaces-aa6e47:1.pid'!
+
+New Xtigervnc server 'codespaces-aa6e47:1 (codespace)' on port 5901 for display :1.
+Use xtigervncviewer -SecurityTypes None codespaces-aa6e47:1 to connect to the VNC server.
+

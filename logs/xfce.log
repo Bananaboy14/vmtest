@@ -10041,3 +10041,297 @@ system-config-printer-applet: failed to connect to system D-Bus
 (xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:28:18.008: Failed to grab keycode 67
 
 (xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:28:18.008: Failed to grab keycode 67
+_IceTransmkdir: Owner of /tmp/.ICE-unix should be set to root
+Another Window Manager (Xfwm4) is already running on screen :1.0
+To replace the current window manager, try "--replace"
+
+(xfwm4:14796): xfwm4-WARNING **: 17:55:42.658: Could not find a screen to manage, exiting
+xfsettingsd-Message: 17:55:42.703: Skipping screen 0, it already has an xsettings manager...
+
+(xfsettingsd:14836): libupower-glib-WARNING **: 17:55:42.706: Couldn't connect to proxy: Could not connect: No such file or directory
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:55:42.730: Failed to grab keycode 107
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:55:42.730: Failed to grab keycode 218
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:55:42.731: Failed to grab keycode 235
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:55:42.731: Failed to grab keycode 27
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:55:42.731: Failed to grab keycode 39
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:55:42.732: Failed to grab keycode 9
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:55:42.732: Failed to grab keycode 107
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:55:42.733: Failed to grab keycode 218
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:55:42.733: Failed to grab keycode 28
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:55:42.734: Failed to grab keycode 41
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:55:42.735: Failed to grab keycode 158
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:55:42.735: Failed to grab keycode 68
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:55:42.735: Failed to grab keycode 68
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:55:42.735: Failed to grab keycode 68
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:55:42.736: Failed to grab keycode 68
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:55:42.737: Failed to grab keycode 69
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:55:42.737: Failed to grab keycode 69
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:55:42.738: Failed to grab keycode 69
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:55:42.738: Failed to grab keycode 69
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:55:42.738: Failed to grab keycode 119
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:55:42.739: Failed to grab keycode 46
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:55:42.739: Failed to grab keycode 107
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:55:42.739: Failed to grab keycode 218
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:55:42.740: Failed to grab keycode 180
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:55:42.740: Failed to grab keycode 26
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:55:42.740: Failed to grab keycode 33
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:55:42.741: Failed to grab keycode 67
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:55:42.741: Failed to grab keycode 67
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:55:42.741: Failed to grab keycode 67
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:55:42.742: Failed to grab keycode 67
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:55:42.742: Failed to grab keycode 9
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:55:42.743: Failed to grab keycode 163
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:55:42.743: Failed to grab keycode 223
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:55:42.743: Failed to grab keycode 9
+xfsettingsd: Another clipboard manager is already running.
+libclock-Message: 17:55:51.114: could not get proxy for org.freedesktop.login1
+
+(xfce4-panel:15014): libclock-WARNING **: 17:55:51.114: could not instantiate a sleep monitor
+
+** (wrapper-2.0:15019): WARNING **: 17:55:51.691: Binding 'XF86AudioLowerVolume' failed!
+
+** (wrapper-2.0:15019): WARNING **: 17:55:51.692: Binding 'XF86AudioRaiseVolume' failed!
+
+** (wrapper-2.0:15019): WARNING **: 17:55:51.692: Binding 'XF86AudioMute' failed!
+
+** (wrapper-2.0:15019): WARNING **: 17:55:51.692: Binding 'XF86AudioMicMute' failed!
+
+(wrapper-2.0:15019): pulseaudio-plugin-WARNING **: 17:55:51.693: Could not have grabbed volume control keys. Is another volume control application (xfce4-volumed) running?
+
+** (wrapper-2.0:15019): WARNING **: 17:55:51.693: Binding 'XF86AudioPlay' failed!
+
+** (wrapper-2.0:15019): WARNING **: 17:55:51.693: Binding 'XF86AudioStop' failed!
+
+** (wrapper-2.0:15019): WARNING **: 17:55:51.693: Binding 'XF86AudioPrev' failed!
+
+** (wrapper-2.0:15019): WARNING **: 17:55:51.693: Binding 'XF86AudioNext' failed!
+
+(wrapper-2.0:15019): pulseaudio-plugin-WARNING **: 17:55:51.693: Could not have grabbed multimedia control keys.
+
+(xfce4-session:14741): xfce4-session-WARNING **: 17:55:51.750: failed to run script: Failed to execute child process “/usr/bin/pm-is-supported” (No such file or directory)
+
+(xfce4-session:14741): xfce4-session-WARNING **: 17:55:51.753: failed to run script: Failed to execute child process “/usr/bin/pm-is-supported” (No such file or directory)
+
+(xfce4-session:14741): xfce4-session-WARNING **: 17:55:51.756: failed to run script: Failed to execute child process “/usr/bin/pm-is-supported” (No such file or directory)
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:56:04.157: Failed to grab keycode 163
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:56:04.158: Failed to grab keycode 223
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:56:04.158: Failed to grab keycode 68
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:56:04.159: Failed to grab keycode 68
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:56:04.159: Failed to grab keycode 68
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:56:04.159: Failed to grab keycode 68
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:56:04.160: Failed to grab keycode 33
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:56:04.160: Failed to grab keycode 158
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:56:04.160: Failed to grab keycode 41
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:56:04.160: Failed to grab keycode 26
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:56:04.160: Failed to grab keycode 28
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:56:04.160: Failed to grab keycode 9
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:56:04.161: Failed to grab keycode 46
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:56:04.161: Failed to grab keycode 235
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:56:04.161: Failed to grab keycode 180
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:56:04.161: Failed to grab keycode 69
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:56:04.161: Failed to grab keycode 69
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:56:04.162: Failed to grab keycode 69
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:56:04.162: Failed to grab keycode 69
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:56:04.162: Failed to grab keycode 9
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:56:04.162: Failed to grab keycode 107
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:56:04.162: Failed to grab keycode 218
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:56:04.163: Failed to grab keycode 107
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:56:04.163: Failed to grab keycode 218
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:56:04.163: Failed to grab keycode 39
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:56:04.163: Failed to grab keycode 9
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:56:04.163: Failed to grab keycode 27
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:56:04.163: Failed to grab keycode 107
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:56:04.164: Failed to grab keycode 218
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:56:04.164: Failed to grab keycode 119
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:56:04.164: Failed to grab keycode 67
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:56:04.164: Failed to grab keycode 67
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:56:04.164: Failed to grab keycode 67
+
+(xfsettingsd:14836): libxfce4kbd-private-WARNING **: 17:56:04.165: Failed to grab keycode 67
+
+** (xfdesktop:15186): CRITICAL **: 17:56:06.842: xfdesktop: already running, quitting.
+
+(xfce4-session:14741): xfce4-session-WARNING **: 17:56:06.847: Unable to launch "/workspaces/vmtest/squashfs-root/lunarclient --hidden" (specified by autostart/lunarclient.desktop): Failed to execute child process “/workspaces/vmtest/squashfs-root/lunarclient” (No such file or directory)
+
+"systemd" is not running in this container due to its overhead.
+Use the "service" command to start services instead. e.g.: 
+
+service --status-all
+
+** (xiccd:15193): CRITICAL **: 17:56:06.858: Failed to connect to colord: Could not connect: No such file or directory
+Connection failure: Connection refused
+pa_context_connect() failed: Connection refused
+
+(polkit-gnome-authentication-agent-1:15207): polkit-gnome-1-WARNING **: 17:56:06.886: Error getting authority: Error initializing authority: Could not connect: No such file or directory
+
+** (light-locker:15215): ERROR **: 17:56:06.915: session_id is not set, is /proc mounted with hidepid>0?
+
+(nm-applet:15191): nm-applet-WARNING **: 17:56:06.949: Error connecting to system D-Bus: Could not connect: No such file or directory
+
+(nm-applet:15191): nm-applet-WARNING **: 17:56:06.949: Could not connect: No such file or directory
+
+(nm-applet:15191): nm-CRITICAL **: 17:56:06.951: ((src/libnm-client-impl/nm-client.c:4115)): assertion '<dropped>' failed
+
+(nm-applet:15191): nm-CRITICAL **: 17:56:06.952: ((src/libnm-client-impl/nm-client.c:4066)): assertion '<dropped>' failed
+
+(nm-applet:15191): nm-CRITICAL **: 17:56:06.952: ((src/libnm-client-impl/nm-client.c:4166)): assertion '<dropped>' failed
+
+(nm-applet:15191): nm-CRITICAL **: 17:56:06.952: ((src/libnm-client-impl/nm-client.c:4214)): assertion '<dropped>' failed
+
+(nm-applet:15191): nm-CRITICAL **: 17:56:06.952: ((src/libnm-client-impl/nm-client.c:4253)): assertion '<dropped>' failed
+
+(nm-applet:15191): nm-CRITICAL **: 17:56:06.952: ((src/libnm-client-impl/nm-client.c:4287)): assertion '<dropped>' failed
+
+(nm-applet:15191): nm-CRITICAL **: 17:56:06.952: ((src/libnm-client-impl/nm-client.c:4326)): assertion '<dropped>' failed
+
+(nm-applet:15191): nm-CRITICAL **: 17:56:06.952: ((src/libnm-client-impl/nm-client.c:4847)): assertion '<dropped>' failed
+
+(nm-applet:15191): nm-CRITICAL **: 17:56:06.953: ((src/libnm-client-impl/nm-client.c:4847)): assertion '<dropped>' failed
+system-config-printer-applet: failed to connect to system D-Bus
+_IceTransmkdir: ERROR: euid != 0,directory /tmp/.ICE-unix will not be created.
+_IceTransmkdir: ERROR: Cannot create /tmp/.ICE-unix
+_IceTransSocketUNIXCreateListener: mkdir(/tmp/.ICE-unix) failed, errno = 17
+_IceTransMakeAllCOTSServerListeners: failed to create listener for unix
+
+(xfwm4:6021): xfwm4-WARNING **: 18:55:46.703: Could not find a screen to manage, exiting
+
+(xfsettingsd:6048): libupower-glib-WARNING **: 18:55:47.220: Couldn't connect to proxy: Could not connect: No such file or directory
+xfsettingsd: No window manager registered on screen 0.
+xfce4-panel: No window manager registered on screen 0. To start the panel without this check, run with --disable-wm-check.
+libclock-Message: 18:56:00.539: could not get proxy for org.freedesktop.login1
+
+(xfce4-panel:6152): libclock-WARNING **: 18:56:00.539: could not instantiate a sleep monitor
+
+** (wrapper-2.0:6246): WARNING **: 18:56:01.058: Binding 'XF86AudioLowerVolume' failed!
+
+** (wrapper-2.0:6246): WARNING **: 18:56:01.058: Binding 'XF86AudioRaiseVolume' failed!
+
+** (wrapper-2.0:6246): WARNING **: 18:56:01.059: Binding 'XF86AudioMute' failed!
+
+** (wrapper-2.0:6246): WARNING **: 18:56:01.059: Binding 'XF86AudioMicMute' failed!
+
+(wrapper-2.0:6246): pulseaudio-plugin-WARNING **: 18:56:01.059: Could not have grabbed volume control keys. Is another volume control application (xfce4-volumed) running?
+
+** (wrapper-2.0:6246): WARNING **: 18:56:01.059: Binding 'XF86AudioPlay' failed!
+
+** (wrapper-2.0:6246): WARNING **: 18:56:01.059: Binding 'XF86AudioStop' failed!
+
+** (wrapper-2.0:6246): WARNING **: 18:56:01.059: Binding 'XF86AudioPrev' failed!
+
+** (wrapper-2.0:6246): WARNING **: 18:56:01.060: Binding 'XF86AudioNext' failed!
+
+(wrapper-2.0:6246): pulseaudio-plugin-WARNING **: 18:56:01.060: Could not have grabbed multimedia control keys.
+
+(xfce4-session:5748): xfce4-session-WARNING **: 18:56:01.103: failed to run script: Failed to execute child process “/usr/bin/pm-is-supported” (No such file or directory)
+
+(xfce4-session:5748): xfce4-session-WARNING **: 18:56:01.105: failed to run script: Failed to execute child process “/usr/bin/pm-is-supported” (No such file or directory)
+
+(xfce4-session:5748): xfce4-session-WARNING **: 18:56:01.108: failed to run script: Failed to execute child process “/usr/bin/pm-is-supported” (No such file or directory)
+No window manager registered on screen 0. To start the xfdesktop without this check, run with --disable-wm-check.
+
+** (xfdesktop:6460): CRITICAL **: 18:56:16.017: xfdesktop: already running, quitting.
+
+(xfce4-session:5748): xfce4-session-WARNING **: 18:56:16.022: Unable to launch "/workspaces/vmtest/squashfs-root/lunarclient --hidden" (specified by autostart/lunarclient.desktop): Failed to execute child process “/workspaces/vmtest/squashfs-root/lunarclient” (No such file or directory)
+
+"systemd" is not running in this container due to its overhead.
+Use the "service" command to start services instead. e.g.: 
+
+service --status-all
+
+** (xiccd:6521): CRITICAL **: 18:56:16.040: Failed to connect to colord: Could not connect: No such file or directory
+Connection failure: Connection refused
+pa_context_connect() failed: Connection refused
+
+(polkit-gnome-authentication-agent-1:6535): polkit-gnome-1-WARNING **: 18:56:16.080: Error getting authority: Error initializing authority: Could not connect: No such file or directory
+
+** (light-locker:6544): ERROR **: 18:56:16.103: session_id is not set, is /proc mounted with hidepid>0?
+
+(nm-applet:6519): nm-applet-WARNING **: 18:56:16.132: Error connecting to system D-Bus: Could not connect: No such file or directory
+
+(nm-applet:6519): nm-applet-WARNING **: 18:56:16.133: Could not connect: No such file or directory
+
+(nm-applet:6519): nm-CRITICAL **: 18:56:16.134: ((src/libnm-client-impl/nm-client.c:4115)): assertion '<dropped>' failed
+
+(nm-applet:6519): nm-CRITICAL **: 18:56:16.135: ((src/libnm-client-impl/nm-client.c:4066)): assertion '<dropped>' failed
+
+(nm-applet:6519): nm-CRITICAL **: 18:56:16.136: ((src/libnm-client-impl/nm-client.c:4166)): assertion '<dropped>' failed
+
+(nm-applet:6519): nm-CRITICAL **: 18:56:16.136: ((src/libnm-client-impl/nm-client.c:4214)): assertion '<dropped>' failed
+
+(nm-applet:6519): nm-CRITICAL **: 18:56:16.136: ((src/libnm-client-impl/nm-client.c:4253)): assertion '<dropped>' failed
+
+(nm-applet:6519): nm-CRITICAL **: 18:56:16.136: ((src/libnm-client-impl/nm-client.c:4287)): assertion '<dropped>' failed
+
+(nm-applet:6519): nm-CRITICAL **: 18:56:16.136: ((src/libnm-client-impl/nm-client.c:4326)): assertion '<dropped>' failed
+
+(nm-applet:6519): nm-CRITICAL **: 18:56:16.136: ((src/libnm-client-impl/nm-client.c:4847)): assertion '<dropped>' failed
+
+(nm-applet:6519): nm-CRITICAL **: 18:56:16.137: ((src/libnm-client-impl/nm-client.c:4847)): assertion '<dropped>' failed
+system-config-printer-applet: failed to connect to system D-Bus

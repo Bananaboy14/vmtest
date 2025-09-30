@@ -1,6 +1,0 @@
-provider: generic
-url: https://launcherupdates.lunarclientcdn.com
-publishAutoUpdate: true
-useMultipleRangeRequest: false
-channel: latest-ow
-updaterCacheDirName: lunarclient-updater

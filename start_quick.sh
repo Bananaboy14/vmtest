@@ -35,14 +35,26 @@ if pgrep -f "lunarclient" > /dev/null; then
     echo "✅ Lunar Client already running"
 else
     echo "🎮 Starting Lunar Client..."
-    if [ -f "squashfs-root/AppRun" ]; then
-        DISPLAY=:1 nohup ./squashfs-root/AppRun > /dev/null 2>&1 &
-    else
-        echo "📦 Extracting Lunar Client first..."
-        "./Lunar Client-3.4.11-ow.AppImage" --appimage-extract
-        DISPLAY=:1 nohup ./squashfs-root/AppRun > /dev/null 2>&1 &
+    # Extract AppImage if needed
+    if [ ! -f "squashfs-root/AppRun" ]; then
+        echo "📦 Extracting Lunar Client AppImage..."
+        "/workspaces/vmtest/Lunar Client-3.4.11-ow.AppImage" --appimage-extract
+        sleep 2
     fi
-    sleep 2
+    
+    # Ensure lunarclient binary exists (fix nested extraction)
+    if [ ! -f "squashfs-root/lunarclient" ] && [ -f "squashfs-root/squashfs-root-old/lunarclient" ]; then
+        echo "🔧 Fixing nested AppImage extraction..."
+        cp squashfs-root/squashfs-root-old/lunarclient squashfs-root/
+    fi
+    
+    # Start Lunar Client
+    if [ -f "squashfs-root/AppRun" ]; then
+        DISPLAY=:1 nohup ./squashfs-root/AppRun --no-sandbox > /dev/null 2>&1 &
+        sleep 2
+    else
+        echo "❌ Failed to extract Lunar Client AppImage"
+    fi
 fi
 
 echo ""

@@ -1,0 +1,18 @@
+{
+  "dependencies": {
+    "esbuild": "^0.25.9",
+    "express": "^5.1.0",
+    "express-ws": "^5.0.2",
+    "ws": "^8.18.3"
+  },
+  "name": "vmtest",
+  "description": "A robust, self-healing VNC desktop environment with Minecraft Lunar Client, featuring **automatic reconnection, session persistence, and comprehensive monitoring**. This evolved from a simple noVNC setup into an enterprise-grade persistent desktop solution.",
+  "version": "1.0.0",
+  "main": "express_server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

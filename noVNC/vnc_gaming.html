@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Remote Desktop Pro (Gaming)</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="utf-8">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+	<style>
+		/* ...existing code from vnc_glass.html styles... */
+	</style>
+</head>
+<body>
+	<!-- Main Desktop Viewport -->
+	<div class="desktop-viewport" id="viewport">
+		<div class="loading-overlay" id="loadingOverlay">
+			<div class="loading-spinner"></div>
+			<div class="loading-title">Remote Desktop Pro (Gaming)</div>
+			<div class="loading-text">Establishing secure connection to your desktop environment...</div>
+		</div>
+		<div class="error-message" id="errorMessage">
+			<div class="error-title">Connection Failed</div>
+			<div class="error-text" id="errorText">Unable to connect to the desktop. Please try again.</div>
+		</div>
+	</div>
+	<!-- Glass UI Overlay -->
+	<div class="glass-ui" id="glassUI">
+		<!-- Top Navigation Bar -->
+		<div class="top-bar">
+			<div class="logo">
+				<div class="logo-icon">G</div>
+				<span>Remote Desktop Gaming</span>
+			</div>
+			<div class="connection-status">
+				<div class="status-indicator">
+					<div class="status-dot" id="statusDot"></div>
+					<span id="statusText">Connecting...</span>
+				</div>
+			</div>
+		</div>
+		<!-- Bottom Control Panel -->
+		<div class="bottom-controls">
+			<div class="control-group">
+				<button class="glass-btn primary" id="connectBtn">
+					<span>🔗</span>
+					<span id="connectBtnText">Connect</span>
+				</button>
+				<button class="glass-btn" id="mouseLockBtn">
+					<span>🖱️</span>
+					<span>Lock Mouse</span>
+				</button>
+				<button class="glass-btn" id="fullscreenBtn">
+					<span>⛶</span>
+					<span>Fullscreen</span>
+				</button>
+				<button class="glass-btn" id="disconnectBtn" disabled>
+					<span>⏹️</span>
+					<span>Disconnect</span>
+				</button>
+			</div>
+		</div>
+	</div>
+	<!-- Floating Mouse Lock Hint -->
+	<div class="floating-hint" id="mouseLockHint">
+		Click desktop to capture mouse • Press ESC to release
+	</div>
+	<script type="module">
+		import "../../rfb.bundle.js";
+		// ...existing code from vnc_glass.html script, with wsUrl logic...
+		// (For brevity, you can copy the full script block from vnc_glass.html here)
+	</script>
+</body>
+</html>

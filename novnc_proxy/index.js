@@ -6,7 +6,7 @@ const fs = require('fs');
 
 // Enhanced configuration for ultimate persistence
 const NOVNC_DIR = process.env.NOVNC_DIR || '/opt/noVNC';
-const PORT = parseInt(process.env.NOVNC_PORT || '8080', 10);
+const PORT = process.env.PORT || 8081;
 const VNC_HOST = process.env.VNC_HOST || '127.0.0.1';
 const VNC_PORT = parseInt(process.env.VNC_PORT || '5901', 10);
 
@@ -161,7 +161,7 @@ app.get('/stats', (req, res) => {
   res.json(serverStats);
 });
 
-// Redirect root to enhanced VNC client
+// Redirect root to main VNC client
 app.get('/', (req, res) => res.redirect('/vnc.html'));
 
 app.get('/vnc.html', (req, res) => {
@@ -173,8 +173,28 @@ app.get('/vnc.html', (req, res) => {
   }
 });
 
+// Enhanced CORS and security headers for mouse lock
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    res.header('X-Frame-Options', 'SAMEORIGIN');
+    res.header('Permissions-Policy', 'pointer-lock=(self)');
+    res.header('Feature-Policy', 'pointer-lock \'self\'');
+    next();
+});
+
+// Serve static files from project root with enhanced mime types
+app.use('/', express.static('/workspaces/vmtest', {
+    setHeaders: (res, path) => {
+        if (path.endsWith('.html')) {
+            res.setHeader('Content-Type', 'text/html; charset=utf-8');
+        }
+    }
+}));
+
 // Serve static noVNC files
-app.use('/', express.static(NOVNC_DIR));
+app.use('/noVNC', express.static(NOVNC_DIR));
 
 // Enhanced WebSocket proxy with ultimate persistence
 app.ws('/websockify', function(ws, req) {

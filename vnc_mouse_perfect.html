@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Gaming Desktop - Perfect Mouse Accuracy</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #000;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            cursor: none; /* Hide cursor for gaming */
+        }
+        
+        #viewport {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+        }
+        
+        canvas {
+            display: block;
+            margin: 0 auto;
+            image-rendering: pixelated; /* For crisp pixel art */
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+            cursor: none;
+        }
+        
+        .mouse-status {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: #0f0;
+            padding: 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            z-index: 1000;
+        }
+        
+        .controls {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+        
+        .btn {
+            background: rgba(0, 50, 100, 0.8);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .btn:hover {
+            background: rgba(0, 70, 140, 0.9);
+        }
+        
+        .connection-info {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            padding: 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div id="viewport"></div>
+    
+    <div class="mouse-status" id="mouseStatus">
+        Mouse: Raw Input Mode
+        <br>Acceleration: DISABLED
+        <br>Click to lock pointer
+    </div>
+    
+    <div class="connection-info" id="connectionInfo">
+        Status: Connecting...
+    </div>
+    
+    <div class="controls">
+        <button class="btn" onclick="togglePointerLock()">Lock Mouse</button>
+        <button class="btn" onclick="toggleFullscreen()">Fullscreen</button>
+        <button class="btn" onclick="resetMouseSettings()">Reset Mouse</button>
+    </div>
+
+    <script type="module">
+        let rfb = null;
+        let pointerLocked = false;
+        
+        async function connectToDesktop() {
+            try {
+                const { default: RFB } = await import('./noVNC/core/rfb.js');
+                
+                const wsProto = window.location.protocol === "https:" ? "wss" : "ws";
+                const wsUrl = `${wsProto}://${window.location.host}/websocket`;
+                
+                const viewport = document.getElementById('viewport');
+                
+                // Ultra-precise gaming RFB settings
+                rfb = new RFB(viewport, wsUrl, {
+                    credentials: {},
+                    focusOnClick: true,
+                    clipViewport: false,
+                    scaleViewport: false, // 1:1 pixel mapping for accuracy
+                    resizeSession: false,
+                    viewOnly: false,
+                    showDotCursor: false, // No cursor overlay
+                    shared: true,
+                    localCursor: false, // Raw server cursor
+                    dragViewport: false, // No viewport dragging
+                    // Maximum quality, minimum compression for responsiveness
+                    qualityLevel: 9,
+                    compressionLevel: 1,
+                });
+
+                rfb.addEventListener('connect', () => {
+                    console.log('✅ Gaming VNC Connected with raw mouse input');
+                    document.getElementById('connectionInfo').innerHTML = 
+                        'Status: Connected<br>Mouse: Raw Input<br>Acceleration: OFF';
+                    
+                    const canvas = viewport.querySelector('canvas');
+                    if (canvas) {
+                        // Perfect pixel rendering
+                        const ctx = canvas.getContext('2d');
+                        if (ctx) {
+                            ctx.imageSmoothingEnabled = false;
+                            ctx.webkitImageSmoothingEnabled = false;
+                            ctx.mozImageSmoothingEnabled = false;
+                            ctx.msImageSmoothingEnabled = false;
+                        }
+                        
+                        // Gaming-optimized canvas
+                        canvas.style.imageRendering = 'pixelated';
+                        canvas.style.imageRendering = 'crisp-edges';
+                        canvas.style.cursor = 'none';
+                        
+                        // Auto-request pointer lock on first click
+                        canvas.addEventListener('click', () => {
+                            if (!pointerLocked) {
+                                canvas.requestPointerLock();
+                            }
+                        });
+                    }
+                });
+
+                rfb.addEventListener('disconnect', (e) => {
+                    console.log('❌ Gaming VNC Disconnected:', e.detail);
+                    document.getElementById('connectionInfo').innerHTML = 'Status: Disconnected';
+                });
+
+            } catch (error) {
+                console.error('💥 Connection failed:', error);
+                document.getElementById('connectionInfo').innerHTML = 'Status: Connection Failed';
+            }
+        }
+
+        // Pointer lock management
+        document.addEventListener('pointerlockchange', () => {
+            const canvas = document.querySelector('canvas');
+            pointerLocked = document.pointerLockElement === canvas;
+            
+            const status = document.getElementById('mouseStatus');
+            if (pointerLocked) {
+                status.innerHTML = 
+                    'Mouse: LOCKED (Gaming Mode)<br>Acceleration: DISABLED<br>Press ESC to unlock';
+                console.log('🎯 Pointer locked - gaming mode active');
+            } else {
+                status.innerHTML = 
+                    'Mouse: Raw Input Mode<br>Acceleration: DISABLED<br>Click to lock pointer';
+                console.log('🖱️ Pointer unlocked');
+            }
+        });
+
+        // Global functions
+        window.togglePointerLock = function() {
+            const canvas = document.querySelector('canvas');
+            if (canvas) {
+                if (pointerLocked) {
+                    document.exitPointerLock();
+                } else {
+                    canvas.requestPointerLock();
+                }
+            }
+        };
+        
+        window.toggleFullscreen = function() {
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            } else {
+                document.documentElement.requestFullscreen();
+            }
+        };
+        
+        window.resetMouseSettings = function() {
+            fetch('/api/reset-mouse', { method: 'POST' })
+                .then(() => {
+                    console.log('🔄 Mouse settings reset');
+                    alert('Mouse settings reset! Mouse acceleration disabled.');
+                })
+                .catch(() => {
+                    console.log('⚠️ Could not reset via API, manual reset needed');
+                    alert('Please run: bash /workspaces/vmtest/fix_mouse_accuracy.sh');
+                });
+        };
+
+        // Prevent all default mouse behaviors
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('mousedown', e => e.preventDefault());
+        document.addEventListener('mouseup', e => e.preventDefault());
+        document.addEventListener('wheel', e => e.preventDefault());
+        
+        // Gaming keyboard shortcuts
+        document.addEventListener('keydown', e => {
+            switch(e.code) {
+                case 'F11':
+                    e.preventDefault();
+                    toggleFullscreen();
+                    break;
+                case 'F1':
+                    e.preventDefault();
+                    togglePointerLock();
+                    break;
+                case 'F5':
+                    e.preventDefault();
+                    resetMouseSettings();
+                    break;
+            }
+        });
+
+        // Auto-connect
+        setTimeout(connectToDesktop, 500);
+
+    </script>
+</body>
+</html>

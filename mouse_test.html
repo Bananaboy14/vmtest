@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Mouse Accuracy Test</title>
+    <meta charset="utf-8">
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #000;
+            color: #0f0;
+            font-family: monospace;
+        }
+        
+        .test-area {
+            border: 2px solid #0f0;
+            width: 800px;
+            height: 600px;
+            position: relative;
+            background: #111;
+            margin: 20px 0;
+        }
+        
+        .crosshair {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #f00;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+        
+        .info {
+            background: #222;
+            padding: 10px;
+            border: 1px solid #0f0;
+            margin: 10px 0;
+        }
+        
+        .btn {
+            background: #0f0;
+            color: #000;
+            padding: 10px 20px;
+            border: none;
+            margin: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎯 Mouse Accuracy Test</h1>
+    
+    <div class="info" id="info">
+        Mouse position: 0, 0<br>
+        Movement count: 0<br>
+        Movements per second: 0<br>
+        Mouse accuracy: Testing...
+    </div>
+    
+    <button class="btn" onclick="resetTest()">Reset Test</button>
+    <button class="btn" onclick="openGameClient()">Open Gaming Client</button>
+    <button class="btn" onclick="fixMouseSettings()">Fix Mouse Settings</button>
+    
+    <div class="test-area" id="testArea">
+        <div class="crosshair" id="crosshair"></div>
+    </div>
+    
+    <div class="info">
+        Instructions:<br>
+        • Move your mouse around the test area above<br>
+        • Watch the red dot follow your cursor<br>
+        • Check if movement feels 1:1 with no acceleration<br>
+        • High movements/second = good responsiveness<br>
+        • The dot should track perfectly with your mouse
+    </div>
+
+    <script>
+        let moveCount = 0;
+        let lastTime = Date.now();
+        let lastPos = { x: 0, y: 0 };
+        
+        const testArea = document.getElementById('testArea');
+        const crosshair = document.getElementById('crosshair');
+        const info = document.getElementById('info');
+        
+        testArea.addEventListener('mousemove', (e) => {
+            const rect = testArea.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            crosshair.style.left = x + 'px';
+            crosshair.style.top = y + 'px';
+            
+            moveCount++;
+            
+            const now = Date.now();
+            if (now - lastTime >= 1000) {
+                const mps = Math.round(moveCount * 1000 / (now - lastTime));
+                moveCount = 0;
+                lastTime = now;
+                
+                updateInfo(x, y, mps);
+            }
+        });
+        
+        function updateInfo(x, y, mps) {
+            const distance = Math.sqrt(Math.pow(x - lastPos.x, 2) + Math.pow(y - lastPos.y, 2));
+            const accuracy = distance < 5 ? "EXCELLENT" : distance < 15 ? "GOOD" : "NEEDS IMPROVEMENT";
+            
+            info.innerHTML = `
+                Mouse position: ${Math.round(x)}, ${Math.round(y)}<br>
+                Movement count: ${moveCount}<br>
+                Movements per second: ${mps}<br>
+                Mouse accuracy: ${accuracy} (${mps > 60 ? 'High responsiveness' : 'Low responsiveness'})
+            `;
+            
+            lastPos = { x, y };
+        }
+        
+        window.resetTest = function() {
+            moveCount = 0;
+            lastTime = Date.now();
+            crosshair.style.left = '50%';
+            crosshair.style.top = '50%';
+            info.innerHTML = 'Mouse position: 0, 0<br>Movement count: 0<br>Movements per second: 0<br>Mouse accuracy: Testing...';
+        };
+        
+        window.openGameClient = function() {
+            window.open('/vnc_fixed_gaming.html', '_blank');
+        };
+        
+        window.fixMouseSettings = function() {
+            fetch('/api/reset-mouse', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    alert('Mouse settings fixed! ' + data.message);
+                })
+                .catch(error => {
+                    alert('Error fixing mouse settings. Please run manually: bash /workspaces/vmtest/fix_mouse_accuracy.sh');
+                });
+        };
+    </script>
+</body>
+</html>

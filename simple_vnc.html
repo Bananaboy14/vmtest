@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple VNC Client</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .controls {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .vnc-container {
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 15px;
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-right: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .status {
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        
+        .status.connecting {
+            background: rgba(255, 193, 7, 0.3);
+            border: 1px solid rgba(255, 193, 7, 0.5);
+        }
+        
+        .status.connected {
+            background: rgba(40, 167, 69, 0.3);
+            border: 1px solid rgba(40, 167, 69, 0.5);
+        }
+        
+        .status.error {
+            background: rgba(220, 53, 69, 0.3);
+            border: 1px solid rgba(220, 53, 69, 0.5);
+        }
+        
+        #screen {
+            border-radius: 10px;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Gaming VNC Client</h1>
+        
+        <div class="controls">
+            <button id="connectBtn" onclick="connectVNC()">Connect to Desktop</button>
+            <button id="disconnectBtn" onclick="disconnectVNC()" disabled>Disconnect</button>
+            <button onclick="toggleFullscreen()">Fullscreen</button>
+            <button onclick="lockMouse()" id="mouseBtn">Lock Mouse</button>
+        </div>
+        
+        <div id="status" class="status">Ready to connect</div>
+        
+        <div class="vnc-container">
+            <div id="screen"></div>
+        </div>
+    </div>
+
+    <!-- Load noVNC -->
+    <script type="module">
+        import RFB from './noVNC/core/rfb.js';
+        
+        let rfb = null;
+        let isConnected = false;
+        
+        window.connectVNC = function() {
+            const screen = document.getElementById('screen');
+            const status = document.getElementById('status');
+            const connectBtn = document.getElementById('connectBtn');
+            const disconnectBtn = document.getElementById('disconnectBtn');
+            
+            // Clear screen
+            screen.innerHTML = '';
+            
+            // Update status
+            status.textContent = 'Connecting to VNC server...';
+            status.className = 'status connecting';
+            
+            connectBtn.disabled = true;
+            
+            // Direct connection to VNC server in GitHub Codespaces
+            let url;
+            if (window.location.hostname.includes('github') || window.location.hostname.includes('codespaces')) {
+                // GitHub Codespaces - use the forwarded port for VNC
+                url = window.location.origin.replace('https://', 'wss://').replace('-3000.', '-5901.') + '/';
+            } else {
+                // Local development
+                url = 'ws://localhost:5901/';
+            }
+            
+            console.log('Connecting to:', url);
+            
+            try {
+                rfb = new RFB(screen, url, {
+                    credentials: {},
+                    shared: true,
+                    focusOnClick: true,
+                    clipViewport: true,
+                    scaleViewport: true
+                });
+                
+                rfb.addEventListener('connect', function() {
+                    console.log('✅ VNC Connected');
+                    isConnected = true;
+                    status.textContent = 'Connected to Desktop';
+                    status.className = 'status connected';
+                    connectBtn.disabled = true;
+                    disconnectBtn.disabled = false;
+                });
+                
+                rfb.addEventListener('disconnect', function(e) {
+                    console.log('❌ VNC Disconnected:', e.detail);
+                    isConnected = false;
+                    status.textContent = 'Disconnected: ' + (e.detail.reason || 'Connection lost');
+                    status.className = 'status error';
+                    connectBtn.disabled = false;
+                    disconnectBtn.disabled = true;
+                });
+                
+                rfb.addEventListener('securityfailure', function(e) {
+                    console.log('❌ Security failure:', e.detail);
+                    status.textContent = 'Authentication failed';
+                    status.className = 'status error';
+                    connectBtn.disabled = false;
+                });
+                
+            } catch (error) {
+                console.error('Error creating RFB:', error);
+                status.textContent = 'Error: ' + error.message;
+                status.className = 'status error';
+                connectBtn.disabled = false;
+            }
+        };
+        
+        window.disconnectVNC = function() {
+            if (rfb) {
+                rfb.disconnect();
+                rfb = null;
+            }
+        };
+        
+        window.toggleFullscreen = function() {
+            if (!document.fullscreenElement) {
+                document.getElementById('screen').requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        };
+        
+        window.lockMouse = function() {
+            const screen = document.getElementById('screen');
+            screen.requestPointerLock();
+        };
+    </script>
+</body>
+</html>

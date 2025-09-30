@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Direct WebSocket Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .log { 
+            border: 1px solid #ccc; 
+            padding: 10px; 
+            height: 400px; 
+            overflow-y: scroll; 
+            font-family: monospace;
+            white-space: pre-wrap;
+            background: #f5f5f5;
+        }
+        button { 
+            padding: 10px 20px; 
+            margin: 5px; 
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Direct WebSocket Connection Test</h1>
+    <button onclick="testWebSocket()">Test WebSocket</button>
+    <button onclick="clearLog()">Clear Log</button>
+    
+    <div class="log" id="log"></div>
+
+    <script>
+        function log(message) {
+            const logDiv = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            logDiv.textContent += `[${timestamp}] ${message}\n`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+        
+        function testWebSocket() {
+            log('=== Starting WebSocket Test ===');
+            log('Location: ' + window.location.href);
+            log('Host: ' + window.location.host);
+            
+            const wsUrl = `ws://${window.location.host}/websockify`;
+            log('WebSocket URL: ' + wsUrl);
+            
+            try {
+                log('Creating WebSocket...');
+                const ws = new WebSocket(wsUrl);
+                
+                log('WebSocket created, state: ' + ws.readyState);
+                
+                let connectionTimer = setTimeout(() => {
+                    log('❌ Connection timeout after 10 seconds');
+                    ws.close();
+                }, 10000);
+                
+                ws.onopen = function(event) {
+                    clearTimeout(connectionTimer);
+                    log('✅ WebSocket OPENED successfully!');
+                    log('Ready state: ' + ws.readyState);
+                    log('Protocol: ' + ws.protocol);
+                    log('URL: ' + ws.url);
+                    
+                    // Send a test message
+                    try {
+                        ws.send('Hello VNC!');
+                        log('✅ Test message sent');
+                    } catch (err) {
+                        log('❌ Error sending message: ' + err.message);
+                    }
+                    
+                    // Close after a moment
+                    setTimeout(() => {
+                        log('Closing WebSocket...');
+                        ws.close();
+                    }, 2000);
+                };
+                
+                ws.onmessage = function(event) {
+                    log('📨 Received message: ' + event.data);
+                };
+                
+                ws.onerror = function(error) {
+                    clearTimeout(connectionTimer);
+                    log('❌ WebSocket ERROR occurred');
+                    log('Error event: ' + JSON.stringify(error, null, 2));
+                    console.error('WebSocket error:', error);
+                };
+                
+                ws.onclose = function(event) {
+                    clearTimeout(connectionTimer);
+                    log('🔌 WebSocket CLOSED');
+                    log('Close code: ' + event.code);
+                    log('Close reason: ' + (event.reason || 'No reason given'));
+                    log('Was clean: ' + event.wasClean);
+                    
+                    // Explain common close codes
+                    const codeExplanations = {
+                        1000: 'Normal closure',
+                        1001: 'Going away',
+                        1002: 'Protocol error',
+                        1003: 'Unsupported data',
+                        1005: 'No status received',
+                        1006: 'Abnormal closure',
+                        1007: 'Invalid frame payload data',
+                        1008: 'Policy violation',
+                        1009: 'Message too big',
+                        1010: 'Mandatory extension missing',
+                        1011: 'Internal server error',
+                        1015: 'TLS handshake failure'
+                    };
+                    
+                    if (codeExplanations[event.code]) {
+                        log('Code explanation: ' + codeExplanations[event.code]);
+                    }
+                };
+                
+            } catch (err) {
+                log('❌ Exception creating WebSocket: ' + err.message);
+                console.error('WebSocket creation exception:', err);
+            }
+        }
+        
+        function clearLog() {
+            document.getElementById('log').textContent = '';
+        }
+        
+        // Auto-test on load
+        window.onload = function() {
+            log('Page loaded. Click "Test WebSocket" to start.');
+        };
+    </script>
+</body>
+</html>

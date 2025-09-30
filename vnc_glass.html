@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Remote Desktop Pro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: rgba(8, 8, 16, 0.95);
+            --bg-secondary: rgba(15, 15, 30, 0.8);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-hover: rgba(255, 255, 255, 0.08);
+            --accent-primary: #6366f1;
+            --accent-secondary: #8b5cf6;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0c0c1e 0%, #1a1a2e 50%, #16213e 100%);
+            color: var(--text-primary);
+        }
+
+        .desktop-viewport {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* Removed flexbox centering - let noVNC handle positioning natively */
+        }
+
+        /* Canvas styling - let noVNC handle it naturally */
+        .desktop-viewport canvas {
+            max-width: 100% !important;
+            max-height: 100% !important;
+        }
+
+        /* In fullscreen, scale canvas to fill screen while preserving mouse accuracy */
+        :fullscreen .desktop-viewport,
+        :-webkit-full-screen .desktop-viewport,
+        :-moz-full-screen .desktop-viewport,
+        :-ms-fullscreen .desktop-viewport {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+
+        :fullscreen .desktop-viewport canvas,
+        :-webkit-full-screen .desktop-viewport canvas,
+        :-moz-full-screen .desktop-viewport canvas,
+        :-ms-fullscreen .desktop-viewport canvas {
+            width: 100vw !important;
+            height: 100vh !important;
+            max-width: none !important;
+            max-height: none !important;
+            object-fit: cover !important;
+        }
+
+        /* Let noVNC handle canvas positioning natively - no custom styling */
+
+        .glass-ui {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-ui.visible {
+            opacity: 1;
+        }
+
+        /* When an element is fullscreen, hide the glass chrome to give an immersive view */
+        :fullscreen .glass-ui,
+        .in-fullscreen .glass-ui,
+        :-webkit-full-screen .glass-ui,
+        :-moz-full-screen .glass-ui,
+        :-ms-fullscreen .glass-ui,
+        body:fullscreen .glass-ui,
+        html:fullscreen .glass-ui {
+            display: none !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            visibility: hidden !important;
+        }
+
+        /* Also hide individual glass UI components in fullscreen */
+        :fullscreen .top-bar,
+        :fullscreen .bottom-controls,
+        :-webkit-full-screen .top-bar,
+        :-webkit-full-screen .bottom-controls,
+        :-moz-full-screen .top-bar,
+        :-moz-full-screen .bottom-controls,
+        :-ms-fullscreen .top-bar,
+        :-ms-fullscreen .bottom-controls,
+        body:fullscreen .top-bar,
+        body:fullscreen .bottom-controls,
+        html:fullscreen .top-bar,
+        html:fullscreen .bottom-controls {
+            display: none !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            visibility: hidden !important;
+        }
+
+        .top-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: linear-gradient(180deg, 
+                rgba(15, 15, 30, 0.9) 0%, 
+                rgba(15, 15, 30, 0.7) 70%,
+                transparent 100%);
+            backdrop-filter: blur(20px) saturate(1.5);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            pointer-events: auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 18px;
+            letter-spacing: -0.025em;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+        }
+
+        .connection-status {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--error);
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.connected {
+            background: var(--success);
+            animation: none;
+        }
+
+        .status-dot.connecting {
+            background: var(--warning);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .bottom-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: linear-gradient(0deg, 
+                rgba(15, 15, 30, 0.9) 0%, 
+                rgba(15, 15, 30, 0.7) 70%,
+                transparent 100%);
+            backdrop-filter: blur(20px) saturate(1.5);
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 24px;
+            pointer-events: auto;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 8px;
+            backdrop-filter: blur(20px);
+        }
+
+        .glass-btn {
+            padding: 12px 24px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.6s;
+        }
+
+        .glass-btn:hover {
+            background: var(--glass-hover);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .glass-btn:hover::before {
+            left: 100%;
+        }
+
+        .glass-btn:active {
+            transform: translateY(0);
+        }
+
+        .glass-btn.primary {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-color: var(--accent-primary);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+        }
+
+        .glass-btn.primary:hover {
+            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .glass-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 100;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 40px;
+            backdrop-filter: blur(20px);
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .loading-spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 24px;
+        }
+
+        .loading-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .loading-text {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .floating-hint {
+            position: absolute;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            padding: 12px 24px;
+            backdrop-filter: blur(15px);
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            opacity: 0;
+            transition: all 0.3s ease;
+            pointer-events: none;
+            z-index: 2000;
+        }
+
+        .floating-hint.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(4px);
+        }
+
+        .error-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 16px;
+            padding: 24px;
+            backdrop-filter: blur(20px);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            display: none;
+        }
+
+        .error-title {
+            color: var(--error);
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .error-text {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .top-bar {
+                padding: 0 16px;
+                height: 50px;
+            }
+            
+            .bottom-controls {
+                height: 70px;
+                padding: 0 16px;
+            }
+            
+            .control-group {
+                gap: 8px;
+                padding: 6px;
+            }
+            
+            .glass-btn {
+                padding: 10px 16px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Desktop Viewport -->
+    <div class="desktop-viewport" id="viewport">
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="loading-spinner"></div>
+            <div class="loading-title">Remote Desktop Pro</div>
+            <div class="loading-text">Establishing secure connection to your desktop environment...</div>
+        </div>
+        
+        <div class="error-message" id="errorMessage">
+            <div class="error-title">Connection Failed</div>
+            <div class="error-text" id="errorText">Unable to connect to the desktop. Please try again.</div>
+        </div>
+    </div>
+
+    <!-- Glass UI Overlay -->
+    <div class="glass-ui" id="glassUI">
+        <!-- Top Navigation Bar -->
+        <div class="top-bar">
+            <div class="logo">
+                <div class="logo-icon">R</div>
+                <span>Remote Desktop Pro</span>
+            </div>
+            
+            <div class="connection-status">
+                <div class="status-indicator">
+                    <div class="status-dot" id="statusDot"></div>
+                    <span id="statusText">Connecting...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Control Panel -->
+        <div class="bottom-controls">
+            <div class="control-group">
+                <button class="glass-btn primary" id="connectBtn">
+                    <span>🔗</span>
+                    <span id="connectBtnText">Connect</span>
+                </button>
+                <button class="glass-btn" id="mouseLockBtn">
+                    <span>🖱️</span>
+                    <span>Lock Mouse</span>
+                </button>
+                <button class="glass-btn" id="fullscreenBtn">
+                    <span>⛶</span>
+                    <span>Fullscreen</span>
+                </button>
+                <button class="glass-btn" id="disconnectBtn" disabled>
+                    <span>⏹️</span>
+                    <span>Disconnect</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Mouse Lock Hint -->
+    <div class="floating-hint" id="mouseLockHint">
+        Click desktop to capture mouse • Press ESC to release
+    </div>
+
+    <script type="module">
+        // Global state
+        let rfb = null;
+        let isConnected = false;
+        let isPointerLocked = false;
+        let canvas = null;
+        let reconnectAttempts = 0;
+        let maxReconnectAttempts = 5;
+        
+        // UI Elements
+        const viewport = document.getElementById('viewport');
+        const glassUI = document.getElementById('glassUI');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const errorMessage = document.getElementById('errorMessage');
+        const statusDot = document.getElementById('statusDot');
+        const statusText = document.getElementById('statusText');
+        const connectBtn = document.getElementById('connectBtn');
+        const connectBtnText = document.getElementById('connectBtnText');
+        const mouseLockBtn = document.getElementById('mouseLockBtn');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const disconnectBtn = document.getElementById('disconnectBtn');
+        const mouseLockHint = document.getElementById('mouseLockHint');
+
+        // Auto-show/hide UI
+        let uiTimeout;
+        let isUIVisible = true;
+
+        function showUI() {
+            isUIVisible = true;
+            glassUI.classList.add('visible');
+            clearTimeout(uiTimeout);
+            uiTimeout = setTimeout(hideUI, 4000);
+        }
+
+        function hideUI() {
+            if (!glassUI.matches(':hover') && isConnected) {
+                glassUI.classList.remove('visible');
+                isUIVisible = false;
+            }
+        }
+
+        // Event listeners for UI visibility - simplified to avoid mouse conflicts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                showUI();
+            }
+        });
+
+        function updateStatus(message, state = 'connecting') {
+            statusText.textContent = message;
+            statusDot.className = `status-dot ${state}`;
+            
+            if (state === 'connected') {
+                statusDot.classList.add('connected');
+            } else if (state === 'connecting') {
+                statusDot.classList.add('connecting');
+            }
+        }
+
+        function showError(message) {
+            errorMessage.style.display = 'block';
+            loadingOverlay.style.display = 'none';
+            document.getElementById('errorText').textContent = message;
+            connectBtn.disabled = false;
+            connectBtnText.textContent = 'Retry Connection';
+        }
+
+        function hideError() {
+            errorMessage.style.display = 'none';
+        }
+
+        async function connectToDesktop() {
+            if (isConnected) return;
+            
+            hideError();
+            loadingOverlay.style.display = 'block';
+            connectBtn.disabled = true;
+            connectBtnText.textContent = 'Connecting...';
+            updateStatus('Loading VNC client...', 'connecting');
+            
+            try {
+                // Import RFB module from bundled noVNC directory
+                // vnc_glass.html is served from project root, noVNC lives in /noVNC
+                const { default: RFB } = await import('./noVNC/core/rfb.js');
+                updateStatus('Establishing connection...', 'connecting');
+                
+                // Clear viewport
+                const canvasElements = viewport.querySelectorAll('canvas');
+                canvasElements.forEach(c => c.remove());
+                
+                // Create WebSocket connection - use current host for codespaces compatibility
+                const wsProto = window.location.protocol === "https:" ? "wss" : "ws";
+                const wsUrl = `${wsProto}://${window.location.host}/websocket`;
+                
+                console.log('🔗 Connecting to:', wsUrl);
+                rfb = new RFB(viewport, wsUrl, {
+                    credentials: {},
+                    focusOnClick: true,
+                    clipViewport: false,
+                    scaleViewport: true,
+                    resizeSession: false,
+                    viewOnly: false,
+                    showDotCursor: true,
+                    shared: true
+                });
+
+                // Connection successful
+                rfb.addEventListener('connect', () => {
+                    console.log('✅ VNC Connection Established');
+                    isConnected = true;
+                    reconnectAttempts = 0;
+                    
+                    loadingOverlay.style.display = 'none';
+                    updateStatus('Connected • Desktop Ready', 'connected');
+                    
+                    connectBtn.disabled = true;
+                    connectBtnText.textContent = 'Connected';
+                    disconnectBtn.disabled = false;
+                    
+                    canvas = viewport.querySelector('canvas');
+                    if (canvas) {
+                        // Let noVNC handle all mouse events natively - no custom handling
+                        canvas.style.cursor = 'default';
+                        // Ensure canvas gets focus for proper mouse handling
+                        canvas.focus();
+                        
+                        // If we're already in fullscreen when connecting, apply scaling
+                        const isFullscreen = !!(document.fullscreenElement || 
+                                               document.webkitFullscreenElement || 
+                                               document.mozFullScreenElement || 
+                                               document.msFullscreenElement);
+                        if (isFullscreen) {
+                            setTimeout(() => {
+                                const canvasRect = canvas.getBoundingClientRect();
+                                const viewportWidth = window.innerWidth;
+                                const viewportHeight = window.innerHeight;
+                                
+                                const scaleX = viewportWidth / canvasRect.width;
+                                const scaleY = viewportHeight / canvasRect.height;
+                                const scale = Math.min(scaleX, scaleY); // Use min to show entire desktop
+                                
+                                canvas.style.transform = `scale(${scale})`;
+                                canvas.style.transformOrigin = 'center center';
+                                
+                                console.log('Connected in fullscreen - applying scaling');
+                            }, 200);
+                        }
+                    }
+                    
+                    // Auto-hide UI after connection
+                    setTimeout(hideUI, 3000);
+                });
+
+                // Connection lost
+                rfb.addEventListener('disconnect', (e) => {
+                    console.log('❌ VNC Disconnected:', e.detail);
+                    isConnected = false;
+                    isPointerLocked = false;
+                    
+                    // Clear the canvas to avoid showing stale content
+                    const canvasElements = viewport.querySelectorAll('canvas');
+                    canvasElements.forEach(c => c.remove());
+                    
+                    if (e.detail.clean) {
+                        // Clean disconnect - probably intentional
+                        updateStatus('Disconnected', 'error');
+                        connectBtn.disabled = false;
+                        connectBtnText.textContent = 'Connect';
+                        disconnectBtn.disabled = true;
+                        loadingOverlay.style.display = 'none';
+                    } else if (reconnectAttempts < maxReconnectAttempts) {
+                        updateStatus(`Reconnecting... (${reconnectAttempts + 1}/${maxReconnectAttempts})`, 'connecting');
+                        setTimeout(() => {
+                            reconnectAttempts++;
+                            connectToDesktop();
+                        }, 2000 + (1000 * reconnectAttempts)); // Exponential backoff
+                    } else {
+                        showError('Connection lost. Maximum retry attempts reached.');
+                        updateStatus('Disconnected', 'error');
+                        connectBtn.disabled = false;
+                        connectBtnText.textContent = 'Reconnect';
+                        disconnectBtn.disabled = true;
+                        reconnectAttempts = 0; // Reset for next manual attempt
+                    }
+                });
+
+                // Security failure
+                rfb.addEventListener('securityfailure', (e) => {
+                    console.error('🔒 Security failure:', e.detail);
+                    showError('Authentication failed: ' + e.detail.reason);
+                    updateStatus('Security Error', 'error');
+                });
+
+                // Desktop resize
+                rfb.addEventListener('desktopsize', () => {
+                    console.log('📐 Desktop resized - maintaining stable scaling');
+                    // Let noVNC handle desktop size changes naturally
+                    // Don't force scaling changes that can disrupt mouse coordinates
+                });
+
+                // Clipboard sync
+                rfb.addEventListener('clipboard', (e) => {
+                    if (navigator.clipboard) {
+                        navigator.clipboard.writeText(e.detail.text).catch(console.warn);
+                    }
+                });
+
+            } catch (error) {
+                console.error('💥 Connection failed:', error);
+                showError(`Failed to connect: ${error.message}`);
+                updateStatus('Connection Error', 'error');
+                connectBtn.disabled = false;
+                connectBtnText.textContent = 'Retry Connection';
+            }
+        }
+
+        // Canvas setup and mouse handling functions removed for stability
+        // (These were causing mouse coordinate offset issues)
+        
+        function disconnect() {
+            if (rfb && isConnected) {
+                rfb.disconnect();
+            }
+        }
+
+        function toggleFullscreen() {
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            } else {
+                viewport.requestFullscreen().catch(console.warn);
+            }
+        }
+
+        // Handle fullscreen changes - let noVNC handle scaling naturally
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+        document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+        document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+
+        function handleFullscreenChange() {
+            const isFullscreen = !!(document.fullscreenElement || 
+                                   document.webkitFullscreenElement || 
+                                   document.mozFullScreenElement || 
+                                   document.msFullscreenElement);
+            
+            if (!isFullscreen) {
+                // Exited fullscreen - show the UI and reset scaling
+                showUI();
+                glassUI.style.display = '';
+                if (canvas) {
+                    canvas.style.transform = '';
+                    canvas.style.transformOrigin = '';
+                }
+                console.log('Exited fullscreen - showing UI');
+            } else {
+                // Entered fullscreen - hide UI and apply intelligent scaling
+                glassUI.style.display = 'none';
+                glassUI.classList.remove('visible');
+                
+                if (canvas) {
+                    // Calculate scale to fill screen while maintaining aspect ratio
+                    setTimeout(() => {
+                        const canvasRect = canvas.getBoundingClientRect();
+                        const viewportWidth = window.innerWidth;
+                        const viewportHeight = window.innerHeight;
+                        
+                        const scaleX = viewportWidth / canvasRect.width;
+                        const scaleY = viewportHeight / canvasRect.height;
+                        const scale = Math.min(scaleX, scaleY); // Use min to show entire desktop without cropping
+                        
+                        canvas.style.transform = `scale(${scale})`;
+                        canvas.style.transformOrigin = 'center center';
+                        
+                        console.log(`Fullscreen scaling: ${scale}x (${canvasRect.width}x${canvasRect.height} -> ${viewportWidth}x${viewportHeight})`);
+                    }, 100);
+                }
+                console.log('Entered fullscreen - hiding UI and scaling canvas');
+            }
+            // Let noVNC automatically adjust to the new viewport size
+        }
+
+        // Pointer lock event handlers - DISABLED to prevent mouse conflicts
+        /*
+        document.addEventListener('pointerlockchange', () => {
+            isPointerLocked = document.pointerLockElement === canvas;
+            mouseLockBtn.innerHTML = isPointerLocked ? 
+                '<span>🔓</span><span>Unlock Mouse</span>' : 
+                '<span>🖱️</span><span>Lock Mouse</span>';
+        });
+        */
+
+        // Window resize handler - let noVNC handle naturally
+        window.addEventListener('resize', () => {
+            // Let noVNC automatically handle window resize events
+            // Forcing scaling changes can disrupt mouse coordinate mapping
+            console.log('Window resized - letting noVNC handle naturally');
+        });
+
+        // Button event listeners - mouse lock disabled for stability
+        connectBtn.addEventListener('click', connectToDesktop);
+        // Mouse lock disabled to prevent connection issues
+        mouseLockBtn.addEventListener('click', () => {
+            // Show a message that this feature is disabled
+            console.log('Mouse lock disabled for connection stability');
+        });
+        fullscreenBtn.addEventListener('click', toggleFullscreen);
+        disconnectBtn.addEventListener('click', disconnect);
+
+        // Initialize
+        updateStatus('Ready to Connect', 'connecting');
+        showUI();
+        
+        // Auto-connect after 1 second
+        setTimeout(() => {
+            if (!isConnected) {
+                connectToDesktop();
+            }
+        }, 1000);
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Module Debug Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .log { 
+            border: 1px solid #ccc; 
+            padding: 10px; 
+            height: 400px; 
+            overflow-y: scroll; 
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>Module Debug Test</h1>
+    <div class="log" id="log"></div>
+
+    <script type="module">
+        function log(message) {
+            const logDiv = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            logDiv.textContent += `[${timestamp}] ${message}\n`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+        
+        log('Starting module test...');
+        
+        try {
+            log('Attempting to import RFB...');
+            const RFBModule = await import('./core/rfb.js');
+            log('RFB module imported successfully!');
+            log('RFB exports: ' + Object.keys(RFBModule));
+            
+            const RFB = RFBModule.default || RFBModule.RFB;
+            log('RFB constructor: ' + (typeof RFB));
+            
+            if (typeof RFB === 'function') {
+                log('RFB is a function, testing WebSocket creation...');
+                
+                // Test WebSocket creation
+                const wsUrl = `ws://${window.location.host}/websockify`;
+                log('WebSocket URL: ' + wsUrl);
+                
+                const ws = new WebSocket(wsUrl);
+                
+                ws.onopen = function() {
+                    log('WebSocket connection opened!');
+                    ws.close();
+                };
+                
+                ws.onerror = function(error) {
+                    log('WebSocket error: ' + error);
+                    console.error('WebSocket error:', error);
+                };
+                
+                ws.onclose = function(event) {
+                    log(`WebSocket closed: code=${event.code}, reason=${event.reason}`);
+                };
+                
+            } else {
+                log('ERROR: RFB is not a function!');
+            }
+            
+        } catch (error) {
+            log('ERROR importing RFB: ' + error.message);
+            console.error('Import error:', error);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>🎮 VNC Gaming Client - Redirecting...</title>
+    <style>
+        body {
+            background: #1a1a1a;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+        .loading {
+            font-size: 24px;
+            margin: 20px;
+        }
+        .info {
+            background: #333;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 600px;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎮 VNC Gaming Client</h1>
+    <div class="loading">🔄 Redirecting to standard noVNC client...</div>
+    <div class="info">
+        <p>Using the proven noVNC client with automatic connection to your gaming desktop.</p>
+        <p>If you're not redirected automatically, <a href="noVNC/vnc.html?host=localhost&port=8080&path=websocket&autoconnect=1&resize=scale" style="color: #4fc3f7;">click here</a>.</p>
+    </div>
+
+    <script>
+        // Auto-redirect to noVNC with the right connection parameters
+        setTimeout(() => {
+            window.location.href = 'noVNC/vnc.html?host=localhost&port=8080&path=websocket&autoconnect=1&resize=scale&shared=1';
+        }, 2000);
+    </script>
+</body>
+</html>

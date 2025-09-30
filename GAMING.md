@@ -2,6 +2,23 @@
 
 ## ✨ **New Gaming Features**
 
+## **Start Everything Up**
+set -e
+pkill -f vnc_server.js || true
+pkill -f websockify || true
+vncserver -kill :1 || true
+vncserver :1 -geometry 1024x768 -depth 16 --I-KNOW-THIS-IS-INSECURE
+# start a simple terminal on the VNC display
+DISPLAY=:1 xterm >/dev/null 2>&1 &
+# start websockify serving the noVNC folder on port 6080
+nohup websockify --web=/workspaces/vmtest/noVNC 6080 localhost:5901 > /workspaces/vmtest/websockify.log 2>&1 &
+# Give services a moment
+sleep 1
+sudo lsof -i :5901 || true
+sudo lsof -i :6080 || true
+ps aux | grep websockify | grep -v grep || true
+
+
 ### 🖥️ **Full Screen Gaming Mode**
 - **One-click gaming mode** - Click "🎮 Gaming Mode" button after connecting
 - **True fullscreen experience** - Hides all UI elements and browser chrome

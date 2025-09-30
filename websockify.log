@@ -1,0 +1,22 @@
+nohup: ignoring input
+WebSocket server settings:
+  - Listen on :6080
+  - Web server. Web root: /workspaces/vmtest/noVNC
+  - No SSL/TLS support (no cert file)
+  - proxying from :6080 to localhost:5901
+127.0.0.1 - - [10/Sep/2025 19:40:40] code 404, message File not found
+127.0.0.1 - - [10/Sep/2025 19:40:43] 127.0.0.1: Plain non-SSL (ws://) WebSocket connection
+127.0.0.1 - - [10/Sep/2025 19:40:43] 127.0.0.1: Path: '/websockify'
+127.0.0.1 - - [10/Sep/2025 19:40:43] connecting to: localhost:5901
+127.0.0.1 - - [10/Sep/2025 19:40:46] 127.0.0.1: Plain non-SSL (ws://) WebSocket connection
+127.0.0.1 - - [10/Sep/2025 19:40:46] 127.0.0.1: Path: '/websockify'
+127.0.0.1 - - [10/Sep/2025 19:40:46] connecting to: localhost:5901
+127.0.0.1 - - [10/Sep/2025 19:41:03] 127.0.0.1: Plain non-SSL (ws://) WebSocket connection
+127.0.0.1 - - [10/Sep/2025 19:41:03] 127.0.0.1: Path: '/websockify'
+127.0.0.1 - - [10/Sep/2025 19:41:03] connecting to: localhost:5901
+127.0.0.1 - - [10/Sep/2025 19:49:57] 127.0.0.1: Plain non-SSL (ws://) WebSocket connection
+127.0.0.1 - - [10/Sep/2025 19:49:57] 127.0.0.1: Path: '/websockify'
+127.0.0.1 - - [10/Sep/2025 19:49:57] connecting to: localhost:5901
+127.0.0.1 - - [10/Sep/2025 19:50:00] 127.0.0.1: Plain non-SSL (ws://) WebSocket connection
+127.0.0.1 - - [10/Sep/2025 19:50:00] 127.0.0.1: Path: '/websockify'
+127.0.0.1 - - [10/Sep/2025 19:50:00] connecting to: localhost:5901

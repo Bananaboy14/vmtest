@@ -1,724 +1,903 @@
 <!DOCTYPE html>
-<html lang="en" class="noVNC_loading">
+<html lang="en">
 <head>
-    <title>🖥️ Minecraft VNC Desktop - Ultimate Persistent Setup</title>
-    <meta charset="utf-8">
+    <title>Remote Desktop Pro</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="app/images/icons/novnc.ico">
-    <link rel="stylesheet" href="app/styles/base.css">
-    <link rel="stylesheet" href="app/styles/input.css">
+    <meta charset="utf-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Load noVNC using ES6 modules -->
+    <script type="module" crossorigin="anonymous" src="/noVNC/app/error-handler.js"></script>
+
     <style>
-        /* Professional UI Styles */
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        :root {
+            --bg-primary: rgba(8, 8, 16, 0.95);
+            --bg-secondary: rgba(15, 15, 30, 0.8);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-hover: rgba(255, 255, 255, 0.08);
+            --accent-primary: #6366f1;
+            --accent-secondary: #8b5cf6;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
+
+        * {
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            height: 100vh;
-            overflow: hidden;
+            box-sizing: border-box;
         }
-        
-        .connection-dashboard {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            text-align: center;
-            z-index: 1000;
-            min-width: 400px;
-            max-width: 500px;
-            border: 1px solid rgba(255,255,255,0.3);
-        }
-        
-        .connection-dashboard h1 {
-            margin: 0 0 20px 0;
-            color: #333;
-            font-size: 28px;
-            font-weight: 700;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .status-indicator {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            margin-right: 8px;
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-        
-        .status-indicator.connecting {
-            background: #ffa726;
-        }
-        
-        .status-indicator.connected {
-            background: #4caf50;
-        }
-        
-        .status-indicator.error {
-            background: #f44336;
-        }
-        
-        .connection-button {
-            background: linear-gradient(135deg, #4CAF50, #45a049);
-            border: none;
-            color: white;
-            padding: 16px 32px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            font-weight: 600;
-            margin: 8px 4px;
-            cursor: pointer;
-            border-radius: 8px;
-            min-width: 150px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 16px rgba(76, 175, 80, 0.4);
-        }
-        
-        .connection-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(76, 175, 80, 0.6);
-        }
-        
-        .connection-button:disabled {
-            background: linear-gradient(135deg, #cccccc, #999999);
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-        
-        .connection-button.disconnect {
-            background: linear-gradient(135deg, #f44336, #da190b);
-            box-shadow: 0 4px 16px rgba(244, 67, 54, 0.4);
-        }
-        
-        .connection-button.disconnect:hover {
-            box-shadow: 0 8px 24px rgba(244, 67, 54, 0.6);
-        }
-        
-        .status-message {
-            margin: 20px 0;
-            padding: 16px;
-            border-radius: 8px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-        
-        .status-message.info {
-            background: rgba(33, 150, 243, 0.1);
-            color: #1976d2;
-            border: 1px solid rgba(33, 150, 243, 0.3);
-        }
-        
-        .status-message.success {
-            background: rgba(76, 175, 80, 0.1);
-            color: #388e3c;
-            border: 1px solid rgba(76, 175, 80, 0.3);
-        }
-        
-        .status-message.error {
-            background: rgba(244, 67, 54, 0.1);
-            color: #d32f2f;
-            border: 1px solid rgba(244, 67, 54, 0.3);
-        }
-        
-        .progress-container {
-            margin: 20px 0;
-            background: rgba(0,0,0,0.1);
-            border-radius: 8px;
-            overflow: hidden;
-            height: 8px;
-            position: relative;
-        }
-        
-        .progress-bar {
+
+        html, body {
+            width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, #4CAF50, #45a049);
-            width: 0%;
-            transition: width 0.3s ease;
-            border-radius: 8px;
+            overflow: hidden;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0c0c1e 0%, #1a1a2e 50%, #16213e 100%);
+            color: var(--text-primary);
         }
-        
-        .connection-stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin: 20px 0;
-        }
-        
-        .stat-card {
-            background: rgba(255,255,255,0.6);
-            padding: 16px;
-            border-radius: 8px;
-            text-align: center;
-            border: 1px solid rgba(255,255,255,0.3);
-        }
-        
-        .stat-value {
-            font-size: 24px;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 4px;
-        }
-        
-        .stat-label {
-            font-size: 12px;
-            color: #666;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .retry-info {
-            background: rgba(255, 193, 7, 0.1);
-            border: 1px solid rgba(255, 193, 7, 0.3);
-            color: #f57c00;
-            padding: 12px;
-            border-radius: 8px;
-            margin: 16px 0;
-            font-size: 14px;
-        }
-        
-        .system-status {
-            margin: 24px 0;
-            padding: 20px;
-            background: rgba(255,255,255,0.6);
-            border-radius: 8px;
-            border: 1px solid rgba(255,255,255,0.3);
-        }
-        
-        .system-status h3 {
-            margin: 0 0 16px 0;
-            color: #333;
-            font-size: 16px;
-            font-weight: 600;
-        }
-        
-        .service-status {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 8px 0;
-            padding: 8px;
-            background: rgba(255,255,255,0.4);
-            border-radius: 6px;
-        }
-        
-        .service-name {
-            font-weight: 500;
-            color: #333;
-        }
-        
-        .service-indicator {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #4caf50;
-        }
-        
-        .service-indicator.warning {
-            background: #ff9800;
-        }
-        
-        .service-indicator.error {
-            background: #f44336;
-        }
-        
-        /* VNC Container Styles */
-        #noVNC_container {
+
+        .desktop-viewport {
             position: absolute;
             top: 0;
             left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .desktop-viewport canvas {
+            background: #000;
+            border-radius: 0;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+            cursor: none;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+        }
+
+        .glass-ui {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-ui.visible {
+            opacity: 1;
+        }
+
+        .top-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: linear-gradient(180deg, 
+                rgba(15, 15, 30, 0.9) 0%, 
+                rgba(15, 15, 30, 0.7) 70%,
+                transparent 100%);
+            backdrop-filter: blur(20px) saturate(1.5);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            pointer-events: auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 18px;
+            letter-spacing: -0.025em;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+        }
+
+        .connection-status {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--error);
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.connected {
+            background: var(--success);
+            animation: none;
+        }
+
+        .status-dot.connecting {
+            background: var(--warning);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .bottom-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: linear-gradient(0deg, 
+                rgba(15, 15, 30, 0.9) 0%, 
+                rgba(15, 15, 30, 0.7) 70%,
+                transparent 100%);
+            backdrop-filter: blur(20px) saturate(1.5);
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 24px;
+            pointer-events: auto;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 8px;
+            backdrop-filter: blur(20px);
+        }
+
+        .glass-btn {
+            padding: 12px 24px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
             width: 100%;
             height: 100%;
-            background: #000000 !important;
-            overflow: hidden !important;
-            display: none;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.6s;
         }
-        
-        #noVNC_container.connected {
-            display: block !important;
+
+        .glass-btn:hover {
+            background: var(--glass-hover);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
         }
-        
-        #noVNC_container canvas {
-            position: absolute !important;
-            top: 0 !important;
-            left: 0 !important;
-            width: 100% !important;
-            height: 100% !important;
-            object-fit: fill !important;
+
+        .glass-btn:hover::before {
+            left: 100%;
         }
-        
-        /* Control Panel */
-        .control-panel {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 16px;
-            border-radius: 8px;
-            z-index: 9999;
-            display: none;
-            min-width: 200px;
+
+        .glass-btn:active {
+            transform: translateY(0);
         }
-        
-        .control-panel.connected {
-            display: block;
+
+        .glass-btn.primary {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-color: var(--accent-primary);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
         }
-        
-        .control-button {
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            padding: 8px 16px;
-            margin: 4px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            transition: all 0.2s ease;
+
+        .glass-btn.primary:hover {
+            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.4);
+            transform: translateY(-2px);
         }
-        
-        .control-button:hover {
-            background: rgba(255, 255, 255, 0.3);
+
+        .glass-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
         }
-        
-        .uptime-display {
+
+        .loading-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 100;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 40px;
+            backdrop-filter: blur(20px);
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .loading-spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 24px;
+        }
+
+        .loading-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .loading-text {
+            color: var(--text-secondary);
             font-size: 14px;
-            color: #ccc;
+            line-height: 1.5;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .floating-hint {
+            position: absolute;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            padding: 12px 24px;
+            backdrop-filter: blur(15px);
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            opacity: 0;
+            transition: all 0.3s ease;
+            pointer-events: none;
+            z-index: 2000;
+        }
+
+        .floating-hint.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(4px);
+        }
+
+        .error-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 16px;
+            padding: 24px;
+            backdrop-filter: blur(20px);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            display: none;
+        }
+
+        .error-title {
+            color: var(--error);
+            font-size: 18px;
+            font-weight: 600;
             margin-bottom: 8px;
         }
-        
-        /* Hide noVNC UI elements */
-        .noVNC_status, .noVNC_panel, .noVNC_logo, .noVNC_control_bar,
-        .noVNC_status_button, .noVNC_status_normal, .noVNC_status_error,
-        .noVNC_status_warn, .noVNC_button, .noVNC_connect_button,
-        .noVNC_status_bar, .noVNC_expander, .noVNC_resizer {
-            display: none !important;
+
+        .error-text {
+            color: var(--text-secondary);
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
-    <div class="connection-dashboard" id="dashboard">
-        <h1>🖥️ VNC Desktop</h1>
-        
-        <div class="status-message" id="statusMessage">
-            <span class="status-indicator connecting" id="statusIndicator"></span>
-            <span id="statusText">Ready to connect</span>
+    <!-- Main Desktop Viewport -->
+    <div class="desktop-viewport" id="viewport">
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="loading-spinner"></div>
+            <div class="loading-title">Remote Desktop Pro</div>
+            <div class="loading-text">Establishing secure connection to your desktop environment...</div>
         </div>
         
-        <div class="progress-container" id="progressContainer" style="display: none;">
-            <div class="progress-bar" id="progressBar"></div>
+        <div class="error-message" id="errorMessage">
+            <div class="error-title">Connection Failed</div>
+            <div class="error-text" id="errorText">Unable to connect to the desktop. Please try again.</div>
         </div>
-        
-        <div class="connection-stats" id="connectionStats" style="display: none;">
-            <div class="stat-card">
-                <div class="stat-value" id="attemptCount">0</div>
-                <div class="stat-label">Attempts</div>
+    </div>
+
+    <!-- Glass UI Overlay -->
+    <div class="glass-ui visible" id="glassUI">
+        <!-- Top Navigation Bar -->
+        <div class="top-bar">
+            <div class="logo">
+                <div class="logo-icon">R</div>
+                <span>Remote Desktop Pro</span>
             </div>
-            <div class="stat-card">
-                <div class="stat-value" id="uptime">00:00</div>
-                <div class="stat-label">Uptime</div>
+            
+            <div class="connection-status">
+                <div class="status-indicator">
+                    <div class="status-dot connecting" id="statusDot"></div>
+                    <span id="statusText">Ready to Connect</span>
+                </div>
             </div>
         </div>
-        
-        <div class="retry-info" id="retryInfo" style="display: none;">
-            <strong>Auto-Recovery Active:</strong><br>
-            <span id="retryText">Attempting reconnection...</span>
-        </div>
-        
-        <div>
-            <button class="connection-button" id="connectBtn">🚀 Connect</button>
-            <button class="connection-button disconnect" id="disconnectBtn" style="display: none;">🔌 Disconnect</button>
-        </div>
-        
-        <div class="system-status" id="systemStatus">
-            <h3>📊 System Health</h3>
-            <div class="service-status">
-                <span class="service-name">VNC Server</span>
-                <div class="service-indicator error" id="vncStatus"></div>
-            </div>
-            <div class="service-status">
-                <span class="service-name">WebSocket Proxy</span>
-                <div class="service-indicator error" id="proxyStatus"></div>
-            </div>
-            <div class="service-status">
-                <span class="service-name">Desktop Session</span>
-                <div class="service-indicator error" id="desktopStatus"></div>
+
+        <!-- Bottom Control Panel -->
+        <div class="bottom-controls">
+            <div class="control-group">
+                <button class="glass-btn primary" id="connectBtn">
+                    <span>🔗</span>
+                    <span id="connectBtnText">Connect</span>
+                </button>
+                <button class="glass-btn" id="mouseLockBtn">
+                    <span>🖱️</span>
+                    <span>Lock Mouse</span>
+                </button>
+                <button class="glass-btn" id="fullscreenBtn">
+                    <span>⛶</span>
+                    <span>Fullscreen</span>
+                </button>
+                <button class="glass-btn" id="disconnectBtn" disabled>
+                    <span>⏹️</span>
+                    <span>Disconnect</span>
+                </button>
             </div>
         </div>
     </div>
-    
-    <div id="noVNC_container"></div>
-    
-    <div class="control-panel" id="controlPanel">
-        <div class="uptime-display" id="uptimeDisplay">Uptime: 00:00:00</div>
-        <button class="control-button" id="fullscreenBtn">⛶ Fullscreen</button>
-        <button class="control-button" id="clipboardBtn">📋 Clipboard</button>
-        <button class="control-button" id="healthBtn">🏥 Health</button>
+
+    <!-- Floating Mouse Lock Hint -->
+    <div class="floating-hint" id="mouseLockHint">
+        Click desktop to capture mouse • Press ESC to release
     </div>
 
     <script type="module">
-        import RFB from './core/rfb.js';
+        // Import noVNC RFB module
+        import RFB from '/noVNC/core/rfb.js';
         
-        class PersistentVNCClient {
-            constructor() {
-                this.rfb = null;
-                this.connected = false;
-                this.connectionAttempts = 0;
-                this.maxAttempts = 999; // Ultimate persistence
-                this.baseDelay = 1000; // 1 second
-                this.maxDelay = 30000; // 30 seconds
-                this.connectionStartTime = null;
-                this.uptimeInterval = null;
-                this.healthCheckInterval = null;
-                this.sessionStartTime = null;
-                
-                this.initializeElements();
-                this.bindEvents();
-                this.startHealthChecks();
-                this.autoConnect();
-            }
-            
-            initializeElements() {
-                this.dashboard = document.getElementById('dashboard');
-                this.connectBtn = document.getElementById('connectBtn');
-                this.disconnectBtn = document.getElementById('disconnectBtn');
-                this.statusMessage = document.getElementById('statusMessage');
-                this.statusIndicator = document.getElementById('statusIndicator');
-                this.statusText = document.getElementById('statusText');
-                this.progressContainer = document.getElementById('progressContainer');
-                this.progressBar = document.getElementById('progressBar');
-                this.connectionStats = document.getElementById('connectionStats');
-                this.attemptCount = document.getElementById('attemptCount');
-                this.uptime = document.getElementById('uptime');
-                this.retryInfo = document.getElementById('retryInfo');
-                this.retryText = document.getElementById('retryText');
-                this.container = document.getElementById('noVNC_container');
-                this.controlPanel = document.getElementById('controlPanel');
-                this.uptimeDisplay = document.getElementById('uptimeDisplay');
-                
-                // System status elements
-                this.vncStatus = document.getElementById('vncStatus');
-                this.proxyStatus = document.getElementById('proxyStatus');
-                this.desktopStatus = document.getElementById('desktopStatus');
-            }
-            
-            bindEvents() {
-                this.connectBtn.addEventListener('click', () => this.connect());
-                this.disconnectBtn.addEventListener('click', () => this.disconnect());
-                
-                document.getElementById('fullscreenBtn').addEventListener('click', () => this.toggleFullscreen());
-                document.getElementById('clipboardBtn').addEventListener('click', () => this.showClipboard());
-                document.getElementById('healthBtn').addEventListener('click', () => this.showHealthReport());
-            }
-            
-            showStatus(message, type = 'info', showProgress = false) {
-                this.statusText.textContent = message;
-                this.statusMessage.className = `status-message ${type}`;
-                this.statusIndicator.className = `status-indicator ${type}`;
-                
-                this.progressContainer.style.display = showProgress ? 'block' : 'none';
-                if (showProgress) {
-                    const progress = Math.min((this.connectionAttempts / this.maxAttempts) * 100, 100);
-                    this.progressBar.style.width = `${progress}%`;
-                }
-            }
-            
-            updateConnectionStats() {
-                this.attemptCount.textContent = this.connectionAttempts;
-                
-                if (this.sessionStartTime) {
-                    const uptime = Date.now() - this.sessionStartTime;
-                    this.uptime.textContent = this.formatUptime(uptime);
-                    this.uptimeDisplay.textContent = `Uptime: ${this.formatUptime(uptime, true)}`;
-                }
-            }
-            
-            formatUptime(ms, detailed = false) {
-                const seconds = Math.floor(ms / 1000);
-                const minutes = Math.floor(seconds / 60);
-                const hours = Math.floor(minutes / 60);
-                
-                if (detailed) {
-                    return `${hours.toString().padStart(2, '0')}:${(minutes % 60).toString().padStart(2, '0')}:${(seconds % 60).toString().padStart(2, '0')}`;
-                } else {
-                    return `${minutes.toString().padStart(2, '0')}:${(seconds % 60).toString().padStart(2, '0')}`;
-                }
-            }
-            
-            async connect() {
-                if (this.connected) return;
-                
-                this.connectionAttempts++;
-                this.connectBtn.disabled = true;
-                this.connectionStats.style.display = 'grid';
-                
-                this.showStatus(`Attempting connection (${this.connectionAttempts}/${this.maxAttempts})...`, 'info', true);
-                
-                try {
-                    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-                    const wsUrl = `${protocol}//localhost:8080/websockify`;
-                    
-                    console.log(`[VNC] Connection attempt ${this.connectionAttempts}: ${wsUrl}`);
-                    
-                    this.rfb = new RFB(this.container, wsUrl, {
-                        credentials: {},
-                        focusOnClick: false,
-                        clipViewport: false,
-                        scaleViewport: true,
-                        resizeSession: false
-                    });
-                    
-                    this.setupRFBEvents();
-                    this.updateConnectionStats();
-                    
-                } catch (error) {
-                    console.error('[VNC] Connection error:', error);
-                    this.handleConnectionFailure(error.message);
-                }
-            }
-            
-            setupRFBEvents() {
-                this.rfb.addEventListener("connect", () => {
-                    console.log('[VNC] Connected successfully');
-                    this.handleConnectionSuccess();
-                });
-                
-                this.rfb.addEventListener("disconnect", (e) => {
-                    console.log('[VNC] Disconnected:', e.detail);
-                    this.handleDisconnection(e.detail);
-                });
-                
-                this.rfb.addEventListener("credentialsrequired", (e) => {
-                    console.log('[VNC] Credentials required:', e.detail);
-                    this.showStatus('No password required for this VNC server', 'info');
-                });
-                
-                this.rfb.addEventListener("securityfailure", (e) => {
-                    console.log('[VNC] Security failure:', e.detail);
-                    this.handleConnectionFailure(`Security failure: ${e.detail.reason}`);
-                });
-            }
-            
-            handleConnectionSuccess() {
-                this.connected = true;
-                this.sessionStartTime = Date.now();
-                this.connectionAttempts = 0; // Reset on successful connection
-                
-                this.dashboard.style.display = 'none';
-                this.container.classList.add('connected');
-                this.controlPanel.classList.add('connected');
-                
-                this.connectBtn.style.display = 'none';
-                this.disconnectBtn.style.display = 'inline-block';
-                
-                this.showStatus('Connected successfully! 🎉', 'success');
-                
-                // Start uptime tracking
-                this.startUptimeTracking();
-                
-                // Update service statuses
-                this.updateServiceStatus('vnc', 'connected');
-                this.updateServiceStatus('proxy', 'connected');
-                this.updateServiceStatus('desktop', 'connected');
-                
-                setTimeout(() => {
-                    this.optimizeDisplay();
-                }, 1000);
-            }
-            
-            handleConnectionFailure(reason) {
-                this.connectBtn.disabled = false;
-                
-                if (this.connectionAttempts >= this.maxAttempts) {
-                    this.showStatus(`Connection failed after ${this.maxAttempts} attempts: ${reason}`, 'error');
-                    this.retryInfo.style.display = 'none';
-                    return;
-                }
-                
-                // Calculate exponential backoff delay
-                const delay = Math.min(
-                    this.baseDelay * Math.pow(2, Math.min(this.connectionAttempts - 1, 5)),
-                    this.maxDelay
-                );
-                
-                this.showStatus(`Connection failed: ${reason}`, 'error', true);
-                this.retryInfo.style.display = 'block';
-                this.retryText.innerHTML = `Retrying in ${delay/1000}s... (Attempt ${this.connectionAttempts + 1}/${this.maxAttempts})<br><small>Progressive delay: ${delay/1000}s → max 30s</small>`;
-                
-                this.updateConnectionStats();
-                
-                // Schedule reconnection
-                setTimeout(() => {
-                    if (!this.connected) {
-                        this.connect();
-                    }
-                }, delay);
-            }
-            
-            handleDisconnection(detail) {
-                this.connected = false;
-                
-                this.dashboard.style.display = 'block';
-                this.container.classList.remove('connected');
-                this.controlPanel.classList.remove('connected');
-                
-                this.connectBtn.style.display = 'inline-block';
-                this.connectBtn.disabled = false;
-                this.disconnectBtn.style.display = 'none';
-                
-                this.stopUptimeTracking();
-                
-                if (detail.clean) {
-                    this.showStatus('Disconnected by user', 'info');
-                    this.retryInfo.style.display = 'none';
-                    this.connectionAttempts = 0; // Reset attempts on clean disconnect
-                } else {
-                    this.showStatus(`Connection lost: ${detail.reason || 'Unknown error'}`, 'error');
-                    // Auto-reconnect on unexpected disconnection
-                    setTimeout(() => this.connect(), 2000);
-                }
-                
-                this.updateServiceStatuses();
-            }
-            
-            disconnect() {
-                if (this.rfb) {
-                    this.rfb.disconnect();
-                }
-            }
-            
-            startUptimeTracking() {
-                this.uptimeInterval = setInterval(() => {
-                    this.updateConnectionStats();
-                }, 1000);
-            }
-            
-            stopUptimeTracking() {
-                if (this.uptimeInterval) {
-                    clearInterval(this.uptimeInterval);
-                    this.uptimeInterval = null;
-                }
-            }
-            
-            async startHealthChecks() {
-                this.healthCheckInterval = setInterval(async () => {
-                    await this.checkSystemHealth();
-                }, 5000); // Check every 5 seconds
-                
-                // Initial health check
-                setTimeout(() => this.checkSystemHealth(), 1000);
-            }
-            
-            async checkSystemHealth() {
-                try {
-                    // Check VNC server health
-                    const vncHealthy = await this.checkPort(5901);
-                    this.updateServiceStatus('vnc', vncHealthy ? 'connected' : 'error');
-                    
-                    // Check WebSocket proxy health
-                    const proxyHealthy = await this.checkPort(8080);
-                    this.updateServiceStatus('proxy', proxyHealthy ? 'connected' : 'error');
-                    
-                    // Desktop session health (simplified check)
-                    this.updateServiceStatus('desktop', this.connected ? 'connected' : 'warning');
-                    
-                } catch (error) {
-                    console.error('[Health] Check failed:', error);
-                }
-            }
-            
-            async checkPort(port) {
-                try {
-                    const response = await fetch(`http://localhost:${port}`, {
-                        method: 'HEAD',
-                        timeout: 2000
-                    });
-                    return response.ok || response.status < 500;
-                } catch (error) {
-                    return false;
-                }
-            }
-            
-            updateServiceStatus(service, status) {
-                const statusElement = document.getElementById(`${service}Status`);
-                if (statusElement) {
-                    statusElement.className = `service-indicator ${status}`;
-                }
-            }
-            
-            updateServiceStatuses() {
-                // Update all service statuses when disconnected
-                this.updateServiceStatus('vnc', 'error');
-                this.updateServiceStatus('proxy', 'warning');
-                this.updateServiceStatus('desktop', 'error');
-            }
-            
-            optimizeDisplay() {
-                if (this.rfb && this.connected) {
-                    const canvas = this.container.querySelector('canvas');
-                    if (canvas) {
-                        canvas.style.width = '100%';
-                        canvas.style.height = '100%';
-                        canvas.style.display = 'block';
-                        console.log('[VNC] Display optimized');
-                    }
-                }
-            }
-            
-            toggleFullscreen() {
-                if (document.fullscreenElement) {
-                    document.exitFullscreen();
-                } else {
-                    document.documentElement.requestFullscreen();
-                }
-            }
-            
-            showClipboard() {
-                // Implement clipboard functionality
-                console.log('[VNC] Clipboard feature not yet implemented');
-            }
-            
-            showHealthReport() {
-                const report = {
-                    connectionAttempts: this.connectionAttempts,
-                    connected: this.connected,
-                    uptime: this.sessionStartTime ? Date.now() - this.sessionStartTime : 0,
-                    maxAttempts: this.maxAttempts
-                };
-                
-                alert(`🏥 Health Report\\n\\nConnection Attempts: ${report.connectionAttempts}\\nConnected: ${report.connected}\\nUptime: ${this.formatUptime(report.uptime, true)}\\nMax Attempts: ${report.maxAttempts}`);
-            }
-            
-            autoConnect() {
-                // Auto-connect after page load
-                console.log('[VNC] Auto-connecting in 2 seconds...');
-                setTimeout(() => {
-                    this.connect();
-                }, 2000);
+        // Global state
+        let rfb = null;
+        let isConnected = false;
+        let isPointerLocked = false;
+        let canvas = null;
+        let reconnectAttempts = 0;
+        let maxReconnectAttempts = 5;
+        
+        // UI Elements
+        const viewport = document.getElementById('viewport');
+        const glassUI = document.getElementById('glassUI');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const errorMessage = document.getElementById('errorMessage');
+        const statusDot = document.getElementById('statusDot');
+        const statusText = document.getElementById('statusText');
+        const connectBtn = document.getElementById('connectBtn');
+        const connectBtnText = document.getElementById('connectBtnText');
+        const mouseLockBtn = document.getElementById('mouseLockBtn');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const disconnectBtn = document.getElementById('disconnectBtn');
+        const mouseLockHint = document.getElementById('mouseLockHint');
+
+        // Auto-show/hide UI
+        let uiTimeout;
+        let isUIVisible = true;
+
+        function showUI() {
+            glassUI.classList.add('visible');
+            isUIVisible = true;
+            clearTimeout(uiTimeout);
+            uiTimeout = setTimeout(hideUI, 4000);
+        }
+
+        function hideUI() {
+            if (!glassUI.matches(':hover') && isConnected) {
+                glassUI.classList.remove('visible');
+                isUIVisible = false;
             }
         }
-        
-        // Initialize the persistent VNC client
-        window.addEventListener('load', () => {
-            new PersistentVNCClient();
+
+        // Event listeners for UI visibility
+        document.addEventListener('mousemove', showUI);
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (isPointerLocked) {
+                    document.exitPointerLock();
+                } else {
+                    showUI();
+                }
+            }
         });
+
+        function updateStatus(message, state = 'connecting') {
+            statusText.textContent = message;
+            statusDot.className = `status-dot ${state}`;
+        }
+
+        function showError(message) {
+            errorMessage.style.display = 'block';
+            loadingOverlay.style.display = 'none';
+            document.getElementById('errorText').textContent = message;
+            connectBtn.disabled = false;
+            connectBtnText.textContent = 'Retry Connection';
+        }
+
+        function hideError() {
+            errorMessage.style.display = 'none';
+        }
+
+        // Global error handler to catch any unhandled JavaScript errors
+        window.addEventListener('error', function(e) {
+            console.error('🚨 Global JavaScript Error:', {
+                message: e.message,
+                filename: e.filename,
+                lineno: e.lineno,
+                colno: e.colno,
+                error: e.error,
+                timeFromStart: connectionStartTime ? (Date.now() - connectionStartTime) : 'N/A'
+            });
+            
+            if (isConnected && connectionStartTime && (Date.now() - connectionStartTime) < 5000) {
+                console.error('🚨 ERROR DURING EARLY CONNECTION - This might be causing disconnect!');
+            }
+        });
+
+        // Unhandled promise rejection handler
+        window.addEventListener('unhandledrejection', function(e) {
+            console.error('🚨 Unhandled Promise Rejection:', {
+                reason: e.reason,
+                promise: e.promise,
+                timeFromStart: connectionStartTime ? (Date.now() - connectionStartTime) : 'N/A'
+            });
+            
+            if (isConnected && connectionStartTime && (Date.now() - connectionStartTime) < 5000) {
+                console.error('🚨 PROMISE REJECTION DURING EARLY CONNECTION - This might be causing disconnect!');
+            }
+        });
+
+        function connectToDesktop() {
+            if (isConnected) return;
+            
+            hideError();
+            loadingOverlay.style.display = 'block';
+            connectBtn.disabled = true;
+            connectBtnText.textContent = 'Connecting...';
+            updateStatus('Establishing connection...', 'connecting');
+            
+            // Track connection start time for debugging
+            const connectionStartTime = Date.now();
+            
+            try {
+                // RFB is imported as ES6 module at the top
+                console.log('🚀 Starting VNC connection at', new Date().toISOString());
+                console.log('📋 RFB module loaded successfully via ES6 import');
+                
+                // Clear viewport
+                const canvasElements = viewport.querySelectorAll('canvas');
+                canvasElements.forEach(c => c.remove());
+                console.log('🧹 Cleared', canvasElements.length, 'existing canvas elements');
+                
+                // Create WebSocket connection - use same port as web server with /websocket path
+                let wsUrl;
+                if (window.location.hostname.includes('github') || window.location.hostname.includes('codespaces')) {
+                    // GitHub Codespaces - use WebSocket on same port as web server
+                    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+                    wsUrl = window.location.origin.replace('https://', 'wss://').replace('http://', 'ws://') + '/websocket';
+                    console.log('🌐 GitHub Codespaces detected, using WebSocket:', wsUrl);
+                } else {
+                    // Local development - use WebSocket on same port as web server
+                    wsUrl = `ws://localhost:8080/websocket`;
+                    console.log('🏠 Local environment, using WebSocket:', wsUrl);
+                }
+                console.log('🔗 Connecting to WebSocket:', wsUrl);
+                console.log('🌐 Window location:', window.location.href);
+                
+                const rfbOptions = {
+                    credentials: {},
+                    focusOnClick: true,
+                    clipViewport: true,
+                    scaleViewport: true,
+                    resizeSession: false,
+                    viewOnly: false,
+                    showDotCursor: false,
+                    shared: true
+                };
+                console.log('⚙️ RFB Options:', rfbOptions);
+                
+                rfb = new RFB(viewport, wsUrl, rfbOptions);
+                console.log('🔧 RFB instance created successfully');
+
+                // Connection successful
+                rfb.addEventListener('connect', function() {
+                    const connectTime = Date.now() - connectionStartTime;
+                    console.log('✅ VNC Connection Established in', connectTime, 'ms');
+                    console.log('📺 Viewport element:', viewport);
+                    
+                    isConnected = true;
+                    reconnectAttempts = 0;
+                    
+                    loadingOverlay.style.display = 'none';
+                    updateStatus('Connected • Desktop Ready', 'connected');
+                    
+                    connectBtn.disabled = true;
+                    connectBtnText.textContent = 'Connected';
+                    disconnectBtn.disabled = false;
+                    
+                    // Wait a moment for canvas to be created
+                    setTimeout(() => {
+                        canvas = viewport.querySelector('canvas');
+                        console.log('🎨 Canvas found:', canvas ? 'YES' : 'NO');
+                        if (canvas) {
+                            console.log('🎨 Canvas size:', canvas.width + 'x' + canvas.height);
+                            setupCanvas();
+                        } else {
+                            console.warn('⚠️ No canvas element found in viewport');
+                        }
+                    }, 100);
+                    
+                    // Auto-hide UI after connection
+                    setTimeout(hideUI, 3000);
+                });
+
+                // Connection lost
+                rfb.addEventListener('disconnect', function(e) {
+                    const timeConnected = Date.now() - connectionStartTime;
+                    
+                    console.error('❌ VNC Disconnected:', e.detail);
+                    console.error('❌ Disconnect reason:', e.detail.reason || 'Unknown');
+                    console.error('❌ Clean disconnect:', e.detail.clean);
+                    console.error('❌ Connection time before disconnect:', timeConnected, 'ms');
+                    
+                    isConnected = false;
+                    isPointerLocked = false;
+                    
+                    // Create detailed error message for display
+                    let errorMsg = 'Connection lost after ' + Math.round(timeConnected/1000) + ' seconds';
+                    let debugInfo = '';
+                    
+                    if (e.detail && e.detail.reason) {
+                        errorMsg += ': ' + e.detail.reason;
+                        debugInfo += 'Reason: ' + e.detail.reason + '\n';
+                    }
+                    
+                    // Add debug information
+                    debugInfo += 'Time connected: ' + timeConnected + 'ms\n';
+                    debugInfo += 'Clean disconnect: ' + (e.detail ? e.detail.clean : 'unknown') + '\n';
+                    debugInfo += 'Canvas exists: ' + (!!viewport.querySelector('canvas')) + '\n';
+                    debugInfo += 'Viewport children: ' + viewport.children.length + '\n';
+                    
+                    // Check for quick disconnects (potential errors)
+                    if (timeConnected < 5000 && timeConnected > 1000) {
+                        errorMsg = '⚠️ RAPID DISCONNECT DETECTED! Connection lasted only ' + Math.round(timeConnected/1000) + ' seconds';
+                        debugInfo += '\n🚨 This appears to be the mysterious disconnect issue!\n';
+                        debugInfo += 'Possible causes:\n';
+                        debugInfo += '- Browser security restrictions\n';
+                        debugInfo += '- VNC protocol negotiation failure\n';
+                        debugInfo += '- WebSocket timeout\n';
+                        debugInfo += '- Canvas rendering error\n';
+                        
+                        // Show detailed debug info in the error message
+                        const debugDiv = document.createElement('div');
+                        debugDiv.style.cssText = `
+                            margin-top: 10px;
+                            padding: 10px;
+                            background: rgba(255,255,255,0.1);
+                            border-radius: 5px;
+                            font-family: monospace;
+                            font-size: 12px;
+                            white-space: pre-wrap;
+                            max-height: 200px;
+                            overflow-y: auto;
+                        `;
+                        debugDiv.textContent = debugInfo;
+                        
+                        const errorTextElement = document.getElementById('errorText');
+                        if (errorTextElement) {
+                            errorTextElement.innerHTML = '';
+                            errorTextElement.appendChild(document.createTextNode(errorMsg));
+                            errorTextElement.appendChild(debugDiv);
+                        }
+                        
+                        // Try a different approach - maybe the issue is with the client configuration
+                        showError('Debug info shown above. Try refreshing the page or using a different browser.');
+                        updateStatus('Connection Error - See Details Above', 'error');
+                        connectBtn.disabled = false;
+                        connectBtnText.textContent = 'Try Again';
+                        disconnectBtn.disabled = true;
+                        return; // Don't auto-retry rapid disconnects
+                    }
+                    
+                    if (reconnectAttempts < maxReconnectAttempts) {
+                        updateStatus(`Reconnecting... (${reconnectAttempts + 1}/${maxReconnectAttempts})`, 'connecting');
+                        setTimeout(function() {
+                            reconnectAttempts++;
+                            connectToDesktop();
+                        }, 2000 * reconnectAttempts);
+                    } else {
+                        showError(errorMsg + '. Maximum retry attempts reached.');
+                        updateStatus('Disconnected', 'error');
+                        connectBtn.disabled = false;
+                        connectBtnText.textContent = 'Reconnect';
+                        disconnectBtn.disabled = true;
+                    }
+                });
+
+                // Security failure
+                rfb.addEventListener('securityfailure', function(e) {
+                    console.error('🔒 Security failure:', e.detail);
+                    showError('Authentication failed: ' + e.detail.reason);
+                    updateStatus('Security Error', 'error');
+                });
+
+                // Desktop resize
+                rfb.addEventListener('desktopsize', function(e) {
+                    console.log('📐 Desktop resized:', e.detail);
+                    if (canvas) {
+                        setTimeout(calculateCanvasTransform, 100);
+                    }
+                });
+
+                // Monitor for any RFB internal errors or state changes
+                rfb.addEventListener('credentialsrequired', function(e) {
+                    console.log('🔐 Credentials required:', e.detail);
+                });
+
+                rfb.addEventListener('clipboard', function(e) {
+                    console.log('📋 Clipboard event:', e.detail);
+                });
+
+                rfb.addEventListener('desktopname', function(e) {
+                    console.log('🖥️ Desktop name:', e.detail.name);
+                });
+
+                rfb.addEventListener('capabilities', function(e) {
+                    console.log('⚙️ Server capabilities:', e.detail);
+                });
+
+                // Bell notification
+                rfb.addEventListener('bell', function() {
+                    console.log('🔔 Bell received');
+                });
+
+                // Capabilities
+                rfb.addEventListener('capabilities', function(e) {
+                    console.log('🔧 Server capabilities:', e.detail);
+                });
+
+                // Clipboard sync
+                rfb.addEventListener('clipboard', function(e) {
+                    if (navigator.clipboard) {
+                        navigator.clipboard.writeText(e.detail.text).catch(console.warn);
+                    }
+                });
+
+            } catch (error) {
+                console.error('💥 Connection failed:', error);
+                showError(`Failed to connect: ${error.message}`);
+                updateStatus('Connection Error', 'error');
+                connectBtn.disabled = false;
+                connectBtnText.textContent = 'Retry Connection';
+            }
+        }
+
+        function setupCanvas() {
+            if (!canvas) return;
+            
+            canvas.style.cursor = 'none';
+            calculateCanvasTransform();
+            
+            // Click to lock mouse
+            canvas.addEventListener('click', requestPointerLock);
+            
+            // Mouse movement handling
+            canvas.addEventListener('mousemove', handleMouseMove);
+            canvas.addEventListener('mousedown', handleMouseEvent);
+            canvas.addEventListener('mouseup', handleMouseEvent);
+            canvas.addEventListener('wheel', handleWheelEvent);
+        }
+
+        function calculateCanvasTransform() {
+            if (!canvas) return;
+            
+            const rect = viewport.getBoundingClientRect();
+            const scale = Math.min(
+                rect.width / canvas.width,
+                rect.height / canvas.height,
+                1.0
+            );
+            
+            const scaledWidth = canvas.width * scale;
+            const scaledHeight = canvas.height * scale;
+            
+            canvas.style.width = scaledWidth + 'px';
+            canvas.style.height = scaledHeight + 'px';
+            canvas.style.position = 'absolute';
+            canvas.style.left = ((rect.width - scaledWidth) / 2) + 'px';
+            canvas.style.top = ((rect.height - scaledHeight) / 2) + 'px';
+            
+            console.log(`🖼️ Canvas: ${canvas.width}x${canvas.height}, Scale: ${scale.toFixed(3)}`);
+            // Sync noVNC display scale so clientToElement -> absX/absY mapping is correct
+            if (typeof rfb !== 'undefined' && rfb && rfb._display) {
+                try { rfb._display.scale = scale; } catch (err) { console.warn('Failed to set display scale', err); }
+            }
+        }
+
+        function transformMouseCoordinates(clientX, clientY) {
+            if (!canvas) return { x: 0, y: 0 };
+            
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            
+            return {
+                x: (clientX - rect.left) * scaleX,
+                y: (clientY - rect.top) * scaleY
+            };
+        }
+
+        function handleMouseMove(e) {
+            if (!rfb || !isConnected) return;
+            
+            if (isPointerLocked) {
+                // Use movement deltas for locked mode
+                rfb.sendPointerEvent(e.movementX, e.movementY, 0, true);
+            } else {
+                const coords = transformMouseCoordinates(e.clientX, e.clientY);
+                rfb.sendPointerEvent(coords.x, coords.y, 0);
+            }
+        }
+
+        function handleMouseEvent(e) {
+            if (!rfb || !isConnected) return;
+            
+            const coords = transformMouseCoordinates(e.clientX, e.clientY);
+            let buttons = 0;
+            
+            if (e.buttons & 1) buttons |= 1; // Left
+            if (e.buttons & 2) buttons |= 4; // Right
+            if (e.buttons & 4) buttons |= 2; // Middle
+            
+            rfb.sendPointerEvent(coords.x, coords.y, buttons);
+        }
+
+        function handleWheelEvent(e) {
+            if (!rfb || !isConnected) return;
+            
+            e.preventDefault();
+            const coords = transformMouseCoordinates(e.clientX, e.clientY);
+            
+            // Convert wheel delta to button clicks
+            if (e.deltaY > 0) {
+                rfb.sendPointerEvent(coords.x, coords.y, 16); // Wheel down
+                rfb.sendPointerEvent(coords.x, coords.y, 0);
+            } else if (e.deltaY < 0) {
+                rfb.sendPointerEvent(coords.x, coords.y, 8); // Wheel up
+                rfb.sendPointerEvent(coords.x, coords.y, 0);
+            }
+        }
+
+        function requestPointerLock() {
+            if (!canvas || !isConnected) return;
+            
+            const lockRequest = canvas.requestPointerLock || 
+                               canvas.mozRequestPointerLock || 
+                               canvas.webkitRequestPointerLock;
+            
+            if (lockRequest) {
+                lockRequest.call(canvas);
+                mouseLockHint.classList.add('show');
+                setTimeout(function() {
+                    mouseLockHint.classList.remove('show');
+                }, 3000);
+            }
+        }
+
+        function disconnect() {
+            if (rfb && isConnected) {
+                rfb.disconnect();
+            }
+        }
+
+        function toggleFullscreen() {
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            } else {
+                document.documentElement.requestFullscreen();
+            }
+        }
+
+        // Pointer lock event handlers
+        document.addEventListener('pointerlockchange', function() {
+            isPointerLocked = document.pointerLockElement === canvas;
+            mouseLockBtn.innerHTML = isPointerLocked ? 
+                '<span>🔓</span><span>Unlock Mouse</span>' : 
+                '<span>🖱️</span><span>Lock Mouse</span>';
+        });
+
+        // Window resize handler
+        window.addEventListener('resize', function() {
+            if (canvas) {
+                setTimeout(calculateCanvasTransform, 100);
+            }
+        });
+
+        // Button event listeners
+        connectBtn.addEventListener('click', connectToDesktop);
+        mouseLockBtn.addEventListener('click', requestPointerLock);
+        fullscreenBtn.addEventListener('click', toggleFullscreen);
+        disconnectBtn.addEventListener('click', disconnect);
+
+        // Initialize
+        updateStatus('Ready to Connect', 'connecting');
+        showUI();
+        
+        // Wait for page to load, then auto-connect
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                console.log('Page fully loaded, RFB available via ES6 import');
+                if (!isConnected) {
+                    connectToDesktop();
+                }
+            }, 1000);
+        });
+
     </script>
 </body>
 </html>

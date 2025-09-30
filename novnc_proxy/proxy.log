@@ -1,0 +1,553 @@
+[2025-09-09T19:02:22.194Z] [INFO] [novnc-proxy] Ultimate Persistent VNC Proxy listening on port 8080, forwarding to 127.0.0.1:5901
+[2025-09-09T19:02:22.195Z] [INFO] [novnc-proxy] Health endpoint available at /health
+[2025-09-09T19:02:22.195Z] [INFO] [novnc-proxy] Statistics endpoint available at /stats
+[2025-09-09T19:03:11.156Z] [HTTP] [novnc-proxy] GET /vnc.html {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:12.508Z] [HTTP] [novnc-proxy] GET /noVNC/core/rfb.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:12.695Z] [HTTP] [novnc-proxy] GET /noVNC/core/input/gesturehandler.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:12.729Z] [HTTP] [novnc-proxy] GET /noVNC/core/input/keyboard.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:12.752Z] [HTTP] [novnc-proxy] GET /noVNC/core/util/element.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:12.801Z] [HTTP] [novnc-proxy] GET /noVNC/core/deflator.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:12.802Z] [HTTP] [novnc-proxy] GET /noVNC/core/decoders/hextile.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:12.869Z] [HTTP] [novnc-proxy] GET /noVNC/core/decoders/rre.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:12.893Z] [HTTP] [novnc-proxy] GET /noVNC/core/input/xtscancodes.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:12.945Z] [HTTP] [novnc-proxy] GET /noVNC/core/input/util.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:12.999Z] [HTTP] [novnc-proxy] GET /noVNC/core/decoders/copyrect.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:13.192Z] [HTTP] [novnc-proxy] GET /noVNC/core/input/fixedkeys.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:13.195Z] [HTTP] [novnc-proxy] GET /noVNC/core/input/domkeytable.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:13.648Z] [HTTP] [novnc-proxy] GET /noVNC/core/input/keysymdef.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:13.708Z] [HTTP] [novnc-proxy] GET /noVNC/core/decoders/zrle.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:13.739Z] [HTTP] [novnc-proxy] GET /noVNC/vendor/pako/lib/zlib/zstream.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:13.750Z] [HTTP] [novnc-proxy] GET /noVNC/core/util/md5.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:13.768Z] [HTTP] [novnc-proxy] GET /noVNC/core/des.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:13.835Z] [HTTP] [novnc-proxy] GET /noVNC/core/ra2.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:13.845Z] [HTTP] [novnc-proxy] GET /noVNC/core/util/strings.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:13.852Z] [HTTP] [novnc-proxy] GET /noVNC/core/display.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:13.904Z] [HTTP] [novnc-proxy] GET /noVNC/core/util/browser.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:13.929Z] [HTTP] [novnc-proxy] GET /noVNC/core/util/eventtarget.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:13.937Z] [HTTP] [novnc-proxy] GET /noVNC/core/encodings.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:13.950Z] [HTTP] [novnc-proxy] GET /noVNC/core/decoders/jpeg.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:13.978Z] [HTTP] [novnc-proxy] GET /noVNC/vendor/pako/lib/zlib/deflate.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:13.982Z] [HTTP] [novnc-proxy] GET /noVNC/core/util/logging.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:13.984Z] [HTTP] [novnc-proxy] GET /noVNC/core/input/keysym.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:14.002Z] [HTTP] [novnc-proxy] GET /noVNC/core/util/int.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:14.007Z] [HTTP] [novnc-proxy] GET /noVNC/core/input/vkeys.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:14.014Z] [HTTP] [novnc-proxy] GET /noVNC/core/decoders/tightpng.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:14.026Z] [HTTP] [novnc-proxy] GET /noVNC/core/util/events.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:14.033Z] [HTTP] [novnc-proxy] GET /noVNC/core/util/cursor.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:14.038Z] [HTTP] [novnc-proxy] GET /noVNC/core/decoders/raw.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:14.047Z] [HTTP] [novnc-proxy] GET /noVNC/core/websock.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:14.059Z] [HTTP] [novnc-proxy] GET /noVNC/core/decoders/tight.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:14.061Z] [HTTP] [novnc-proxy] GET /noVNC/core/inflator.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:14.091Z] [HTTP] [novnc-proxy] GET /noVNC/core/base64.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:14.120Z] [HTTP] [novnc-proxy] GET /noVNC/vendor/pako/lib/zlib/inflate.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:14.124Z] [HTTP] [novnc-proxy] GET /noVNC/vendor/pako/lib/utils/common.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:14.127Z] [HTTP] [novnc-proxy] GET /noVNC/vendor/pako/lib/zlib/trees.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:14.130Z] [HTTP] [novnc-proxy] GET /noVNC/vendor/pako/lib/zlib/adler32.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:14.133Z] [HTTP] [novnc-proxy] GET /noVNC/vendor/pako/lib/zlib/crc32.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:14.135Z] [HTTP] [novnc-proxy] GET /noVNC/vendor/pako/lib/zlib/messages.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:14.196Z] [HTTP] [novnc-proxy] GET /noVNC/vendor/pako/lib/zlib/inffast.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:14.199Z] [HTTP] [novnc-proxy] GET /noVNC/vendor/pako/lib/zlib/inftrees.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:03:22.190Z] [INFO] [novnc-proxy] Server stats: uptime=1m, active_connections=0, total_connections=0, reconnect_attempts=0, vnc_healthy=true
+[2025-09-09T19:04:22.191Z] [INFO] [novnc-proxy] Server stats: uptime=2m, active_connections=0, total_connections=0, reconnect_attempts=0, vnc_healthy=true
+[2025-09-09T19:04:52.745Z] [HTTP] [novnc-proxy] GET /vnc.html {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:54.912Z] [HTTP] [novnc-proxy] GET /noVNC/core/rfb.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:55.372Z] [HTTP] [novnc-proxy] GET /noVNC/core/display.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:55.390Z] [HTTP] [novnc-proxy] GET /noVNC/core/inflator.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:55.396Z] [HTTP] [novnc-proxy] GET /noVNC/core/encodings.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:55.408Z] [HTTP] [novnc-proxy] GET /noVNC/core/input/xtscancodes.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:55.421Z] [HTTP] [novnc-proxy] GET /noVNC/core/decoders/zrle.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:55.423Z] [HTTP] [novnc-proxy] GET /noVNC/core/decoders/tightpng.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:55.615Z] [HTTP] [novnc-proxy] GET /noVNC/vendor/pako/lib/zlib/zstream.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:55.619Z] [HTTP] [novnc-proxy] GET /noVNC/core/util/browser.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:55.622Z] [HTTP] [novnc-proxy] GET /noVNC/core/util/cursor.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:55.624Z] [HTTP] [novnc-proxy] GET /noVNC/core/decoders/copyrect.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:55.630Z] [HTTP] [novnc-proxy] GET /noVNC/core/util/eventtarget.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:55.633Z] [HTTP] [novnc-proxy] GET /noVNC/core/decoders/tight.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:55.649Z] [HTTP] [novnc-proxy] GET /noVNC/core/input/keysym.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:55.660Z] [HTTP] [novnc-proxy] GET /noVNC/core/util/element.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:55.663Z] [HTTP] [novnc-proxy] GET /noVNC/core/decoders/rre.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:55.680Z] [HTTP] [novnc-proxy] GET /noVNC/core/input/keyboard.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:55.684Z] [HTTP] [novnc-proxy] GET /noVNC/core/util/md5.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:55.691Z] [HTTP] [novnc-proxy] GET /noVNC/core/base64.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:55.695Z] [HTTP] [novnc-proxy] GET /noVNC/core/decoders/jpeg.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:55.701Z] [HTTP] [novnc-proxy] GET /noVNC/core/util/int.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:55.715Z] [HTTP] [novnc-proxy] GET /noVNC/core/ra2.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:55.733Z] [HTTP] [novnc-proxy] GET /noVNC/core/decoders/hextile.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:55.737Z] [HTTP] [novnc-proxy] GET /noVNC/core/util/events.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:55.741Z] [HTTP] [novnc-proxy] GET /noVNC/core/des.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:55.800Z] [HTTP] [novnc-proxy] GET /noVNC/core/input/gesturehandler.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:55.803Z] [HTTP] [novnc-proxy] GET /noVNC/core/decoders/raw.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:55.832Z] [HTTP] [novnc-proxy] GET /noVNC/core/util/logging.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:55.848Z] [HTTP] [novnc-proxy] GET /noVNC/core/websock.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:55.854Z] [HTTP] [novnc-proxy] GET /noVNC/core/util/strings.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:55.870Z] [HTTP] [novnc-proxy] GET /noVNC/core/deflator.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:55.879Z] [HTTP] [novnc-proxy] GET /noVNC/core/input/util.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:55.939Z] [HTTP] [novnc-proxy] GET /noVNC/vendor/pako/lib/zlib/inflate.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:55.975Z] [HTTP] [novnc-proxy] GET /noVNC/vendor/pako/lib/zlib/deflate.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:55.988Z] [HTTP] [novnc-proxy] GET /noVNC/core/input/keysymdef.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:55.991Z] [HTTP] [novnc-proxy] GET /noVNC/core/input/fixedkeys.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:55.994Z] [HTTP] [novnc-proxy] GET /noVNC/core/input/domkeytable.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:55.996Z] [HTTP] [novnc-proxy] GET /noVNC/core/input/vkeys.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:56.054Z] [HTTP] [novnc-proxy] GET /noVNC/vendor/pako/lib/zlib/adler32.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:56.058Z] [HTTP] [novnc-proxy] GET /noVNC/vendor/pako/lib/zlib/crc32.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:56.061Z] [HTTP] [novnc-proxy] GET /noVNC/vendor/pako/lib/zlib/inftrees.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:56.063Z] [HTTP] [novnc-proxy] GET /noVNC/vendor/pako/lib/zlib/inffast.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:56.076Z] [HTTP] [novnc-proxy] GET /noVNC/vendor/pako/lib/utils/common.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:56.087Z] [HTTP] [novnc-proxy] GET /noVNC/vendor/pako/lib/zlib/trees.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:04:56.090Z] [HTTP] [novnc-proxy] GET /noVNC/vendor/pako/lib/zlib/messages.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:05:22.192Z] [INFO] [novnc-proxy] Server stats: uptime=3m, active_connections=0, total_connections=0, reconnect_attempts=0, vnc_healthy=true
+[2025-09-09T19:06:22.193Z] [INFO] [novnc-proxy] Server stats: uptime=4m, active_connections=0, total_connections=0, reconnect_attempts=0, vnc_healthy=true
+[2025-09-09T19:07:22.194Z] [INFO] [novnc-proxy] Server stats: uptime=5m, active_connections=0, total_connections=0, reconnect_attempts=0, vnc_healthy=true
+[2025-09-09T19:08:22.197Z] [INFO] [novnc-proxy] Server stats: uptime=6m, active_connections=0, total_connections=0, reconnect_attempts=0, vnc_healthy=true
+[2025-09-09T19:09:22.199Z] [INFO] [novnc-proxy] Server stats: uptime=7m, active_connections=0, total_connections=0, reconnect_attempts=0, vnc_healthy=true
+[2025-09-09T19:10:22.199Z] [INFO] [novnc-proxy] Server stats: uptime=8m, active_connections=0, total_connections=0, reconnect_attempts=0, vnc_healthy=true
+[2025-09-09T19:11:22.201Z] [INFO] [novnc-proxy] Server stats: uptime=9m, active_connections=0, total_connections=0, reconnect_attempts=0, vnc_healthy=true
+[2025-09-09T19:12:22.203Z] [INFO] [novnc-proxy] Server stats: uptime=10m, active_connections=0, total_connections=0, reconnect_attempts=0, vnc_healthy=true
+[2025-09-09T19:13:22.205Z] [INFO] [novnc-proxy] Server stats: uptime=11m, active_connections=0, total_connections=0, reconnect_attempts=0, vnc_healthy=true
+[2025-09-09T19:14:22.207Z] [INFO] [novnc-proxy] Server stats: uptime=12m, active_connections=0, total_connections=0, reconnect_attempts=0, vnc_healthy=true
+[2025-09-09T19:15:22.208Z] [INFO] [novnc-proxy] Server stats: uptime=13m, active_connections=0, total_connections=0, reconnect_attempts=0, vnc_healthy=true
+[2025-09-09T19:16:22.211Z] [INFO] [novnc-proxy] Server stats: uptime=14m, active_connections=0, total_connections=0, reconnect_attempts=0, vnc_healthy=true
+[2025-09-09T19:17:22.211Z] [INFO] [novnc-proxy] Server stats: uptime=15m, active_connections=0, total_connections=0, reconnect_attempts=0, vnc_healthy=true
+[2025-09-09T19:18:22.214Z] [INFO] [novnc-proxy] Server stats: uptime=16m, active_connections=0, total_connections=0, reconnect_attempts=0, vnc_healthy=true
+[2025-09-09T19:19:22.215Z] [INFO] [novnc-proxy] Server stats: uptime=17m, active_connections=0, total_connections=0, reconnect_attempts=0, vnc_healthy=true
+[2025-09-09T19:20:22.217Z] [INFO] [novnc-proxy] Server stats: uptime=18m, active_connections=0, total_connections=0, reconnect_attempts=0, vnc_healthy=true
+[2025-09-09T19:21:22.218Z] [INFO] [novnc-proxy] Server stats: uptime=19m, active_connections=0, total_connections=0, reconnect_attempts=0, vnc_healthy=true
+[2025-09-09T19:22:22.220Z] [INFO] [novnc-proxy] Server stats: uptime=20m, active_connections=0, total_connections=0, reconnect_attempts=0, vnc_healthy=true
+[2025-09-09T19:23:22.222Z] [INFO] [novnc-proxy] Server stats: uptime=21m, active_connections=0, total_connections=0, reconnect_attempts=0, vnc_healthy=true
+[2025-09-09T19:24:22.225Z] [INFO] [novnc-proxy] Server stats: uptime=22m, active_connections=0, total_connections=0, reconnect_attempts=0, vnc_healthy=true
+[2025-09-09T19:24:41.632Z] [HTTP] [novnc-proxy] GET /noVNC/core/rfb.js { ip: '127.0.0.1', userAgent: 'curl/8.5.0', host: 'localhost:8080' }
+[2025-09-09T19:25:22.227Z] [INFO] [novnc-proxy] Server stats: uptime=23m, active_connections=0, total_connections=0, reconnect_attempts=0, vnc_healthy=true
+[2025-09-09T19:26:22.228Z] [INFO] [novnc-proxy] Server stats: uptime=24m, active_connections=0, total_connections=0, reconnect_attempts=0, vnc_healthy=true
+[2025-09-09T19:27:22.230Z] [INFO] [novnc-proxy] Server stats: uptime=25m, active_connections=0, total_connections=0, reconnect_attempts=0, vnc_healthy=true
+[2025-09-09T19:28:22.231Z] [INFO] [novnc-proxy] Server stats: uptime=26m, active_connections=0, total_connections=0, reconnect_attempts=0, vnc_healthy=true
+[2025-09-09T19:28:25.998Z] [HTTP] [novnc-proxy] GET / {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:28:26.760Z] [HTTP] [novnc-proxy] GET /vnc_glass.html {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:28:28.890Z] [HTTP] [novnc-proxy] GET /core/rfb.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:29:19.512Z] [HTTP] [novnc-proxy] GET /noVNC/core/util/logging.js { ip: '127.0.0.1', userAgent: 'curl/8.5.0', host: 'localhost:8080' }
+[2025-09-09T19:29:22.234Z] [INFO] [novnc-proxy] Server stats: uptime=27m, active_connections=0, total_connections=0, reconnect_attempts=0, vnc_healthy=true
+[2025-09-09T19:29:30.482Z] [HTTP] [novnc-proxy] GET /health { ip: '127.0.0.1', userAgent: 'curl/8.5.0', host: 'localhost:8080' }
+[2025-09-09T19:30:22.235Z] [INFO] [novnc-proxy] Server stats: uptime=28m, active_connections=0, total_connections=0, reconnect_attempts=0, vnc_healthy=true
+[2025-09-09T19:31:22.238Z] [INFO] [novnc-proxy] Server stats: uptime=29m, active_connections=0, total_connections=0, reconnect_attempts=0, vnc_healthy=true
+[2025-09-09T19:32:05.414Z] [HTTP] [novnc-proxy] GET /vnc_glass.html {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:32:06.926Z] [HTTP] [novnc-proxy] GET /core/rfb.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:32:22.239Z] [INFO] [novnc-proxy] Server stats: uptime=30m, active_connections=0, total_connections=0, reconnect_attempts=0, vnc_healthy=true
+[2025-09-09T19:32:40.445Z] [HTTP] [novnc-proxy] GET / { ip: '127.0.0.1', userAgent: 'curl/8.5.0', host: 'localhost:8080' }
+[2025-09-09T19:32:52.968Z] [HTTP] [novnc-proxy] GET / {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:32:53.023Z] [HTTP] [novnc-proxy] GET /vnc_glass.html {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:32:54.409Z] [HTTP] [novnc-proxy] GET /core/rfb.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:32:58.960Z] [HTTP] [novnc-proxy] GET / {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:32:59.017Z] [HTTP] [novnc-proxy] GET /vnc_glass.html {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:33:00.426Z] [HTTP] [novnc-proxy] GET /core/rfb.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  host: 'localhost:8080'
+}
+[2025-09-09T19:33:22.241Z] [INFO] [novnc-proxy] Server stats: uptime=31m, active_connections=0, total_connections=0, reconnect_attempts=0, vnc_healthy=true

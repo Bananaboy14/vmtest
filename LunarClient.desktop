@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Lunar Client
+Comment=Launch Lunar Client
+Exec=/workspaces/vmtest/squashfs-root/AppRun
+Icon=/workspaces/vmtest/squashfs-root/lunarclient.png
+Terminal=false
+Categories=Game;

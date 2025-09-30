@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>VNC Debug Client</title>
+    <meta charset="utf-8">
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #222;
+            color: #fff;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .controls {
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            background: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #106ebe;
+        }
+        button:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+        #viewport {
+            border: 2px solid #555;
+            background: #000;
+            width: 100%;
+            height: 600px;
+            overflow: hidden;
+        }
+        .status {
+            margin-top: 10px;
+            padding: 10px;
+            background: #333;
+            border-radius: 4px;
+        }
+        .log {
+            margin-top: 10px;
+            padding: 10px;
+            background: #111;
+            border-radius: 4px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>VNC Debug Client</h1>
+        
+        <div class="controls">
+            <button id="connectBtn">Connect</button>
+            <button id="disconnectBtn" disabled>Disconnect</button>
+            <button id="clearLogBtn">Clear Log</button>
+        </div>
+        
+        <div id="viewport"></div>
+        
+        <div class="status">
+            Status: <span id="status">Ready</span>
+        </div>
+        
+        <div class="log" id="log">
+            <div>Log initialized...</div>
+        </div>
+    </div>
+
+    <script type="module">
+        let rfb = null;
+        let isConnected = false;
+        
+        const viewport = document.getElementById('viewport');
+        const connectBtn = document.getElementById('connectBtn');
+        const disconnectBtn = document.getElementById('disconnectBtn');
+        const clearLogBtn = document.getElementById('clearLogBtn');
+        const status = document.getElementById('status');
+        const log = document.getElementById('log');
+        
+        function addLog(message) {
+            const div = document.createElement('div');
+            div.textContent = `${new Date().toISOString()}: ${message}`;
+            log.appendChild(div);
+            log.scrollTop = log.scrollHeight;
+            console.log(message);
+        }
+        
+        function updateStatus(text) {
+            status.textContent = text;
+            addLog(`Status: ${text}`);
+        }
+        
+        async function connect() {
+            if (isConnected) return;
+            
+            try {
+                addLog('Loading RFB module...');
+                const { default: RFB } = await import('./noVNC/core/rfb.js');
+                
+                addLog('Creating RFB connection...');
+                const wsProto = window.location.protocol === "https:" ? "wss" : "ws";
+                const wsUrl = `${wsProto}://${window.location.host}/websocket`;
+                
+                addLog(`Connecting to: ${wsUrl}`);
+                
+                // Clear viewport
+                viewport.innerHTML = '';
+                
+                // Simple RFB config
+                rfb = new RFB(viewport, wsUrl, {
+                    credentials: {},
+                    focusOnClick: true,
+                    clipViewport: false,
+                    scaleViewport: true,
+                    resizeSession: false,
+                    viewOnly: false,
+                    showDotCursor: true,
+                    shared: true
+                });
+                
+                connectBtn.disabled = true;
+                updateStatus('Connecting...');
+                
+                // Event handlers
+                rfb.addEventListener('connect', () => {
+                    addLog('✅ Connected successfully!');
+                    isConnected = true;
+                    updateStatus('Connected');
+                    connectBtn.disabled = true;
+                    disconnectBtn.disabled = false;
+                });
+                
+                rfb.addEventListener('disconnect', (e) => {
+                    addLog(`❌ Disconnected: ${JSON.stringify(e.detail)}`);
+                    isConnected = false;
+                    updateStatus('Disconnected');
+                    connectBtn.disabled = false;
+                    disconnectBtn.disabled = true;
+                    
+                    if (!e.detail.clean) {
+                        addLog('🔄 Attempting reconnect in 3 seconds...');
+                        setTimeout(connect, 3000);
+                    }
+                });
+                
+                rfb.addEventListener('securityfailure', (e) => {
+                    addLog(`🔒 Security failure: ${JSON.stringify(e.detail)}`);
+                    updateStatus('Security Error');
+                });
+                
+                rfb.addEventListener('clipboard', (e) => {
+                    addLog(`📋 Clipboard: ${e.detail.text.substring(0, 50)}...`);
+                });
+                
+                rfb.addEventListener('bell', () => {
+                    addLog('🔔 Bell received');
+                });
+                
+                rfb.addEventListener('desktopsize', (e) => {
+                    addLog(`📐 Desktop size: ${e.detail.width}x${e.detail.height}`);
+                });
+                
+                rfb.addEventListener('capabilities', (e) => {
+                    addLog(`🛠️ Capabilities: ${JSON.stringify(e.detail)}`);
+                });
+                
+            } catch (error) {
+                addLog(`❌ Error: ${error.message}`);
+                updateStatus('Error');
+                connectBtn.disabled = false;
+            }
+        }
+        
+        function disconnect() {
+            if (rfb && isConnected) {
+                addLog('Disconnecting...');
+                rfb.disconnect();
+            }
+        }
+        
+        function clearLog() {
+            log.innerHTML = '<div>Log cleared...</div>';
+        }
+        
+        // Event listeners
+        connectBtn.addEventListener('click', connect);
+        disconnectBtn.addEventListener('click', disconnect);
+        clearLogBtn.addEventListener('click', clearLog);
+        
+        addLog('VNC Debug Client loaded');
+        updateStatus('Ready');
+    </script>
+</body>
+</html>

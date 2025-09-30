@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Gaming Desktop - High Performance</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #000;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        #viewport {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+        }
+        
+        canvas {
+            display: block;
+            margin: 0 auto;
+            image-rendering: pixelated; /* For crisp pixel art */
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+        }
+        
+        .fps-counter {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #0f0;
+            padding: 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            z-index: 1000;
+        }
+        
+        .latency-info {
+            position: fixed;
+            top: 40px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #ff0;
+            padding: 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            z-index: 1000;
+        }
+        
+        .controls {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+        
+        .btn {
+            background: rgba(0, 50, 100, 0.8);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .btn:hover {
+            background: rgba(0, 70, 140, 0.9);
+        }
+    </style>
+</head>
+<body>
+    <div id="viewport"></div>
+    
+    <div class="fps-counter" id="fpsCounter">FPS: --</div>
+    <div class="latency-info" id="latencyInfo">Latency: --ms</div>
+    
+    <div class="controls">
+        <button class="btn" onclick="toggleFullscreen()">Fullscreen</button>
+        <button class="btn" onclick="toggleStats()">Toggle Stats</button>
+        <button class="btn" onclick="optimizeForFPS()">Optimize FPS</button>
+    </div>
+
+    <script type="module">
+        let rfb = null;
+        let frameCount = 0;
+        let lastTime = performance.now();
+        let showStats = true;
+        
+        // Performance monitoring
+        function updateFPS() {
+            frameCount++;
+            const currentTime = performance.now();
+            const elapsed = currentTime - lastTime;
+            
+            if (elapsed >= 1000) {
+                const fps = Math.round((frameCount * 1000) / elapsed);
+                document.getElementById('fpsCounter').textContent = `FPS: ${fps}`;
+                frameCount = 0;
+                lastTime = currentTime;
+            }
+            
+            requestAnimationFrame(updateFPS);
+        }
+        
+        function measureLatency() {
+            const start = performance.now();
+            // Simple ping-like measurement
+            fetch('/websocket', { method: 'HEAD' })
+                .then(() => {
+                    const latency = Math.round(performance.now() - start);
+                    document.getElementById('latencyInfo').textContent = `Latency: ${latency}ms`;
+                })
+                .catch(() => {
+                    document.getElementById('latencyInfo').textContent = 'Latency: --ms';
+                });
+        }
+
+        async function connectToDesktop() {
+            try {
+                const { default: RFB } = await import('./noVNC/core/rfb.js');
+                
+                const wsProto = window.location.protocol === "https:" ? "wss" : "ws";
+                const wsUrl = `${wsProto}://${window.location.host}/websocket`;
+                
+                const viewport = document.getElementById('viewport');
+                
+                // Gaming-optimized RFB settings
+                rfb = new RFB(viewport, wsUrl, {
+                    credentials: {},
+                    focusOnClick: true,
+                    clipViewport: false,
+                    scaleViewport: false, // Changed to false for 1:1 pixel mapping
+                    resizeSession: false,
+                    viewOnly: false,
+                    showDotCursor: false, // Hide cursor for better performance
+                    shared: true,
+                    // Performance optimizations
+                    qualityLevel: 9,  // Maximum quality for crisp visuals
+                    compressionLevel: 1, // Minimal compression for low latency
+                    // Mouse accuracy optimizations
+                    localCursor: false, // Disable local cursor for raw mouse input
+                    dragViewport: false, // Disable viewport dragging
+                });
+
+                rfb.addEventListener('connect', () => {
+                    console.log('✅ Gaming VNC Connected');
+                    // Start performance monitoring
+                    updateFPS();
+                    setInterval(measureLatency, 2000);
+                    
+                    // Apply gaming optimizations to canvas
+                    const canvas = viewport.querySelector('canvas');
+                    if (canvas) {
+                        // Disable image smoothing for crisp pixels (good for Minecraft)
+                        const ctx = canvas.getContext('2d');
+                        if (ctx) {
+                            ctx.imageSmoothingEnabled = false;
+                            ctx.webkitImageSmoothingEnabled = false;
+                            ctx.mozImageSmoothingEnabled = false;
+                            ctx.msImageSmoothingEnabled = false;
+                        }
+                        
+                        // Optimize canvas for gaming
+                        canvas.style.imageRendering = 'pixelated';
+                        canvas.style.imageRendering = 'crisp-edges';
+                    }
+                });
+
+                rfb.addEventListener('disconnect', (e) => {
+                    console.log('❌ Gaming VNC Disconnected:', e.detail);
+                });
+
+            } catch (error) {
+                console.error('💥 Connection failed:', error);
+            }
+        }
+
+        // Global functions
+        window.toggleFullscreen = function() {
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            } else {
+                document.documentElement.requestFullscreen();
+            }
+        };
+        
+        window.toggleStats = function() {
+            showStats = !showStats;
+            document.getElementById('fpsCounter').style.display = showStats ? 'block' : 'none';
+            document.getElementById('latencyInfo').style.display = showStats ? 'block' : 'none';
+        };
+        
+        window.optimizeForFPS = function() {
+            const canvas = document.querySelector('canvas');
+            if (canvas && rfb) {
+                // Set lower quality for higher FPS
+                rfb.qualityLevel = 6;
+                rfb.compressionLevel = 3;
+                console.log('🚀 Optimized for higher FPS');
+            }
+        };
+
+        // Auto-connect
+        setTimeout(connectToDesktop, 1000);
+        
+        // Prevent context menu for gaming
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        
+        // Optimize for gaming input
+        document.addEventListener('keydown', e => {
+            if (e.code === 'F11') {
+                e.preventDefault();
+                toggleFullscreen();
+            }
+        });
+
+        // Request pointer lock for gaming accuracy
+        document.addEventListener('click', () => {
+            const canvas = document.querySelector('canvas');
+            if (canvas && document.pointerLockElement !== canvas) {
+                canvas.requestPointerLock();
+            }
+        });
+
+        // Handle pointer lock changes
+        document.addEventListener('pointerlockchange', () => {
+            const canvas = document.querySelector('canvas');
+            if (document.pointerLockElement === canvas) {
+                console.log('🎯 Pointer locked for gaming accuracy');
+            } else {
+                console.log('🖱️ Pointer unlocked');
+            }
+        });
+
+        // Prevent default mouse behavior that could affect accuracy
+        document.addEventListener('mousedown', e => e.preventDefault());
+        document.addEventListener('mouseup', e => e.preventDefault());
+        document.addEventListener('mousemove', e => e.preventDefault());
+
+    </script>
+</body>
+</html>

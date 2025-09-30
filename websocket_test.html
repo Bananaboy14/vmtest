@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .log { 
+            border: 1px solid #ccc; 
+            padding: 10px; 
+            height: 300px; 
+            overflow-y: scroll; 
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        button { padding: 10px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>WebSocket Connection Test</h1>
+    <button onclick="testConnection()">Test WebSocket Connection</button>
+    <button onclick="clearLog()">Clear Log</button>
+    
+    <div class="log" id="log"></div>
+
+    <script>
+        let ws = null;
+        
+        function log(message) {
+            const logDiv = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            logDiv.textContent += `[${timestamp}] ${message}\n`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+        
+        function testConnection() {
+            log('Starting WebSocket connection test...');
+            
+            // Determine WebSocket URL based on environment
+            let wsUrl;
+            if (window.location.hostname.includes('github') || window.location.hostname.includes('codespaces')) {
+                // GitHub Codespaces - use secure WebSocket
+                const portUrl = window.location.origin.replace('https://', 'wss://').replace('-3000.', '-8081.');
+                wsUrl = portUrl + '/websockify';
+                log('GitHub Codespaces detected');
+            } else {
+                // Local development
+                wsUrl = `ws://${window.location.hostname}:8081/websockify`;
+            }
+            log(`Connecting to: ${wsUrl}`);
+            
+            try {
+                ws = new WebSocket(wsUrl);
+                
+                ws.onopen = function(event) {
+                    log('WebSocket connection opened successfully!');
+                    log('Connection state: ' + ws.readyState);
+                };
+                
+                ws.onmessage = function(event) {
+                    log('Received message: ' + event.data);
+                };
+                
+                ws.onerror = function(error) {
+                    log('WebSocket error: ' + error);
+                    console.error('WebSocket error:', error);
+                };
+                
+                ws.onclose = function(event) {
+                    log(`WebSocket closed. Code: ${event.code}, Reason: ${event.reason}, Clean: ${event.wasClean}`);
+                };
+                
+            } catch (error) {
+                log('Error creating WebSocket: ' + error.message);
+                console.error('WebSocket creation error:', error);
+            }
+        }
+        
+        function clearLog() {
+            document.getElementById('log').textContent = '';
+        }
+        
+        // Auto-run test on page load
+        window.onload = function() {
+            log('Page loaded. Ready to test WebSocket connection.');
+        };
+    </script>
+</body>
+</html>

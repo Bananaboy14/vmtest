@@ -411,8 +411,9 @@
     </div>
 
     <script type="module">
-        // Import noVNC RFB module
+        // Import noVNC RFB module and shared mouse transform utilities
         import RFB from '/noVNC/core/rfb.js';
+        import { transformMouseCoordinates as sharedTransformMouseCoordinates, calculateCanvasTransform as sharedCalculateCanvasTransform } from './scripts/mouse_transform.js';
         
         // Global state
         let rfb = null;
@@ -755,23 +756,21 @@
 
         function calculateCanvasTransform() {
             if (!canvas) return;
-            
-            const rect = viewport.getBoundingClientRect();
-            const scale = Math.min(
-                rect.width / canvas.width,
-                rect.height / canvas.height,
-                1.0
-            );
-            
+
+            // Use shared calculation for scale/offset
+            const { scale, canvasRect } = sharedCalculateCanvasTransform(canvas, viewport);
+
             const scaledWidth = canvas.width * scale;
             const scaledHeight = canvas.height * scale;
-            
+
+            // Apply sizing to canvas to preserve original behavior
             canvas.style.width = scaledWidth + 'px';
             canvas.style.height = scaledHeight + 'px';
             canvas.style.position = 'absolute';
+            const rect = viewport.getBoundingClientRect();
             canvas.style.left = ((rect.width - scaledWidth) / 2) + 'px';
             canvas.style.top = ((rect.height - scaledHeight) / 2) + 'px';
-            
+
             console.log(`🖼️ Canvas: ${canvas.width}x${canvas.height}, Scale: ${scale.toFixed(3)}`);
             // Sync noVNC display scale so clientToElement -> absX/absY mapping is correct
             if (typeof rfb !== 'undefined' && rfb && rfb._display) {
@@ -781,15 +780,9 @@
 
         function transformMouseCoordinates(clientX, clientY) {
             if (!canvas) return { x: 0, y: 0 };
-            
-            const rect = canvas.getBoundingClientRect();
-            const scaleX = canvas.width / rect.width;
-            const scaleY = canvas.height / rect.height;
-            
-            return {
-                x: (clientX - rect.left) * scaleX,
-                y: (clientY - rect.top) * scaleY
-            };
+            const coords = sharedTransformMouseCoordinates(clientX, clientY, canvas, viewport);
+            if (!coords) return { x: 0, y: 0 };
+            return { x: coords.x, y: coords.y };
         }
 
         function handleMouseMove(e) {

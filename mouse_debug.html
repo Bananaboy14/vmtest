@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mouse Debug Test</title>
+    <style>
+        #debug-canvas {
+            border: 2px solid red;
+            background: lightgray;
+            cursor: crosshair;
+        }
+        #info {
+            font-family: monospace;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Mouse Coordinate Debug</h1>
+    <div id="info">Move mouse and click on canvas to see coordinates</div>
+    <canvas id="debug-canvas" width="800" height="600"></canvas>
+    
+    <script>
+        const canvas = document.getElementById('debug-canvas');
+        const ctx = canvas.getContext('2d');
+        const info = document.getElementById('info');
+        
+        // Draw grid
+        ctx.strokeStyle = '#ccc';
+        for (let x = 0; x < 800; x += 50) {
+            ctx.beginPath();
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x, 600);
+            ctx.stroke();
+        }
+        for (let y = 0; y < 600; y += 50) {
+            ctx.beginPath();
+            ctx.moveTo(0, y);
+            ctx.lineTo(800, y);
+            ctx.stroke();
+        }
+        
+        // Test different scaling scenarios
+        let scale = 1.0;
+        
+        function updateScale(newScale) {
+            scale = newScale;
+            canvas.style.width = (800 * scale) + 'px';
+            canvas.style.height = (600 * scale) + 'px';
+            info.innerHTML = `Scale: ${scale}, Canvas Style: ${canvas.style.width} x ${canvas.style.height}, Canvas Size: ${canvas.width} x ${canvas.height}`;
+        }
+        
+        canvas.addEventListener('click', (e) => {
+            const bounds = canvas.getBoundingClientRect();
+            const clientX = e.clientX;
+            const clientY = e.clientY;
+            
+            // Original clientToElement logic
+            const elementX = clientX - bounds.left;
+            const elementY = clientY - bounds.top;
+            
+            // Test different scaling approaches
+            const scaledX1 = elementX / scale; // Divide by scale
+            const scaledY1 = elementY / scale;
+            
+            const scaledX2 = elementX; // No scaling
+            const scaledY2 = elementY;
+            
+            // Draw markers
+            ctx.fillStyle = 'red';
+            ctx.fillRect(scaledX1 - 2, scaledY1 - 2, 4, 4);
+            
+            ctx.fillStyle = 'blue';
+            ctx.fillRect(scaledX2 - 2, scaledY2 - 2, 4, 4);
+            
+            console.log(`Click: client(${clientX}, ${clientY}) -> element(${elementX}, ${elementY}) -> scaled1(${scaledX1}, ${scaledY1}) scaled2(${scaledX2}, ${scaledY2})`);
+        });
+        
+        // Controls
+        document.addEventListener('keydown', (e) => {
+            if (e.key === '1') updateScale(0.5);
+            if (e.key === '2') updateScale(1.0);
+            if (e.key === '3') updateScale(1.5);
+            if (e.key === '4') updateScale(2.0);
+        });
+        
+        updateScale(1.0);
+        info.innerHTML += '<br>Press 1-4 to change scale, red=scaled, blue=unscaled';
+    </script>
+</body>
+</html>

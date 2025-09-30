@@ -9,9 +9,11 @@ const http = require('http');
 const app = express();
 const port = 8080;
 
-// Redirect root to vnc.html (must be after app is initialized)
+// Redirect root to the glass UI (vnc_glass.html). Keep old vnc.html as a fallback.
 app.get('/', (req, res) => {
-    res.redirect('/vnc.html');
+    // Primary debug landing page
+    res.redirect('/vnc_glass.html');
+    // Fallback: res.redirect('/vnc.html');
 });
 
 // Enable WebSocket support
@@ -21,6 +23,21 @@ expressWs(app);
 app.use(express.static(__dirname));
 // Serve noVNC core files at /core
 app.use('/core', express.static(path.join(__dirname, 'noVNC/core')));
+// Accept JSON request bodies for debug logging
+app.use(express.json({ limit: '1mb' }));
+
+// Endpoint to receive mouse mapping diagnostics from the browser and print to server terminal
+app.post('/mouse-log', (req, res) => {
+    try {
+        const payload = req.body;
+        // Pretty-print concise object to terminal
+        console.log('🖱️ [MOUSE_LOG]', typeof payload === 'object' ? JSON.stringify(payload) : payload);
+    } catch (err) {
+        console.log('🖱️ [MOUSE_LOG] failed to parse body', err);
+    }
+    // 204 No Content - caller used beacon/fetch with no need for a response body
+    res.sendStatus(204);
+});
 
 
 // WebSocket endpoint for VNC (supports both /websockify and /websocket)

@@ -109,6 +109,7 @@
     </div>
 
     <script type="module">
+        import { transformMouseCoordinates } from './scripts/mouse_transform.js';
         let socket = null;
         let canvas = null;
         let ctx = null;
@@ -185,62 +186,47 @@
             // Raw mouse event handling - no delays or throttling
             canvas.addEventListener('mousemove', (e) => {
                 if (!connected) return;
-                
-                const rect = canvas.getBoundingClientRect();
-                const scaleX = canvas.width / rect.width;
-                const scaleY = canvas.height / rect.height;
-                
-                const x = Math.round((e.clientX - rect.left) * scaleX);
-                const y = Math.round((e.clientY - rect.top) * scaleY);
-                
+
+                const coords = transformMouseCoordinates(e.clientX, e.clientY, canvas, viewport);
+                if (!coords) return;
+
+                const x = coords.x;
+                const y = coords.y;
+
                 // Update display
                 document.getElementById('mouseCoords').innerHTML = 
                     `Mouse: ${x}, ${y}<br>Last sent: ${lastMousePos.x}, ${lastMousePos.y}<br>Moves/sec: ${calculateMPS()}`;
-                
+
                 // Send immediately - no throttling
                 sendMouseMove(x, y);
-                
+
                 lastMousePos = { x, y };
                 mouseStats.count++;
             });
             
             canvas.addEventListener('mousedown', (e) => {
                 if (!connected) return;
-                const rect = canvas.getBoundingClientRect();
-                const scaleX = canvas.width / rect.width;
-                const scaleY = canvas.height / rect.height;
-                
-                const x = Math.round((e.clientX - rect.left) * scaleX);
-                const y = Math.round((e.clientY - rect.top) * scaleY);
-                
-                sendMouseButton(x, y, e.button, true);
+                const coords = transformMouseCoordinates(e.clientX, e.clientY, canvas, viewport);
+                if (!coords) return;
+                sendMouseButton(coords.x, coords.y, e.button, true);
             });
             
             canvas.addEventListener('mouseup', (e) => {
                 if (!connected) return;
-                const rect = canvas.getBoundingClientRect();
-                const scaleX = canvas.width / rect.width;
-                const scaleY = canvas.height / rect.height;
-                
-                const x = Math.round((e.clientX - rect.left) * scaleX);
-                const y = Math.round((e.clientY - rect.top) * scaleY);
-                
-                sendMouseButton(x, y, e.button, false);
+                const coords = transformMouseCoordinates(e.clientX, e.clientY, canvas, viewport);
+                if (!coords) return;
+                sendMouseButton(coords.x, coords.y, e.button, false);
             });
             
             canvas.addEventListener('wheel', (e) => {
                 e.preventDefault();
                 if (!connected) return;
-                
-                const rect = canvas.getBoundingClientRect();
-                const scaleX = canvas.width / rect.width;
-                const scaleY = canvas.height / rect.height;
-                
-                const x = Math.round((e.clientX - rect.left) * scaleX);
-                const y = Math.round((e.clientY - rect.top) * scaleY);
-                
-                sendMouseWheel(x, y, e.deltaY);
-            });
+
+                const coords = transformMouseCoordinates(e.clientX, e.clientY, canvas, viewport);
+                if (!coords) return;
+
+                sendMouseWheel(coords.x, coords.y, e.deltaY);
+            }, { passive: false });
         }
         
         function calculateMPS() {

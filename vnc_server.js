@@ -29,6 +29,31 @@ const server = http.createServer((req, res) => {
         });
         return;
     }
+    // Lightweight mouse-log receiver for non-visual client debug (204 No Content)
+    if (req.url === '/mouse-log' && req.method === 'POST') {
+        let body = [];
+        req.on('data', (chunk) => {
+            body.push(chunk);
+        }).on('end', () => {
+            try {
+                body = Buffer.concat(body).toString() || '';
+                // Try parse JSON, but fall back to raw string
+                let payload = body;
+                try {
+                    payload = JSON.parse(body);
+                } catch (e) {
+                    // not JSON
+                }
+                console.log('🖱️ [MOUSE_LOG]', typeof payload === 'object' ? JSON.stringify(payload) : payload);
+            } catch (err) {
+                console.log('🖱️ [MOUSE_LOG] failed to parse body', err);
+            }
+            // No content response to support navigator.sendBeacon without blocking
+            res.writeHead(204);
+            res.end();
+        });
+        return;
+    }
     
     let filePath = path.join(__dirname, req.url === '/' ? 'vnc_glass.html' : req.url);
     

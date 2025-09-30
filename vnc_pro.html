@@ -206,6 +206,7 @@
     </div>
 
     <script type="module">
+        import { transformMouseCoordinates as sharedTransformMouseCoordinates, calculateCanvasTransform as sharedCalculateCanvasTransform } from './scripts/mouse_transform.js';
         let rfb = null;
         let isConnected = false;
         let isPointerLocked = false;
@@ -255,42 +256,31 @@
         
         function calculateCanvasTransform() {
             if (!canvas) return;
-            
-            const container = desktop;
-            const containerRect = container.getBoundingClientRect();
-            const canvasRect = canvas.getBoundingClientRect();
-            
-            canvasScale = Math.min(
-                containerRect.width / canvas.width,
-                containerRect.height / canvas.height
-            );
-            
-            const scaledWidth = canvas.width * canvasScale;
-            const scaledHeight = canvas.height * canvasScale;
-            
-            canvasOffsetX = (containerRect.width - scaledWidth) / 2;
-            canvasOffsetY = (containerRect.height - scaledHeight) / 2;
-            
-            // Apply perfect scaling
-            canvas.style.width = scaledWidth + 'px';
-            canvas.style.height = scaledHeight + 'px';
+            // Use calculateCanvasTransform to compute the exact usedRect (where the
+            // framebuffer is drawn inside the CSS canvas area). This avoids stretching
+            // the canvas and ensures mouse coordinates map correctly to framebuffer pixels.
+            const t = sharedCalculateCanvasTransform(canvas, desktop);
+            const used = t.usedRect || { left: 0, top: 0, width: canvas.width, height: canvas.height };
+
+            // Position the canvas so the drawn framebuffer sits exactly where it is displayed
             canvas.style.position = 'absolute';
-            canvas.style.left = canvasOffsetX + 'px';
-            canvas.style.top = canvasOffsetY + 'px';
-            
-            console.log(`Canvas: ${canvas.width}x${canvas.height}, Scale: ${canvasScale}, Offset: ${canvasOffsetX},${canvasOffsetY}`);
-            // Keep noVNC's internal display scale in sync so client->server
-            // coordinate conversion matches the CSS scaling.
+            canvas.style.left = (used.left - desktop.getBoundingClientRect().left) + 'px';
+            canvas.style.top = (used.top - desktop.getBoundingClientRect().top) + 'px';
+            canvas.style.width = used.width + 'px';
+            canvas.style.height = used.height + 'px';
+
+            canvasScale = t.effectiveScaleX || 1;
+            console.log(`Canvas: ${canvas.width}x${canvas.height}, effectiveScale: ${canvasScale}, usedRect: ${JSON.stringify(used)}`);
             if (typeof rfb !== 'undefined' && rfb && rfb._display) {
                 try { rfb._display.scale = canvasScale; } catch (err) { console.warn('Failed to set display scale', err); }
             }
         }
         
         function transformMouseCoordinates(clientX, clientY) {
-            const rect = canvas.getBoundingClientRect();
-            const x = (clientX - rect.left) / canvasScale;
-            const y = (clientY - rect.top) / canvasScale;
-            return { x, y };
+            if (!canvas) return { x: 0, y: 0 };
+            const coords = sharedTransformMouseCoordinates(clientX, clientY, canvas, desktop);
+            if (!coords) return { x: 0, y: 0 };
+            return { x: coords.x, y: coords.y };
         }
         
         // Pointer Lock API
@@ -365,13 +355,17 @@
                         // Perfect mouse handling
                         canvas.addEventListener('mousemove', (e) => {
                             if (isPointerLocked) {
-                                // Use movement deltas for locked mode
+                                // Use movement deltas for locked mode (relative)
                                 rfb.sendPointerEvent(
                                     e.movementX,
                                     e.movementY,
                                     e.buttons,
                                     true
                                 );
+                            } else {
+                                // Map client coordinates to framebuffer coordinates and send absolute pointer event
+                                const coords = transformMouseCoordinates(e.clientX, e.clientY);
+                                rfb.sendPointerEvent(coords.x, coords.y, e.buttons);
                             }
                         });
                         

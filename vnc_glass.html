@@ -48,10 +48,9 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            /* Removed flexbox centering - let noVNC handle positioning natively */
         }
 
-        /* Canvas styling - let noVNC handle it naturally */
+        /* Let noVNC handle canvas naturally - no forced scaling */
         .desktop-viewport canvas {
             max-width: 100% !important;
             max-height: 100% !important;
@@ -200,6 +199,35 @@
             background: var(--success);
             animation: none;
         }
+        
+        /* Compact status badge used in the top bar */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 999px;
+            font-size: 13px;
+            color: var(--text-primary);
+            min-width: 120px;
+            justify-content: flex-start;
+        }
+        
+        .status-badge .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--error);
+            box-shadow: 0 0 6px rgba(0,0,0,0.4);
+        }
+        
+        .status-badge.connecting { border-color: rgba(245,158,11,0.18); }
+        .status-badge.connected { border-color: rgba(16,185,129,0.18); }
+        .status-badge.error { border-color: rgba(239,68,68,0.18); }
+        
+        .status-badge .status-text { color: var(--text-secondary); font-weight: 600; }
 
         .status-dot.connecting {
             background: var(--warning);
@@ -446,12 +474,13 @@
                 <span>Remote Desktop Pro</span>
             </div>
             
-            <div class="connection-status">
-                <div class="status-indicator">
-                    <div class="status-dot" id="statusDot"></div>
-                    <span id="statusText">Connecting...</span>
+                <div class="connection-status">
+                    <!-- New compact status badge -->
+                    <div class="status-badge" id="statusBadge" title="Connection status">
+                        <span class="status-dot" id="statusDot"></span>
+                        <span class="status-text" id="statusText">Connecting...</span>
+                    </div>
                 </div>
-            </div>
         </div>
 
         <!-- Bottom Control Panel -->
@@ -461,6 +490,7 @@
                     <span>🔗</span>
                     <span id="connectBtnText">Connect</span>
                 </button>
+                    <button class="glass-btn" id="debugToggleBtn" title="Toggle mouse debug">🐞 Debug OFF</button>
                 <button class="glass-btn" id="mouseLockBtn">
                     <span>🖱️</span>
                     <span>Lock Mouse</span>
@@ -482,7 +512,39 @@
         Click desktop to capture mouse • Press ESC to release
     </div>
 
+    <!-- Debug controls removed for production accuracy; mapping uses transformMouseCoordinates -->
+
     <script type="module">
+        import { transformMouseCoordinates, calculateCanvasTransform } from './scripts/mouse_transform.js';
+        // Auto enable non-visual mouse logging when ?debug_mouse=1 is present in the URL.
+        // This helps when DevTools aren't available: the page will POST condensed mouse
+        // mapping events to the server endpoint `/mouse-log` without showing overlays.
+        try {
+            const __params = new URLSearchParams(window.location.search);
+            if (__params.get('debug_mouse') === '1') {
+                window.DEBUG_MOUSE_MAP = true;
+                // When true, the global click handler will avoid drawing overlays and only send logs.
+                window.DEBUG_MOUSE_NONVISUAL = true;
+                console.log('Mouse debug (non-visual) enabled via URL param');
+            }
+
+            // Allow overriding the mouse-log target via URL params so we can test against
+            // a specific server/port without modifying server processes.
+            // Example: ?debug_mouse=1&mouse_log_port=8085 or ?mouse_log_host=localhost&mouse_log_port=8085
+            const MOUSE_LOG_PORT = __params.get('mouse_log_port');
+            const MOUSE_LOG_HOST = __params.get('mouse_log_host');
+            window.getMouseLogUrl = function() {
+                if (MOUSE_LOG_PORT || MOUSE_LOG_HOST) {
+                    const host = MOUSE_LOG_HOST || window.location.hostname;
+                    const proto = window.location.protocol;
+                    const port = MOUSE_LOG_PORT || window.location.port || (proto === 'https:' ? '443' : '80');
+                    return `${proto}//${host}:${port}/mouse-log`;
+                }
+                return '/mouse-log';
+            };
+        } catch (err) {
+            console.warn('Failed to parse URL params for debug_mouse', err);
+        }
         // Global state
         let rfb = null;
         let isConnected = false;
@@ -504,6 +566,184 @@
         const fullscreenBtn = document.getElementById('fullscreenBtn');
         const disconnectBtn = document.getElementById('disconnectBtn');
         const mouseLockHint = document.getElementById('mouseLockHint');
+
+        // --- Top-level debug utilities (available before connection) ---
+        let _mouseDebugOverlay = null;
+        let _mouseDebugPanel = null;
+
+        function ensureDebugOverlay() {
+            if (_mouseDebugOverlay) return _mouseDebugOverlay;
+            const ov = document.createElement('div');
+            ov.id = 'mouse-debug-overlay';
+            Object.assign(ov.style, {
+                position: 'fixed',
+                left: '0px',
+                top: '0px',
+                width: '100%',
+                height: '100%',
+                pointerEvents: 'none',
+                zIndex: 2147483647
+            });
+            document.body.appendChild(ov);
+            _mouseDebugOverlay = ov;
+            return ov;
+        }
+
+        function ensureDebugPanel() {
+            if (_mouseDebugPanel) return _mouseDebugPanel;
+            const panel = document.createElement('div');
+            panel.id = 'mouse-debug-panel';
+            Object.assign(panel.style, {
+                position: 'fixed',
+                right: '12px',
+                bottom: '12px',
+                width: '320px',
+                maxHeight: '40vh',
+                overflow: 'auto',
+                background: 'rgba(0,0,0,0.6)',
+                color: 'white',
+                fontSize: '12px',
+                padding: '8px',
+                borderRadius: '8px',
+                zIndex: 2147483647,
+                pointerEvents: 'auto'
+            });
+            const title = document.createElement('div');
+            title.textContent = 'Mouse Debug Logs';
+            Object.assign(title.style, { fontSize: '12px', fontWeight: 700, marginBottom: '6px' });
+            panel.appendChild(title);
+            const list = document.createElement('div');
+            list.id = 'mouse-debug-list';
+            panel.appendChild(list);
+            document.body.appendChild(panel);
+            _mouseDebugPanel = panel;
+            return panel;
+        }
+
+        // show a persistent banner when debug is enabled so users can see it's active
+        let _mouseDebugBanner = null;
+        function showDebugBanner(show) {
+            try {
+                if (show) {
+                    if (_mouseDebugBanner) return _mouseDebugBanner;
+                    const b = document.createElement('div');
+                    b.id = 'mouse-debug-banner';
+                    Object.assign(b.style, {
+                        position: 'fixed',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        top: '8px',
+                        padding: '6px 12px',
+                        background: 'rgba(255,50,50,0.12)',
+                        color: 'white',
+                        border: '1px solid rgba(255,50,50,0.18)',
+                        borderRadius: '999px',
+                        zIndex: 2147483647,
+                        pointerEvents: 'auto',
+                        display: 'flex',
+                        gap: '8px',
+                        alignItems: 'center'
+                    });
+                    const txt = document.createElement('div'); txt.textContent = '🐞 Debug ON';
+                    const testBtn = document.createElement('button'); testBtn.textContent = 'Emit test log';
+                    Object.assign(testBtn.style, { background: 'rgba(255,255,255,0.06)', color: 'white', border: 'none', padding: '6px 8px', borderRadius: '6px', cursor: 'pointer' });
+                    testBtn.addEventListener('click', () => {
+                        appendDebugLog({ type: 'manual-test', payload: { msg: 'manual test log' } });
+                        sendMouseLog('manual-test', { msg: 'manual test log' });
+                    });
+                    b.appendChild(txt); b.appendChild(testBtn);
+                    document.body.appendChild(b);
+                    _mouseDebugBanner = b;
+                    return b;
+                } else {
+                    if (_mouseDebugBanner && _mouseDebugBanner.parentElement) _mouseDebugBanner.remove();
+                    _mouseDebugBanner = null;
+                }
+            } catch (err) { console.warn('showDebugBanner failed', err); }
+        }
+
+        // floating Test Click button to emit an overlay and server log even if other handlers intercept clicks
+        let _mouseTestButton = null;
+        function showTestClickButton(show) {
+            try {
+                if (show) {
+                    if (_mouseTestButton) return _mouseTestButton;
+                    const btn = document.createElement('button');
+                    btn.id = 'mouse-test-click';
+                    btn.textContent = 'Test Click';
+                    Object.assign(btn.style, {
+                        position: 'fixed',
+                        right: '16px',
+                        top: '64px',
+                        zIndex: 2147483647,
+                        padding: '10px 14px',
+                        borderRadius: '8px',
+                        background: 'rgba(0,0,0,0.6)',
+                        color: 'white',
+                        border: '1px solid rgba(255,255,255,0.06)',
+                        cursor: 'pointer',
+                        pointerEvents: 'auto'
+                    });
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const cx = window.innerWidth/2; const cy = window.innerHeight/2;
+                        ensureDebugOverlay();
+                        appendDebugLog({ type: 'test-click', payload: { cx, cy } });
+                        showDebugOverlay({ usedRect: { left: 0, top: 0, width: window.innerWidth, height: window.innerHeight }, cssX: cx, cssY: cy, x: 0, y: 0 }, cx, cy);
+                        sendMouseLog('test-click', { clientX: cx, clientY: cy });
+                    });
+                    document.body.appendChild(btn);
+                    _mouseTestButton = btn;
+                    return btn;
+                } else {
+                    if (_mouseTestButton && _mouseTestButton.parentElement) _mouseTestButton.remove();
+                    _mouseTestButton = null;
+                }
+            } catch (err) { console.warn('showTestClickButton failed', err); }
+        }
+
+        function appendDebugLog(entry) {
+            try {
+                const panel = ensureDebugPanel();
+                const list = panel.querySelector('#mouse-debug-list');
+                const row = document.createElement('div');
+                row.style.padding = '6px 4px';
+                row.style.borderBottom = '1px solid rgba(255,255,255,0.04)';
+                row.textContent = `${new Date().toLocaleTimeString()} ${entry.type || ''} ${JSON.stringify(entry.payload || entry).slice(0, 200)}`;
+                list.insertBefore(row, list.firstChild);
+                // keep max 20 entries
+                while (list.childElementCount > 20) list.removeChild(list.lastChild);
+            } catch (err) { console.warn('appendDebugLog failed', err); }
+        }
+
+        function sendMouseLog(eventType, payload) {
+            try {
+                const body = JSON.stringify({ type: eventType, ts: Date.now(), payload });
+                // local visual copy for users without DevTools
+                if (window.DEBUG_MOUSE_MAP) appendDebugLog({ type: eventType, payload });
+                // Allow overriding the mouse-log target via window.getMouseLogUrl()
+                const url = (typeof window.getMouseLogUrl === 'function') ? window.getMouseLogUrl() : '/mouse-log';
+                // Helpful console trace so users without DevTools can still see that a log was attempted
+                try { console.log('sendMouseLog ->', url, eventType, payload); } catch (e) {}
+                // Prefer fetch with keepalive in debug/non-visual mode to ensure delivery
+                // (navigator.sendBeacon can be dropped in some sandboxed/code-server environments).
+                if (window.DEBUG_MOUSE_NONVISUAL) {
+                    try {
+                        fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body, keepalive: true }).catch(e => console.warn('mouse-log fetch failed', e));
+                    } catch (e) {
+                        // Older browsers may not support keepalive; fall back to basic fetch
+                        fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body }).catch(e => console.warn('mouse-log fetch failed', e));
+                    }
+                } else if (navigator.sendBeacon) {
+                    const blob = new Blob([body], { type: 'application/json' });
+                    navigator.sendBeacon(url, blob);
+                } else {
+                    fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body }).catch(console.warn);
+                }
+            } catch (err) {
+                console.warn('sendMouseLog failed', err);
+            }
+        }
 
         // Auto-show/hide UI
         let uiTimeout;
@@ -532,12 +772,27 @@
 
         function updateStatus(message, state = 'connecting') {
             statusText.textContent = message;
-            statusDot.className = `status-dot ${state}`;
-            
+            // Update the small indicator dot
+            statusDot.className = `status-dot`;
             if (state === 'connected') {
                 statusDot.classList.add('connected');
             } else if (state === 'connecting') {
                 statusDot.classList.add('connecting');
+            } else if (state === 'error') {
+                statusDot.classList.add('error');
+            }
+
+            // Update the compact badge (visual + accessible)
+            const statusBadge = document.getElementById('statusBadge');
+            if (statusBadge) {
+                // normalize classes
+                statusBadge.classList.remove('connected', 'connecting', 'error');
+                statusBadge.classList.add(state);
+                // Update readable label
+                const statusTextEl = document.getElementById('statusText');
+                if (statusTextEl) statusTextEl.textContent = message;
+                statusBadge.setAttribute('aria-label', `Connection status: ${message}`);
+                statusBadge.title = message;
             }
         }
 
@@ -579,17 +834,20 @@
                 console.log('🔗 Connecting to:', wsUrl);
                 rfb = new RFB(viewport, wsUrl, {
                     credentials: {},
-                    focusOnClick: true,
+                    // Disable noVNC mouse handling so we can implement our own
+                    focusOnClick: false,
                     clipViewport: false,
                     scaleViewport: true,
                     resizeSession: false,
                     viewOnly: false,
-                    showDotCursor: true,
+                    showDotCursor: false,
                     shared: true
                 });
 
                 // Connection successful
                 rfb.addEventListener('connect', () => {
+                    // expose for debugging
+                    try { window.rfb = rfb; } catch (e) {}
                     console.log('✅ VNC Connection Established');
                     isConnected = true;
                     reconnectAttempts = 0;
@@ -603,32 +861,63 @@
                     
                     canvas = viewport.querySelector('canvas');
                     if (canvas) {
-                        // Let noVNC handle all mouse events natively - no custom handling
-                        canvas.style.cursor = 'default';
-                        // Ensure canvas gets focus for proper mouse handling
                         canvas.focus();
+                        console.log('Canvas found, setting up efficient mouse handling');
                         
-                        // If we're already in fullscreen when connecting, apply scaling
-                        const isFullscreen = !!(document.fullscreenElement || 
-                                               document.webkitFullscreenElement || 
-                                               document.mozFullScreenElement || 
-                                               document.msFullscreenElement);
-                        if (isFullscreen) {
-                            setTimeout(() => {
-                                const canvasRect = canvas.getBoundingClientRect();
-                                const viewportWidth = window.innerWidth;
-                                const viewportHeight = window.innerHeight;
-                                
-                                const scaleX = viewportWidth / canvasRect.width;
-                                const scaleY = viewportHeight / canvasRect.height;
-                                const scale = Math.min(scaleX, scaleY); // Use min to show entire desktop
-                                
-                                canvas.style.transform = `scale(${scale})`;
-                                canvas.style.transformOrigin = 'center center';
-                                
-                                console.log('Connected in fullscreen - applying scaling');
-                            }, 200);
-                        }
+                        // Simple coordinate conversion function
+                        const getCanvasCoords = (clientX, clientY) => {
+                            const rect = canvas.getBoundingClientRect();
+                            const scaleX = canvas.width / rect.width;
+                            const scaleY = canvas.height / rect.height;
+                            return {
+                                x: Math.round((clientX - rect.left) * scaleX),
+                                y: Math.round((clientY - rect.top) * scaleY)
+                            };
+                        };
+                        
+                        // Override canvas mouse events with correct coordinate mapping
+                        canvas.addEventListener('mousedown', (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            if (!isConnected || !rfb) return;
+                            const coords = getCanvasCoords(e.clientX, e.clientY);
+                            rfb.sendPointerEvent(coords.x, coords.y, e.buttons);
+                        });
+                        
+                        canvas.addEventListener('mouseup', (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            if (!isConnected || !rfb) return;
+                            const coords = getCanvasCoords(e.clientX, e.clientY);
+                            rfb.sendPointerEvent(coords.x, coords.y, e.buttons);
+                        });
+                        
+                        canvas.addEventListener('wheel', (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            if (!isConnected || !rfb) return;
+                            const coords = getCanvasCoords(e.clientX, e.clientY);
+                            const buttonMask = e.deltaY < 0 ? 8 : 16;
+                            rfb.sendPointerEvent(coords.x, coords.y, buttonMask);
+                            setTimeout(() => rfb.sendPointerEvent(coords.x, coords.y, 0), 50);
+                        });
+                        
+                        // Only add mousemove for debug or when mouse button is pressed (dragging)
+                        let mousePressed = false;
+                        canvas.addEventListener('mousedown', () => { mousePressed = true; });
+                        canvas.addEventListener('mouseup', () => { mousePressed = false; });
+                        
+                        canvas.addEventListener('mousemove', (e) => {
+                            if (!isConnected || !rfb) return;
+                            // Only send mouse moves when dragging or debugging to save CPU
+                            if (!mousePressed && !window.DEBUG_MOUSE_MAP) return;
+                            
+                            const coords = getCanvasCoords(e.clientX, e.clientY);
+                            if (window.DEBUG_MOUSE_MAP) {
+                                console.log('Mouse:', { client: [e.clientX, e.clientY], canvas: [coords.x, coords.y] });
+                            }
+                            rfb.sendPointerEvent(coords.x, coords.y, e.buttons);
+                        });
                     }
                     
                     // Auto-hide UI after connection
@@ -640,6 +929,7 @@
                     console.log('❌ VNC Disconnected:', e.detail);
                     isConnected = false;
                     isPointerLocked = false;
+                    try { if (window.rfb) window.rfb = null; } catch (e) {}
                     
                     // Clear the canvas to avoid showing stale content
                     const canvasElements = viewport.querySelectorAll('canvas');
@@ -789,6 +1079,42 @@
         });
         fullscreenBtn.addEventListener('click', toggleFullscreen);
         disconnectBtn.addEventListener('click', disconnect);
+        const debugToggleBtn = document.getElementById('debugToggleBtn');
+        let debugEnabled = false;
+        debugToggleBtn.addEventListener('click', () => {
+            debugEnabled = !debugEnabled;
+            window.DEBUG_MOUSE_MAP = debugEnabled;
+            debugToggleBtn.textContent = debugEnabled ? '🐞 Debug ON' : '🐞 Debug OFF';
+            debugToggleBtn.style.background = debugEnabled ? 'rgba(255,255,255,0.06)' : '';
+            // If enabling, show the overlay briefly to indicate it's active
+            if (debugEnabled) {
+                showDebugBanner(true);
+                ensureDebugPanel();
+                appendDebugLog({ type: 'debug-enabled', payload: { ts: Date.now() } });
+                // Emit an immediate test log so users see server activity without clicking
+                sendMouseLog('debug-enabled', { ts: Date.now(), note: 'debug toggled on' });
+                if (canvas) {
+                        const latest = calculateCanvasTransform(canvas, viewport);
+                        // Pass the full coords object so showDebugOverlay can render usedRect + logical mapping
+                        showDebugOverlay(latest, window.innerWidth/2, window.innerHeight/2);
+                }
+            } else {
+                showDebugBanner(false);
+            }
+        });
+
+        // Minimal debug helper - only enable if requested
+        document.addEventListener('click', (evt) => {
+            if (!window.DEBUG_MOUSE_MAP) return;
+            try {
+                console.log('Debug click:', { x: evt.clientX, y: evt.clientY });
+                if (window.DEBUG_MOUSE_NONVISUAL) {
+                    sendMouseLog('debug-click', { client: { x: evt.clientX, y: evt.clientY } });
+                }
+            } catch (err) { console.warn('debug click handler failed', err); }
+        }, { passive: true, capture: true });
+
+        // No debug overlay in production - mapping uses transformMouseCoordinates
 
         // Initialize
         updateStatus('Ready to Connect', 'connecting');

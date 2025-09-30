@@ -10,7 +10,12 @@
   "version": "1.0.0",
   "main": "express_server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --runInBand"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0",
+    "jest-environment-jsdom": "^30.1.2",
+    "jsdom": "^22.1.0"
   },
   "keywords": [],
   "author": "",

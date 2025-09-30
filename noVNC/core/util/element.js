@@ -13,20 +13,25 @@
 export function clientToElement(x, y, elem) {
     const bounds = elem.getBoundingClientRect();
     let pos = { x: 0, y: 0 };
-    // Clip to target bounds
+    
+    // Get the actual canvas dimensions vs styled dimensions
+    const scaleX = elem.width / bounds.width;
+    const scaleY = elem.height / bounds.height;
+    
+    // Clip to target bounds and apply scaling
     if (x < bounds.left) {
         pos.x = 0;
     } else if (x >= bounds.right) {
-        pos.x = bounds.width - 1;
+        pos.x = (bounds.width - 1) * scaleX;
     } else {
-        pos.x = x - bounds.left;
+        pos.x = (x - bounds.left) * scaleX;
     }
     if (y < bounds.top) {
         pos.y = 0;
     } else if (y >= bounds.bottom) {
-        pos.y = bounds.height - 1;
+        pos.y = (bounds.height - 1) * scaleY;
     } else {
-        pos.y = y - bounds.top;
+        pos.y = (y - bounds.top) * scaleY;
     }
     return pos;
 }

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>noVNC Mouse Debug Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .debug-info { 
+            background: #f0f0f0; 
+            padding: 10px; 
+            border-radius: 5px; 
+            margin: 10px 0;
+            font-family: monospace;
+        }
+        #test-canvas {
+            border: 2px solid #000;
+            background: #fff;
+            cursor: crosshair;
+            margin: 10px 0;
+        }
+        .controls { margin: 10px 0; }
+        button { margin: 5px; padding: 5px 10px; }
+    </style>
+</head>
+<body>
+    <h1>noVNC Mouse Coordinate Debug</h1>
+    
+    <div class="debug-info">
+        <h3>Instructions:</h3>
+        <ol>
+            <li>Click on the canvas below to test coordinate transformation</li>
+            <li>Use the scale buttons to test different scaling factors</li>
+            <li>Check the browser console for detailed debug output</li>
+            <li>Red dots show where clicks are detected</li>
+        </ol>
+    </div>
+    
+    <div class="controls">
+        <button onclick="setScale(0.5)">50% Scale</button>
+        <button onclick="setScale(1.0)">100% Scale</button>
+        <button onclick="setScale(1.5)">150% Scale</button>
+        <button onclick="setScale(2.0)">200% Scale</button>
+        <button onclick="clearCanvas()">Clear</button>
+    </div>
+    
+    <canvas id="test-canvas" width="800" height="600"></canvas>
+    
+    <div class="debug-info" id="debug-output">
+        Click on the canvas to see coordinate information here...
+    </div>
+    
+    <script>
+        const canvas = document.getElementById('test-canvas');
+        const ctx = canvas.getContext('2d');
+        const debugOutput = document.getElementById('debug-output');
+        
+        // Draw grid
+        function drawGrid() {
+            ctx.clearRect(0, 0, 800, 600);
+            ctx.strokeStyle = '#ddd';
+            ctx.lineWidth = 1;
+            
+            for (let x = 0; x <= 800; x += 50) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, 600);
+                ctx.stroke();
+            }
+            for (let y = 0; y <= 600; y += 50) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(800, y);
+                ctx.stroke();
+            }
+            
+            // Add coordinate labels
+            ctx.fillStyle = '#666';
+            ctx.font = '12px Arial';
+            for (let x = 0; x <= 800; x += 100) {
+                for (let y = 0; y <= 600; y += 100) {
+                    if (x === 0 && y === 0) continue;
+                    ctx.fillText(`${x},${y}`, x + 5, y + 15);
+                }
+            }
+        }
+        
+        // Simulate noVNC's clientToElement function
+        function clientToElement(x, y, elem) {
+            const bounds = elem.getBoundingClientRect();
+            const scaleX = elem.width / bounds.width;
+            const scaleY = elem.height / bounds.height;
+            
+            const elementX = (x - bounds.left) * scaleX;
+            const elementY = (y - bounds.top) * scaleY;
+            
+            return { x: elementX, y: elementY };
+        }
+        
+        function setScale(factor) {
+            canvas.style.width = (800 * factor) + 'px';
+            canvas.style.height = (600 * factor) + 'px';
+            drawGrid();
+            console.log(`Canvas scaled to ${factor}x - styled size: ${canvas.style.width} x ${canvas.style.height}`);
+        }
+        
+        function clearCanvas() {
+            drawGrid();
+        }
+        
+        canvas.addEventListener('click', (e) => {
+            const bounds = canvas.getBoundingClientRect();
+            const pos = clientToElement(e.clientX, e.clientY, canvas);
+            
+            // Draw a red dot at the calculated position
+            ctx.fillStyle = 'red';
+            ctx.beginPath();
+            ctx.arc(pos.x, pos.y, 5, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Update debug output
+            const scaleX = canvas.width / bounds.width;
+            const scaleY = canvas.height / bounds.height;
+            
+            debugOutput.innerHTML = `
+                <strong>Last Click Debug Info:</strong><br>
+                Client coordinates: (${e.clientX}, ${e.clientY})<br>
+                Canvas bounds: left=${bounds.left.toFixed(1)}, top=${bounds.top.toFixed(1)}, width=${bounds.width.toFixed(1)}, height=${bounds.height.toFixed(1)}<br>
+                Canvas actual: width=${canvas.width}, height=${canvas.height}<br>
+                Canvas styled: width=${canvas.style.width}, height=${canvas.style.height}<br>
+                Scale factors: X=${scaleX.toFixed(3)}, Y=${scaleY.toFixed(3)}<br>
+                Calculated position: (${pos.x.toFixed(1)}, ${pos.y.toFixed(1)})<br>
+                Expected: Red dot should appear where you clicked
+            `;
+            
+            console.log('Click test:', {
+                client: [e.clientX, e.clientY],
+                bounds: bounds,
+                scales: [scaleX, scaleY],
+                calculated: [pos.x, pos.y]
+            });
+        });
+        
+        // Initialize
+        drawGrid();
+        setScale(1.0);
+    </script>
+</body>
+</html>

@@ -1,0 +1,968 @@
+nohup: ignoring input
+🚀 Starting All-in-One VNC Server on port 8085 (proxy -> localhost:5901)
+🔗 WebSocket proxy ready on /websocket path
+✅ All-in-One VNC Server running on http://localhost:8085
+📁 Serving files from: /workspaces/vmtest
+🔗 WebSocket proxy available at ws://localhost:8085/websocket
+🎯 Direct access: http://localhost:8085/ will load vnc_glass.html
+🖱️ [MOUSE_LOG] {"type":"test","ts":1758655742,"payload":{"msg":"hello-8085"}}
+📱 Client connected to WebSocket proxy from: ::1
+🖥️  VNC socket error: 
+🖥️  VNC socket error:  Code: ECONNREFUSED Full error: AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7) {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5901
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5901
+    }
+  ]
+}
+🖥️  VNC connection closed, hadError: true
+📊 Session stats - Received: 0 Sent: 0
+WebSocket closed: code=1011, reason=VNC server error
+📱 WebSocket client disconnected - Code: 1011 Reason: VNC server error
+📊 Session stats - Received: 0 Sent: 0
+📱 Client connected to WebSocket proxy from: ::1
+🖥️  VNC socket error: 
+🖥️  VNC socket error:  Code: ECONNREFUSED Full error: AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7) {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5901
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5901
+    }
+  ]
+}
+🖥️  VNC connection closed, hadError: true
+📊 Session stats - Received: 0 Sent: 0
+WebSocket closed: code=1011, reason=VNC server error
+📱 WebSocket client disconnected - Code: 1011 Reason: VNC server error
+📊 Session stats - Received: 0 Sent: 0
+📱 Client connected to WebSocket proxy from: ::1
+🖥️  VNC socket error: 
+🖥️  VNC socket error:  Code: ECONNREFUSED Full error: AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7) {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5901
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5901
+    }
+  ]
+}
+🖥️  VNC connection closed, hadError: true
+📊 Session stats - Received: 0 Sent: 0
+WebSocket closed: code=1011, reason=VNC server error
+📱 WebSocket client disconnected - Code: 1011 Reason: VNC server error
+📊 Session stats - Received: 0 Sent: 0
+📱 Client connected to WebSocket proxy from: ::1
+🖥️  VNC socket error: 
+🖥️  VNC socket error:  Code: ECONNREFUSED Full error: AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7) {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5901
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5901
+    }
+  ]
+}
+🖥️  VNC connection closed, hadError: true
+📊 Session stats - Received: 0 Sent: 0
+WebSocket closed: code=1011, reason=VNC server error
+📱 WebSocket client disconnected - Code: 1011 Reason: VNC server error
+📊 Session stats - Received: 0 Sent: 0
+📱 Client connected to WebSocket proxy from: ::1
+🖥️  VNC socket error: 
+🖥️  VNC socket error:  Code: ECONNREFUSED Full error: AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7) {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5901
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5901
+    }
+  ]
+}
+🖥️  VNC connection closed, hadError: true
+📊 Session stats - Received: 0 Sent: 0
+WebSocket closed: code=1011, reason=VNC server error
+📱 WebSocket client disconnected - Code: 1011 Reason: VNC server error
+📊 Session stats - Received: 0 Sent: 0
+📱 Client connected to WebSocket proxy from: ::1
+🖥️  VNC socket error: 
+🖥️  VNC socket error:  Code: ECONNREFUSED Full error: AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7) {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5901
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5901
+    }
+  ]
+}
+🖥️  VNC connection closed, hadError: true
+📊 Session stats - Received: 0 Sent: 0
+WebSocket closed: code=1011, reason=VNC server error
+📱 WebSocket client disconnected - Code: 1011 Reason: VNC server error
+📊 Session stats - Received: 0 Sent: 0
+📱 Client connected to WebSocket proxy from: ::1
+🖥️  VNC socket error: 
+🖥️  VNC socket error:  Code: ECONNREFUSED Full error: AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7) {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5901
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5901
+    }
+  ]
+}
+🖥️  VNC connection closed, hadError: true
+📊 Session stats - Received: 0 Sent: 0
+WebSocket closed: code=1011, reason=VNC server error
+📱 WebSocket client disconnected - Code: 1011 Reason: VNC server error
+📊 Session stats - Received: 0 Sent: 0
+📱 Client connected to WebSocket proxy from: ::1
+🖥️  VNC socket error: 
+🖥️  VNC socket error:  Code: ECONNREFUSED Full error: AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7) {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5901
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5901
+    }
+  ]
+}
+🖥️  VNC connection closed, hadError: true
+📊 Session stats - Received: 0 Sent: 0
+WebSocket closed: code=1011, reason=VNC server error
+📱 WebSocket client disconnected - Code: 1011 Reason: VNC server error
+📊 Session stats - Received: 0 Sent: 0
+📱 Client connected to WebSocket proxy from: ::1
+🖥️  VNC socket error: 
+🖥️  VNC socket error:  Code: ECONNREFUSED Full error: AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7) {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5901
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5901
+    }
+  ]
+}
+🖥️  VNC connection closed, hadError: true
+📊 Session stats - Received: 0 Sent: 0
+WebSocket closed: code=1011, reason=VNC server error
+📱 WebSocket client disconnected - Code: 1011 Reason: VNC server error
+📊 Session stats - Received: 0 Sent: 0
+📱 Client connected to WebSocket proxy from: ::1
+🖥️  VNC socket error: 
+🖥️  VNC socket error:  Code: ECONNREFUSED Full error: AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7) {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5901
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5901
+    }
+  ]
+}
+🖥️  VNC connection closed, hadError: true
+📊 Session stats - Received: 0 Sent: 0
+WebSocket closed: code=1011, reason=VNC server error
+📱 WebSocket client disconnected - Code: 1011 Reason: VNC server error
+📊 Session stats - Received: 0 Sent: 0
+📱 Client connected to WebSocket proxy from: ::1
+🖥️  VNC socket error: 
+🖥️  VNC socket error:  Code: ECONNREFUSED Full error: AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7) {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5901
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5901
+    }
+  ]
+}
+🖥️  VNC connection closed, hadError: true
+📊 Session stats - Received: 0 Sent: 0
+WebSocket closed: code=1011, reason=VNC server error
+📱 WebSocket client disconnected - Code: 1011 Reason: VNC server error
+📊 Session stats - Received: 0 Sent: 0
+📱 Client connected to WebSocket proxy from: ::1
+🖥️  VNC socket error: 
+🖥️  VNC socket error:  Code: ECONNREFUSED Full error: AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7) {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5901
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5901
+    }
+  ]
+}
+🖥️  VNC connection closed, hadError: true
+📊 Session stats - Received: 0 Sent: 0
+WebSocket closed: code=1011, reason=VNC server error
+📱 WebSocket client disconnected - Code: 1011 Reason: VNC server error
+📊 Session stats - Received: 0 Sent: 0
+📱 Client connected to WebSocket proxy from: ::1
+🖥️  VNC socket error: 
+🖥️  VNC socket error:  Code: ECONNREFUSED Full error: AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7) {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5901
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5901
+    }
+  ]
+}
+🖥️  VNC connection closed, hadError: true
+📊 Session stats - Received: 0 Sent: 0
+WebSocket closed: code=1011, reason=VNC server error
+📱 WebSocket client disconnected - Code: 1011 Reason: VNC server error
+📊 Session stats - Received: 0 Sent: 0
+📱 Client connected to WebSocket proxy from: ::1
+🖥️  VNC socket error: 
+🖥️  VNC socket error:  Code: ECONNREFUSED Full error: AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7) {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5901
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5901
+    }
+  ]
+}
+🖥️  VNC connection closed, hadError: true
+📊 Session stats - Received: 0 Sent: 0
+WebSocket closed: code=1011, reason=VNC server error
+📱 WebSocket client disconnected - Code: 1011 Reason: VNC server error
+📊 Session stats - Received: 0 Sent: 0
+📱 Client connected to WebSocket proxy from: ::1
+🖥️  VNC socket error: 
+🖥️  VNC socket error:  Code: ECONNREFUSED Full error: AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7) {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5901
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5901
+    }
+  ]
+}
+🖥️  VNC connection closed, hadError: true
+📊 Session stats - Received: 0 Sent: 0
+WebSocket closed: code=1011, reason=VNC server error
+📱 WebSocket client disconnected - Code: 1011 Reason: VNC server error
+📊 Session stats - Received: 0 Sent: 0
+📱 Client connected to WebSocket proxy from: ::1
+🖥️  VNC socket error: 
+🖥️  VNC socket error:  Code: ECONNREFUSED Full error: AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7) {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5901
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5901
+    }
+  ]
+}
+🖥️  VNC connection closed, hadError: true
+📊 Session stats - Received: 0 Sent: 0
+WebSocket closed: code=1011, reason=VNC server error
+📱 WebSocket client disconnected - Code: 1011 Reason: VNC server error
+📊 Session stats - Received: 0 Sent: 0
+📱 Client connected to WebSocket proxy from: ::1
+🖥️  VNC socket error: 
+🖥️  VNC socket error:  Code: ECONNREFUSED Full error: AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7) {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5901
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5901
+    }
+  ]
+}
+🖥️  VNC connection closed, hadError: true
+📊 Session stats - Received: 0 Sent: 0
+WebSocket closed: code=1011, reason=VNC server error
+📱 WebSocket client disconnected - Code: 1011 Reason: VNC server error
+📊 Session stats - Received: 0 Sent: 0
+📱 Client connected to WebSocket proxy from: ::1
+🖥️  VNC socket error: 
+🖥️  VNC socket error:  Code: ECONNREFUSED Full error: AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7) {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5901
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5901
+    }
+  ]
+}
+🖥️  VNC connection closed, hadError: true
+📊 Session stats - Received: 0 Sent: 0
+WebSocket closed: code=1011, reason=VNC server error
+📱 WebSocket client disconnected - Code: 1011 Reason: VNC server error
+📊 Session stats - Received: 0 Sent: 0
+📱 Client connected to WebSocket proxy from: ::1
+🖥️  VNC socket error: 
+🖥️  VNC socket error:  Code: ECONNREFUSED Full error: AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7) {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5901
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5901
+    }
+  ]
+}
+🖥️  VNC connection closed, hadError: true
+📊 Session stats - Received: 0 Sent: 0
+WebSocket closed: code=1011, reason=VNC server error
+📱 WebSocket client disconnected - Code: 1011 Reason: VNC server error
+📊 Session stats - Received: 0 Sent: 0
+📱 Client connected to WebSocket proxy from: ::1
+🖥️  VNC socket error: 
+🖥️  VNC socket error:  Code: ECONNREFUSED Full error: AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7) {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5901
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5901
+    }
+  ]
+}
+🖥️  VNC connection closed, hadError: true
+📊 Session stats - Received: 0 Sent: 0
+WebSocket closed: code=1011, reason=VNC server error
+📱 WebSocket client disconnected - Code: 1011 Reason: VNC server error
+📊 Session stats - Received: 0 Sent: 0
+📱 Client connected to WebSocket proxy from: ::1
+🖥️  VNC socket error: 
+🖥️  VNC socket error:  Code: ECONNREFUSED Full error: AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7) {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5901
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5901
+    }
+  ]
+}
+🖥️  VNC connection closed, hadError: true
+📊 Session stats - Received: 0 Sent: 0
+WebSocket closed: code=1011, reason=VNC server error
+📱 WebSocket client disconnected - Code: 1011 Reason: VNC server error
+📊 Session stats - Received: 0 Sent: 0
+📱 Client connected to WebSocket proxy from: ::1
+🖥️  VNC socket error: 
+🖥️  VNC socket error:  Code: ECONNREFUSED Full error: AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7) {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5901
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5901
+    }
+  ]
+}
+🖥️  VNC connection closed, hadError: true
+📊 Session stats - Received: 0 Sent: 0
+WebSocket closed: code=1011, reason=VNC server error
+📱 WebSocket client disconnected - Code: 1011 Reason: VNC server error
+📊 Session stats - Received: 0 Sent: 0
+📱 Client connected to WebSocket proxy from: ::1
+🖥️  VNC socket error: 
+🖥️  VNC socket error:  Code: ECONNREFUSED Full error: AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7) {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5901
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5901
+    }
+  ]
+}
+🖥️  VNC connection closed, hadError: true
+📊 Session stats - Received: 0 Sent: 0
+WebSocket closed: code=1011, reason=VNC server error
+📱 WebSocket client disconnected - Code: 1011 Reason: VNC server error
+📊 Session stats - Received: 0 Sent: 0
+📱 Client connected to WebSocket proxy from: ::1
+🖥️  VNC socket error: 
+🖥️  VNC socket error:  Code: ECONNREFUSED Full error: AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7) {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5901
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5901
+    }
+  ]
+}
+🖥️  VNC connection closed, hadError: true
+📊 Session stats - Received: 0 Sent: 0
+WebSocket closed: code=1011, reason=VNC server error
+📱 WebSocket client disconnected - Code: 1011 Reason: VNC server error
+📊 Session stats - Received: 0 Sent: 0
+📱 Client connected to WebSocket proxy from: ::1
+🖥️  VNC socket error: 
+🖥️  VNC socket error:  Code: ECONNREFUSED Full error: AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7) {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5901
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5901
+    }
+  ]
+}
+🖥️  VNC connection closed, hadError: true
+📊 Session stats - Received: 0 Sent: 0
+WebSocket closed: code=1011, reason=VNC server error
+📱 WebSocket client disconnected - Code: 1011 Reason: VNC server error
+📊 Session stats - Received: 0 Sent: 0
+📱 Client connected to WebSocket proxy from: ::1
+🖥️  VNC socket error: 
+🖥️  VNC socket error:  Code: ECONNREFUSED Full error: AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7) {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5901
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5901
+    }
+  ]
+}
+🖥️  VNC connection closed, hadError: true
+📊 Session stats - Received: 0 Sent: 0
+WebSocket closed: code=1011, reason=VNC server error
+📱 WebSocket client disconnected - Code: 1011 Reason: VNC server error
+📊 Session stats - Received: 0 Sent: 0
+📱 Client connected to WebSocket proxy from: ::1
+🖥️  VNC socket error: 
+🖥️  VNC socket error:  Code: ECONNREFUSED Full error: AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7) {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5901
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5901
+    }
+  ]
+}
+🖥️  VNC connection closed, hadError: true
+📊 Session stats - Received: 0 Sent: 0
+WebSocket closed: code=1011, reason=VNC server error
+📱 WebSocket client disconnected - Code: 1011 Reason: VNC server error
+📊 Session stats - Received: 0 Sent: 0
+📱 Client connected to WebSocket proxy from: ::1
+🖥️  VNC socket error: 
+🖥️  VNC socket error:  Code: ECONNREFUSED Full error: AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7) {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5901
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5901
+    }
+  ]
+}
+🖥️  VNC connection closed, hadError: true
+📊 Session stats - Received: 0 Sent: 0
+WebSocket closed: code=1011, reason=VNC server error
+📱 WebSocket client disconnected - Code: 1011 Reason: VNC server error
+📊 Session stats - Received: 0 Sent: 0
+📱 Client connected to WebSocket proxy from: ::1
+🖥️  VNC socket error: 
+🖥️  VNC socket error:  Code: ECONNREFUSED Full error: AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7) {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5901
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5901
+    }
+  ]
+}
+🖥️  VNC connection closed, hadError: true
+📊 Session stats - Received: 0 Sent: 0
+WebSocket closed: code=1011, reason=VNC server error
+📱 WebSocket client disconnected - Code: 1011 Reason: VNC server error
+📊 Session stats - Received: 0 Sent: 0
+📱 Client connected to WebSocket proxy from: ::1
+🖥️  VNC socket error: 
+🖥️  VNC socket error:  Code: ECONNREFUSED Full error: AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7) {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5901
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5901
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -111,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5901
+    }
+  ]
+}
+🖥️  VNC connection closed, hadError: true
+📊 Session stats - Received: 0 Sent: 0
+WebSocket closed: code=1011, reason=VNC server error
+📱 WebSocket client disconnected - Code: 1011 Reason: VNC server error
+📊 Session stats - Received: 0 Sent: 0

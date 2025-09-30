@@ -1027,8 +1027,24 @@ export default class RFB extends EventTargetMixin {
 
         let pos = clientToElement(ev.clientX, ev.clientY,
                                   this._canvas);
-
-        switch (ev.type) {
+        
+        // Debug logging for mouse coordinate issues
+        if (ev.type === 'mousedown') {
+            const bounds = this._canvas.getBoundingClientRect();
+            const scaleX = this._canvas.width / bounds.width;
+            const scaleY = this._canvas.height / bounds.height;
+            console.log('Mouse Debug:', {
+                type: ev.type,
+                client: [ev.clientX, ev.clientY],
+                bounds: {left: bounds.left, top: bounds.top, width: bounds.width, height: bounds.height},
+                canvas: {width: this._canvas.width, height: this._canvas.height},
+                style: {width: this._canvas.style.width, height: this._canvas.style.height},
+                scales: [scaleX, scaleY],
+                pos: [pos.x, pos.y],
+                display: {scale: this._display.scale, viewport: this._display._viewportLoc},
+                final: [this._display.absX(pos.x), this._display.absY(pos.y)]
+            });
+        }        switch (ev.type) {
             case 'mousedown':
                 setCapture(this._canvas);
                 this._handleMouseButton(pos.x, pos.y,

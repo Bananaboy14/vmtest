@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Mouse Log Test</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 24px; background: #111; color: #eee }
+    .btn { padding: 12px 18px; background: #2b6cb0; color: white; border-radius: 8px; border: none; cursor: pointer }
+  </style>
+</head>
+<body>
+  <h2>/mouse-log test page</h2>
+  <p>This page will POST a small JSON payload to <code>/mouse-log</code>. Use the button below or add <code>?auto=1</code> to auto-send on load.</p>
+  <button id="sendBtn" class="btn">Send test mouse log</button>
+  <pre id="out" style="margin-top:16px; background:#000; padding:12px; border-radius:6px; max-width:720px"></pre>
+
+  <script>
+    function send(payload) {
+      const url = '/mouse-log';
+      const body = JSON.stringify(payload);
+      document.getElementById('out').textContent = `POST ${url}\n\n${body}`;
+      // use fetch so we can see errors in console
+      fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body })
+        .then(r => { document.getElementById('out').textContent += `\n\nresponse: ${r.status}` })
+        .catch(e => { document.getElementById('out').textContent += `\n\nerror: ${e}` });
+    }
+
+    document.getElementById('sendBtn').addEventListener('click', () => {
+      const payload = { type: 'manual-test', ts: Date.now(), payload: { note: 'manual click from mouse-log-test' } };
+      send(payload);
+    });
+
+    // auto-run if ?auto=1
+    try {
+      const p = new URLSearchParams(window.location.search);
+      if (p.get('auto') === '1') {
+        setTimeout(() => document.getElementById('sendBtn').click(), 200);
+      }
+    } catch (e) {}
+  </script>
+</body>
+</html>

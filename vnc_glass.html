@@ -398,6 +398,8 @@
             transform: translateX(-50%) translateY(4px);
         }
 
+        /* Gaming mode indicator removed for clean gaming experience */
+
         .error-message {
             position: absolute;
             top: 50%;
@@ -510,8 +512,8 @@
                 </button>
                 <button class="glass-btn" id="debugToggleBtn" title="Toggle mouse debug">🐞 Debug OFF</button>
                 <button class="glass-btn" id="mouseLockBtn">
-                    <span>🖱️</span>
-                    <span>Lock Mouse</span>
+                    <span>🎮</span>
+                    <span>Gaming Mouse</span>
                 </button>
                 <button class="glass-btn" id="fullscreenBtn">
                     <span>⛶</span>
@@ -527,8 +529,10 @@
 
     <!-- Floating Mouse Lock Hint -->
     <div class="floating-hint" id="mouseLockHint">
-        Click desktop to capture mouse • Press ESC to release
+        🎮 Ctrl+F for gaming mode • Ctrl+Shift+F windowed • Gaming button • ESC for menus
     </div>
+
+    <!-- Gaming Mode Indicator - Hidden for clean gaming -->
 
     <!-- Floating Clipboard Panel -->
     <div id="floatingClipboard" style="
@@ -853,16 +857,47 @@
         }
 
         function hideUI() {
-            if (!glassUI.matches(':hover') && isConnected) {
+            if (!glassUI.matches(':hover') && isConnected && !isPointerLocked) {
                 glassUI.classList.remove('visible');
                 isUIVisible = false;
             }
         }
 
-        // Event listeners for UI visibility - simplified to avoid mouse conflicts
+        // Gaming keyboard handling
         document.addEventListener('keydown', (e) => {
+            // Ctrl+F for instant gaming mode with fullscreen
+            if (e.ctrlKey && (e.key === 'f' || e.key === 'F')) {
+                e.preventDefault();
+                if (isConnected && canvas) {
+                    enterGamingMode();
+                }
+                return;
+            }
+            
+            // Ctrl+Shift+F to exit fullscreen but keep mouse locked (for windowed gaming)
+            if (e.ctrlKey && e.shiftKey && (e.key === 'f' || e.key === 'F')) {
+                e.preventDefault();
+                if (document.fullscreenElement && isPointerLocked) {
+                    document.exitFullscreen();
+                    showFloatingHint('🪟 Windowed gaming mode • Mouse still locked', 2000);
+                }
+                return;
+            }
+            
+            // ESC behavior - only show UI, don't unlock mouse (for Minecraft menus)
             if (e.key === 'Escape') {
-                showUI();
+                if (isPointerLocked) {
+                    // Don't unlock mouse - just show UI briefly for Minecraft menus
+                    showUI();
+                    // Auto-hide UI again after a short time unless user interacts
+                    setTimeout(() => {
+                        if (isPointerLocked && !glassUI.matches(':hover')) {
+                            hideUI();
+                        }
+                    }, 2000);
+                } else {
+                    showUI();
+                }
             }
         });
 
@@ -998,22 +1033,71 @@
                             setTimeout(() => rfb.sendPointerEvent(coords.x, coords.y, 0), 50);
                         });
                         
-                        // Only add mousemove for debug or when mouse button is pressed (dragging)
+                        // Gaming mouse handling with pointer lock support
                         let mousePressed = false;
+                        let virtualMouseX = 0;
+                        let virtualMouseY = 0;
+                        
                         canvas.addEventListener('mousedown', () => { mousePressed = true; });
                         canvas.addEventListener('mouseup', () => { mousePressed = false; });
                         
                         canvas.addEventListener('mousemove', (e) => {
                             if (!isConnected || !rfb) return;
-                            // Only send mouse moves when dragging or debugging to save CPU
-                            if (!mousePressed && !window.DEBUG_MOUSE_MAP) return;
                             
-                            const coords = getCanvasCoords(e.clientX, e.clientY);
-                            if (window.DEBUG_MOUSE_MAP) {
-                                console.log('Mouse:', { client: [e.clientX, e.clientY], canvas: [coords.x, coords.y] });
+                            if (isPointerLocked) {
+                                // Gaming mode: Use movement deltas for smooth camera control
+                                const sensitivity = 2.0; // Increased sensitivity for better responsiveness
+                                const deltaX = (e.movementX || e.mozMovementX || e.webkitMovementX || 0) * sensitivity;
+                                const deltaY = (e.movementY || e.mozMovementY || e.webkitMovementY || 0) * sensitivity;
+                                
+                                // Apply movement to virtual mouse position
+                                virtualMouseX += deltaX;
+                                virtualMouseY += deltaY;
+                                
+                                // Keep virtual mouse within canvas bounds with wrapping for continuous movement
+                                if (virtualMouseX < 0) virtualMouseX = canvas.width - 1;
+                                if (virtualMouseX >= canvas.width) virtualMouseX = 0;
+                                if (virtualMouseY < 0) virtualMouseY = canvas.height - 1;
+                                if (virtualMouseY >= canvas.height) virtualMouseY = 0;
+                                
+                                // Always send mouse movement in gaming mode for smooth control
+                                rfb.sendPointerEvent(Math.round(virtualMouseX), Math.round(virtualMouseY), e.buttons);
+                                
+                                if (window.DEBUG_MOUSE_MAP) {
+                                    console.log('Gaming mouse:', { 
+                                        rawMovement: [e.movementX, e.movementY],
+                                        scaledMovement: [deltaX, deltaY], 
+                                        virtual: [virtualMouseX, virtualMouseY],
+                                        canvasSize: [canvas.width, canvas.height]
+                                    });
+                                }
+                            } else {
+                                // Normal mode: Only send mouse moves when dragging or debugging to save CPU
+                                if (!mousePressed && !window.DEBUG_MOUSE_MAP) return;
+                                
+                                const coords = getCanvasCoords(e.clientX, e.clientY);
+                                virtualMouseX = coords.x;
+                                virtualMouseY = coords.y;
+                                
+                                if (window.DEBUG_MOUSE_MAP) {
+                                    console.log('Normal mouse:', { client: [e.clientX, e.clientY], canvas: [coords.x, coords.y] });
+                                }
+                                rfb.sendPointerEvent(coords.x, coords.y, e.buttons);
                             }
-                            rfb.sendPointerEvent(coords.x, coords.y, e.buttons);
                         });
+                        
+                        // Gaming click handling - NO auto-lock, only manual initialization
+                        canvas.addEventListener('click', (e) => {
+                            if (!isPointerLocked) {
+                                // Only initialize virtual mouse position, no auto gaming mode
+                                const coords = getCanvasCoords(e.clientX, e.clientY);
+                                virtualMouseX = coords.x;
+                                virtualMouseY = coords.y;
+                                // No auto-lock behavior - gaming mode only via manual controls
+                            }
+                        });
+                        
+                        // No double-click gaming mode - only manual button/keyboard activation
                     }
                     
                     // Auto-hide UI after connection
@@ -1149,15 +1233,38 @@
             // Let noVNC automatically adjust to the new viewport size
         }
 
-        // Pointer lock event handlers - DISABLED to prevent mouse conflicts
-        /*
-        document.addEventListener('pointerlockchange', () => {
-            isPointerLocked = document.pointerLockElement === canvas;
+        // Pointer lock event handlers for gaming
+        document.addEventListener('pointerlockchange', handlePointerLockChange);
+        document.addEventListener('mozpointerlockchange', handlePointerLockChange);
+        document.addEventListener('webkitpointerlockchange', handlePointerLockChange);
+        
+        function handlePointerLockChange() {
+            isPointerLocked = !!(document.pointerLockElement || document.mozPointerLockElement || document.webkitPointerLockElement);
+            
             mouseLockBtn.innerHTML = isPointerLocked ? 
-                '<span>🔓</span><span>Unlock Mouse</span>' : 
-                '<span>🖱️</span><span>Lock Mouse</span>';
-        });
-        */
+                '<span>🔓</span><span>Exit Gaming</span>' : 
+                '<span>🎮</span><span>Gaming Mode</span>';
+            
+            if (isPointerLocked) {
+                // Initialize virtual mouse to center of canvas for proper cursor movement
+                if (canvas) {
+                    virtualMouseX = canvas.width / 2;
+                    virtualMouseY = canvas.height / 2;
+                    console.log('🎮 Gaming mode active - Virtual mouse initialized at center:', [virtualMouseX, virtualMouseY]);
+                    
+                    // Send initial position to sync with VNC
+                    if (rfb && isConnected) {
+                        rfb.sendPointerEvent(Math.round(virtualMouseX), Math.round(virtualMouseY), 0);
+                    }
+                }
+                
+                // Hide UI immediately when gaming
+                hideUI();
+            } else {
+                console.log('🖱️ Gaming mode disabled');
+                showUI(); // Show UI when exiting gaming mode
+            }
+        }
 
         // Window resize handler - let noVNC handle naturally
         window.addEventListener('resize', () => {
@@ -1302,13 +1409,69 @@
             }
         }, { capture: true });
 
-        // Button event listeners - mouse lock disabled for stability
+        // Gaming mode with auto-fullscreen
+        function enterGamingMode() {
+            if (!canvas || !isConnected) {
+                showFloatingHint('❌ Connect to desktop first', 2000);
+                return;
+            }
+            
+            // First enter fullscreen
+            if (!document.fullscreenElement) {
+                viewport.requestFullscreen().then(() => {
+                    // Then request pointer lock after fullscreen is active
+                    setTimeout(() => {
+                        canvas.requestPointerLock = canvas.requestPointerLock ||
+                                                   canvas.mozRequestPointerLock ||
+                                                   canvas.webkitRequestPointerLock;
+                        canvas.requestPointerLock();
+                    }, 100);
+                }).catch(console.warn);
+            } else {
+                // Already fullscreen, just lock pointer
+                canvas.requestPointerLock = canvas.requestPointerLock ||
+                                           canvas.mozRequestPointerLock ||
+                                           canvas.webkitRequestPointerLock;
+                canvas.requestPointerLock();
+            }
+        }
+        
+        function requestGamingMouseLock() {
+            if (!canvas || !isConnected) {
+                showFloatingHint('❌ Connect to desktop first', 2000);
+                return;
+            }
+            
+            if (isPointerLocked) {
+                // Exit gaming mode - unlock pointer and exit fullscreen
+                document.exitPointerLock = document.exitPointerLock || 
+                                         document.mozExitPointerLock || 
+                                         document.webkitExitPointerLock;
+                document.exitPointerLock();
+                
+                if (document.fullscreenElement) {
+                    document.exitFullscreen();
+                }
+            } else {
+                // Enter gaming mode with fullscreen
+                enterGamingMode();
+            }
+        }
+        
+        function showFloatingHint(message, duration = 3000) {
+            const hint = document.getElementById('mouseLockHint');
+            if (hint) {
+                hint.textContent = message;
+                hint.classList.add('show');
+                setTimeout(() => {
+                    hint.classList.remove('show');
+                }, duration);
+            }
+        }
+
+        // Button event listeners
         connectBtn.addEventListener('click', connectToDesktop);
-        // Mouse lock disabled to prevent connection issues
-        mouseLockBtn.addEventListener('click', () => {
-            // Show a message that this feature is disabled
-            console.log('Mouse lock disabled for connection stability');
-        });
+        mouseLockBtn.addEventListener('click', requestGamingMouseLock);
         fullscreenBtn.addEventListener('click', toggleFullscreen);
         disconnectBtn.addEventListener('click', disconnect);
         const debugToggleBtn = document.getElementById('debugToggleBtn');

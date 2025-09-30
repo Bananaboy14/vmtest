@@ -7,3 +7,5 @@ __pycache__/
 .DS_Store
 node_modules/
 
+# Extracted AppImage contents - regenerated from AppImage
+squashfs-root/

@@ -589,6 +589,17 @@ export default class RFB extends EventTargetMixin {
         // preventDefault() on mousedown doesn't stop this event for some
         // reason so we have to explicitly block it
         this._canvas.addEventListener('contextmenu', this._eventHandlers.handleMouse);
+        
+        // Additional context menu prevention
+        this._canvas.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }, true);
+        
+        // Ensure canvas can receive focus
+        this._canvas.setAttribute('tabindex', '0');
+        this._canvas.style.outline = 'none';
 
         // Wheel events
         this._canvas.addEventListener("wheel", this._eventHandlers.handleWheel);
@@ -615,6 +626,13 @@ export default class RFB extends EventTargetMixin {
         this._canvas.removeEventListener('contextmenu', this._eventHandlers.handleMouse);
         this._canvas.removeEventListener("mousedown", this._eventHandlers.focusCanvas);
         this._canvas.removeEventListener("touchstart", this._eventHandlers.focusCanvas);
+        
+        // Remove additional context menu handler
+        this._canvas.removeEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }, true);
         this._resizeObserver.disconnect();
         this._keyboard.ungrab();
         this._gestures.detach();
@@ -1021,7 +1039,13 @@ export default class RFB extends EventTargetMixin {
         ev.stopPropagation();
         ev.preventDefault();
 
-        if ((ev.type === 'click') || (ev.type === 'contextmenu')) {
+        if (ev.type === 'click') {
+            return;
+        }
+        
+        // Handle contextmenu by preventing it but don't return early
+        if (ev.type === 'contextmenu') {
+            // Context menu is already prevented above, just return
             return;
         }
 

@@ -38,6 +38,110 @@
     <!-- Stylesheets -->
     <link rel="stylesheet" href="app/styles/base.css">
     <link rel="stylesheet" href="app/styles/input.css">
+    <link rel="stylesheet" href="core/rfb.css">
+    
+    <!-- Custom floating clipboard styles -->
+    <style>
+        #noVNC_floating_clipboard {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(40, 40, 40, 0.95);
+            border: 2px solid #666;
+            border-radius: 8px;
+            padding: 10px;
+            color: white;
+            font-family: sans-serif;
+            font-size: 14px;
+            z-index: 10000;
+            min-width: 280px;
+            max-width: 400px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        #noVNC_floating_clipboard.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: translateX(100%);
+        }
+        
+        .noVNC_connected:fullscreen #noVNC_floating_clipboard,
+        .noVNC_connected:-webkit-full-screen #noVNC_floating_clipboard,
+        .noVNC_connected:-moz-full-screen #noVNC_floating_clipboard {
+            display: none;
+        }
+        
+        #noVNC_floating_clipboard h3 {
+            margin: 0 0 10px 0;
+            color: #ccc;
+            font-size: 16px;
+        }
+        
+        #noVNC_floating_clipboard textarea {
+            width: 100%;
+            height: 80px;
+            background: #333;
+            color: white;
+            border: 1px solid #666;
+            border-radius: 4px;
+            padding: 8px;
+            font-family: monospace;
+            font-size: 12px;
+            resize: vertical;
+            margin-bottom: 10px;
+        }
+        
+        #noVNC_floating_clipboard button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 8px;
+            font-size: 12px;
+        }
+        
+        #noVNC_floating_clipboard button:hover {
+            background: #45a049;
+        }
+        
+        #noVNC_floating_clipboard button.secondary {
+            background: #666;
+        }
+        
+        #noVNC_floating_clipboard button.secondary:hover {
+            background: #777;
+        }
+        
+        #noVNC_floating_clipboard .status {
+            margin-top: 8px;
+            font-size: 11px;
+            color: #aaa;
+        }
+        
+        /* Additional canvas styling for better mouse handling */
+        #noVNC_canvas, #noVNC_container canvas {
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+            -webkit-touch-callout: none !important;
+            outline: none !important;
+        }
+        
+        #noVNC_container {
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+            -webkit-touch-callout: none !important;
+        }
+    </style>
 
     <!-- Images that will later appear via CSS -->
     <link rel="preload" as="image" href="app/images/info.svg">
@@ -46,6 +150,225 @@
 
     <script type="module" crossorigin="anonymous" src="app/error-handler.js"></script>
     <script type="module" crossorigin="anonymous" src="app/ui.js"></script>
+    
+    <!-- Floating Clipboard Script -->
+    <script>
+        // Aggressive context menu prevention
+        document.addEventListener('contextmenu', function(e) {
+            // Check if the event target is within noVNC container
+            const noVNCContainer = document.getElementById('noVNC_container');
+            if (noVNCContainer && (noVNCContainer.contains(e.target) || e.target === noVNCContainer)) {
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                return false;
+            }
+        }, true);
+        
+        // Prevent drag operations on canvas
+        document.addEventListener('dragstart', function(e) {
+            const noVNCContainer = document.getElementById('noVNC_container');
+            if (noVNCContainer && (noVNCContainer.contains(e.target) || e.target === noVNCContainer)) {
+                e.preventDefault();
+                return false;
+            }
+        });
+        
+        // Initialize floating clipboard functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const floatingClipboard = document.getElementById('noVNC_floating_clipboard');
+            const pasteText = document.getElementById('noVNC_floating_paste_text');
+            const pasteBtn = document.getElementById('noVNC_floating_paste_btn');
+            const clearBtn = document.getElementById('noVNC_floating_clear_btn');
+            const closeBtn = document.getElementById('noVNC_floating_close_btn');
+            const status = document.getElementById('noVNC_floating_status');
+            
+            let isVisible = false;
+            
+            // Show/hide floating clipboard
+            function toggleClipboard() {
+                isVisible = !isVisible;
+                floatingClipboard.classList.toggle('hidden', !isVisible);
+                if (isVisible) {
+                    pasteText.focus();
+                }
+            }
+            
+            // Send text to VNC
+            function sendToVNC() {
+                const text = pasteText.value.trim();
+                if (!text) {
+                    status.textContent = 'No text to send';
+                    status.style.color = '#ff6666';
+                    return;
+                }
+                
+                if (window.UI && window.UI.rfb && window.UI.rfb.clipboardPasteFrom) {
+                    try {
+                        window.UI.rfb.clipboardPasteFrom(text);
+                        status.textContent = `Sent ${text.length} characters to VNC`;
+                        status.style.color = '#66ff66';
+                        pasteText.value = '';
+                        
+                        // Auto-hide after successful paste
+                        setTimeout(() => {
+                            if (isVisible) toggleClipboard();
+                        }, 1500);
+                    } catch (e) {
+                        status.textContent = 'Error sending to VNC: ' + e.message;
+                        status.style.color = '#ff6666';
+                    }
+                } else {
+                    status.textContent = 'VNC not connected';
+                    status.style.color = '#ff6666';
+                }
+            }
+            
+            // Clear text
+            function clearText() {
+                pasteText.value = '';
+                status.textContent = 'Text cleared';
+                status.style.color = '#aaa';
+                pasteText.focus();
+            }
+            
+            // Event listeners
+            pasteBtn.addEventListener('click', sendToVNC);
+            clearBtn.addEventListener('click', clearText);
+            closeBtn.addEventListener('click', toggleClipboard);
+            
+            // Toggle button
+            const toggleBtn = document.getElementById('noVNC_clipboard_toggle');
+            toggleBtn.addEventListener('click', toggleClipboard);
+            
+            // Hide toggle button in fullscreen
+            const hideToggleInFullscreen = () => {
+                if (document.fullscreenElement) {
+                    toggleBtn.style.display = 'none';
+                } else {
+                    toggleBtn.style.display = 'block';
+                }
+            };
+            document.addEventListener('fullscreenchange', hideToggleInFullscreen);
+            document.addEventListener('webkitfullscreenchange', hideToggleInFullscreen);
+            document.addEventListener('mozfullscreenchange', hideToggleInFullscreen);
+            
+            // Auto-paste from system clipboard when opening
+            pasteText.addEventListener('focus', async () => {
+                try {
+                    if (navigator.clipboard && navigator.clipboard.readText) {
+                        const clipText = await navigator.clipboard.readText();
+                        if (clipText && !pasteText.value) {
+                            pasteText.value = clipText;
+                            status.textContent = 'Pasted from system clipboard';
+                            status.style.color = '#66ff66';
+                        }
+                    }
+                } catch (e) {
+                    // Clipboard access denied or not available
+                }
+            });
+            
+            // Enter key sends to VNC
+            pasteText.addEventListener('keydown', (e) => {
+                if (e.ctrlKey && e.key === 'Enter') {
+                    e.preventDefault();
+                    sendToVNC();
+                }
+            });
+            
+            // Keyboard shortcut to toggle clipboard (Ctrl+Shift+V)
+            document.addEventListener('keydown', (e) => {
+                if (e.ctrlKey && e.shiftKey && e.key === 'V') {
+                    e.preventDefault();
+                    toggleClipboard();
+                }
+            });
+            
+            // Show clipboard immediately for testing, then check connection
+            console.log('Initializing floating clipboard...');
+            
+            // Show clipboard by default
+            floatingClipboard.classList.remove('hidden');
+            isVisible = true;
+            status.textContent = 'Ready to paste • Press Ctrl+Shift+V to toggle';
+            status.style.color = '#66ff66';
+            
+            const checkConnection = () => {
+                const connected = window.UI && window.UI.rfb && (window.UI.rfb._rfbConnectionState === 'connected');
+                console.log('Connection check:', connected, window.UI?.rfb?._rfbConnectionState);
+                
+                if (connected) {
+                    if (!isVisible) {
+                        floatingClipboard.classList.remove('hidden');
+                        isVisible = true;
+                        status.textContent = 'Connected • Ready to paste';
+                        status.style.color = '#66ff66';
+                    }
+                } else {
+                    // Keep visible but show connection status
+                    if (isVisible) {
+                        status.textContent = 'VNC not connected • Paste will work when connected';
+                        status.style.color = '#ffaa66';
+                    }
+                }
+            };
+            
+            // Check connection status periodically
+            setInterval(checkConnection, 2000);
+            
+            // Also listen to custom events if they exist
+            document.addEventListener('connect', () => {
+                setTimeout(checkConnection, 500);
+            });
+            
+            document.addEventListener('disconnect', () => {
+                checkConnection();
+            });
+            
+            // Initial check
+            setTimeout(checkConnection, 1000);
+            
+            // Additional canvas protection when it's available
+            const waitForCanvas = () => {
+                const canvas = document.querySelector('#noVNC_container canvas') || document.getElementById('noVNC_canvas');
+                if (canvas) {
+                    console.log('Canvas found, adding context menu prevention');
+                    
+                    // Multiple layers of context menu prevention
+                    canvas.addEventListener('contextmenu', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        e.stopImmediatePropagation();
+                        return false;
+                    }, { capture: true, passive: false });
+                    
+                    canvas.addEventListener('selectstart', (e) => {
+                        e.preventDefault();
+                        return false;
+                    });
+                    
+                    canvas.addEventListener('dragstart', (e) => {
+                        e.preventDefault();
+                        return false;
+                    });
+                    
+                    // Ensure canvas has proper attributes
+                    canvas.setAttribute('tabindex', '0');
+                    canvas.style.outline = 'none';
+                    canvas.style.userSelect = 'none';
+                    canvas.style.webkitUserSelect = 'none';
+                    canvas.style.mozUserSelect = 'none';
+                    canvas.style.msUserSelect = 'none';
+                    
+                } else {
+                    // Keep checking for canvas
+                    setTimeout(waitForCanvas, 500);
+                }
+            };
+            setTimeout(waitForCanvas, 1000);
+        });
+    </script>
 </head>
 
 <body>
@@ -331,6 +654,25 @@
              style for example -->
         <textarea id="noVNC_keyboardinput" autocapitalize="off"
             autocomplete="off" spellcheck="false" tabindex="-1"></textarea>
+    </div>
+    
+    <!-- Floating Clipboard Panel -->
+    <div id="noVNC_floating_clipboard">
+        <h3>📋 Quick Paste</h3>
+        <textarea id="noVNC_floating_paste_text" placeholder="Paste text here to send to VNC..." autocomplete="off" spellcheck="false"></textarea>
+        <div>
+            <button id="noVNC_floating_paste_btn">Send to VNC</button>
+            <button id="noVNC_floating_clear_btn" class="secondary">Clear</button>
+            <button id="noVNC_floating_close_btn" class="secondary">Hide</button>
+        </div>
+        <div class="status" id="noVNC_floating_status">Ready to paste • Press Ctrl+Shift+V to toggle</div>
+    </div>
+    
+    <!-- Floating Clipboard Toggle Button -->
+    <div id="noVNC_clipboard_toggle" style="position: fixed; top: 20px; right: 320px; z-index: 9999; background: rgba(76, 175, 80, 0.9); color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: bold; box-shadow: 0 3px 6px rgba(0,0,0,0.4); transition: all 0.2s ease;" 
+         onmouseover="this.style.background='rgba(76, 175, 80, 1.0)'; this.style.transform='scale(1.05)'" 
+         onmouseout="this.style.background='rgba(76, 175, 80, 0.9)'; this.style.transform='scale(1.0)'">
+        📋 Quick Paste
     </div>
 
     <audio id="noVNC_bell">

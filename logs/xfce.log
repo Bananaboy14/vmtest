@@ -9596,3 +9596,448 @@ Error sending from webFrameMain:  Error: Render frame was disposed before WebFra
 15:10:18.264 › [Launch]   [Ui] Pruning /home/codespace/.lunarclient/ui/static/index.js
 (node:2454) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
 15:10:28.827 › [Launch]   [Textures] Received index response, status is 200
+LaunchProcess: failed to execvp:
+xdg-settings
+15:10:33.674 › [Launch] [Assets] No new files needed, skipping download phase...
+15:10:33.675 › [Launch]   [Assets] Finished check (22088ms)
+15:11:02.203 › [Launch]   [Ui] Index is valid, using it...
+LaunchProcess: failed to execvp:
+xdg-settings
+[5578:0930/151102.492479:ERROR:ffmpeg_common.cc(970)] Unsupported pixel format: -1
+[5578:0930/151102.584189:ERROR:ffmpeg_common.cc(970)] Unsupported pixel format: -1
+15:11:05.287 › [Launch] [Ui] No new files needed, skipping download phase...
+15:11:05.287 › [Launch]   [Ui] Finished check (53700ms)
+15:11:28.980 › [Launch] [Artifacts] Starting download of 6 files...
+15:11:29.057 › [Launch] [Artifacts] All files queued for download. Waiting...
+15:11:29.063 › [Launch] [Artifacts] Attempting differential download for /home/codespace/.lunarclient/offline/multiver/common-0.1.0-SNAPSHOT-all.jar
+15:11:29.073 › [Launch] [Artifacts] Attempting differential download for /home/codespace/.lunarclient/offline/multiver/optifine-0.1.0-SNAPSHOT-all.jar
+15:11:29.074 › [Launch] [Artifacts] Attempting differential download for /home/codespace/.lunarclient/offline/multiver/lunar-lang.jar
+15:11:29.074 › [Launch] [Artifacts] Attempting differential download for /home/codespace/.lunarclient/offline/multiver/legacy-0.1.0-SNAPSHOT-all.jar
+15:11:29.078 › [Launch] [Artifacts] Attempting differential download for /home/codespace/.lunarclient/offline/multiver/genesis-0.1.0-SNAPSHOT-all.jar
+15:11:29.169 › [Launch] [Artifacts] Differential download for /home/codespace/.lunarclient/offline/multiver/optifine-0.1.0-SNAPSHOT-all.jar finished successfully.
+15:11:29.202 › [Launch] [Artifacts] Attempting differential download for /home/codespace/.lunarclient/offline/multiver/lunar.jar
+15:11:29.206 › [Launch] [Artifacts] Differential download for /home/codespace/.lunarclient/offline/multiver/common-0.1.0-SNAPSHOT-all.jar finished successfully.
+15:11:29.227 › [Launch] [Textures] Starting download of 26 files...
+15:11:29.227 › [Launch] [Textures] All files queued for download. Waiting...
+15:11:29.228 › [Launch] [Textures] Attempting full download for /home/codespace/.lunarclient/textures/assets/lunar/cosmetics/index, differential not available.
+15:11:29.229 › [Launch] [Textures] Attempting full download for /home/codespace/.lunarclient/textures/assets/lunar/cosmetics.json, differential not available.
+15:11:29.229 › [Launch] [Textures] Attempting full download for /home/codespace/.lunarclient/textures/assets/lunar/jit_index, differential not available.
+15:11:29.230 › [Launch] [Textures] Attempting full download for /home/codespace/.lunarclient/textures/assets/lunar/cosmetics/cloaks/stray_cloak.webp.mcmeta, differential not available.
+15:11:29.231 › [Launch] [Textures] Attempting full download for /home/codespace/.lunarclient/textures/assets/lunar/cosmetics/models/hats/bandanna/textures/stray_bandanna.webp.mcmeta, differential not available.
+15:11:29.237 › [Launch] [Artifacts] Differential download for /home/codespace/.lunarclient/offline/multiver/lunar-lang.jar finished successfully.
+15:11:29.311 › [Launch] [Textures] Attempting full download for /home/codespace/.lunarclient/textures/assets/lunar/cosmetics/models/gek/wings/cherub_wings/cherub_wings.geo.json, differential not available.
+15:11:29.336 › [Launch] [Textures] Attempting full download for /home/codespace/.lunarclient/textures/assets/lunar/cosmetics/models/gek/wings/cherub_wings/cherub_wings.anim.json, differential not available.
+15:11:29.345 › [Launch] [Textures] Attempting full download for /home/codespace/.lunarclient/textures/assets/lunar/cosmetics/models/gek/wings/bone_wings/bone_wings.anim.json, differential not available.
+15:11:29.378 › [Launch] [Textures] Attempting full download for /home/codespace/.lunarclient/textures/assets/lunar/cosmetics/models/gek/wings/bone_wings/bone_wings.geo.json, differential not available.
+15:11:29.405 › [Launch] [Textures] Attempting full download for /home/codespace/.lunarclient/textures/assets/lunar/cosmetics/models/gek/wings/dragoon_wings/dragoon_wings.anim.json, differential not available.
+15:11:29.423 › [Launch] [Textures] Attempting full download for /home/codespace/.lunarclient/textures/assets/lunar/cosmetics/models/gek/wings/dragoon_wings/dragoon_wings.geo.json, differential not available.
+15:11:29.443 › [Launch] [Textures] Attempting full download for /home/codespace/.lunarclient/textures/assets/lunar/cosmetics/models/gek/wings/cherub_wings/textures/black.webp, differential not available.
+15:11:29.487 › [Launch] [Textures] Attempting full download for /home/codespace/.lunarclient/textures/assets/lunar/cosmetics/models/gek/wings/cherub_wings/textures/black.gek.json, differential not available.
+15:11:29.525 › [Launch] [Textures] Attempting full download for /home/codespace/.lunarclient/textures/assets/lunar/cosmetics/models/gek/wings/cherub_wings/textures/white.gek.json, differential not available.
+15:11:29.548 › [Launch] [Artifacts] Differential download for /home/codespace/.lunarclient/offline/multiver/legacy-0.1.0-SNAPSHOT-all.jar finished successfully.
+15:11:29.563 › [Launch] [Textures] Attempting full download for /home/codespace/.lunarclient/textures/assets/lunar/cosmetics/models/gek/wings/cherub_wings/textures/white.webp, differential not available.
+15:11:29.573 › [Launch] [Textures] Attempting full download for /home/codespace/.lunarclient/textures/assets/lunar/cosmetics/models/gek/wings/bone_wings/textures/black.webp, differential not available.
+15:11:29.580 › [Launch] [Textures] Attempting full download for /home/codespace/.lunarclient/textures/assets/lunar/cosmetics/models/gek/wings/bone_wings/textures/black.gek.json, differential not available.
+15:11:29.600 › [Launch] [Textures] Attempting full download for /home/codespace/.lunarclient/textures/assets/lunar/cosmetics/models/gek/wings/bone_wings/textures/white.gek.json, differential not available.
+15:11:29.606 › [Launch] [Textures] Attempting full download for /home/codespace/.lunarclient/textures/assets/lunar/cosmetics/models/gek/wings/bone_wings/textures/white.webp, differential not available.
+15:11:29.612 › [Launch] [Textures] Attempting full download for /home/codespace/.lunarclient/textures/assets/lunar/cosmetics/models/gek/wings/dragoon_wings/textures/red.webp, differential not available.
+15:11:29.634 › [Launch] [Textures] Attempting full download for /home/codespace/.lunarclient/textures/assets/lunar/cosmetics/models/gek/wings/dragoon_wings/textures/black.webp, differential not available.
+15:11:29.677 › [Launch] [Textures] Attempting full download for /home/codespace/.lunarclient/textures/assets/lunar/cosmetics/models/gek/wings/dragoon_wings/textures/red.gek.json, differential not available.
+15:11:29.677 › [Launch] [Textures] Attempting full download for /home/codespace/.lunarclient/textures/assets/lunar/cosmetics/models/gek/wings/dragoon_wings/textures/black.gek.json, differential not available.
+15:11:29.678 › [Launch] [Textures] Attempting full download for /home/codespace/.lunarclient/textures/assets/lunar/cosmetics/models/gek/wings/dragoon_wings/textures/white.gek.json, differential not available.
+15:11:29.684 › [Launch] [Textures] Attempting full download for /home/codespace/.lunarclient/textures/assets/lunar/cosmetics/models/gek/wings/dragoon_wings/textures/white.webp, differential not available.
+15:11:29.704 › [Launch] [Textures] Attempting full download for /home/codespace/.lunarclient/textures/assets/lunar/cosmetics/cloaks/oscslogos.webp, differential not available.
+15:11:29.734 › [Launch] [Artifacts] Differential download for /home/codespace/.lunarclient/offline/multiver/genesis-0.1.0-SNAPSHOT-all.jar finished successfully.
+15:11:29.737 › [Launch] [Textures] Download complete.
+15:11:29.737 › [Launch]   [Textures] Finished check (78151ms)
+15:11:30.673 › [Launch] [Artifacts] Differential download for /home/codespace/.lunarclient/offline/multiver/lunar.jar finished successfully.
+15:11:30.674 › [Launch] [Artifacts] Download complete.
+15:11:30.675 › [Launch]     [Artifacts] Finished check (79086ms)
+15:11:30.675 › [Launch]     [Natives] Starting check...
+15:11:30.676 › [Launch]     [Natives] Extracting 4 natives to /home/codespace/.lunarclient/offline/multiver/natives...
+15:11:31.543 › [Launch]   [Jre] No new files needed, skipping download phase...
+15:11:31.544 › [Launch]   [Jre] Performing JavaW integrity check...
+15:11:31.544 › [Launch]   [Jre] Current JavaW file permissions: 755
+15:11:31.544 › [Launch]   [Jre] Finished check (79957ms)
+LaunchProcess: failed to execvp:
+xdg-settings
+15:11:38.536 › [Window] [main] Window focused
+15:11:38.551 › [Window] [main] Window focused
+15:11:44.955 › [Launch]     [Natives] Finished check (14280ms)
+15:11:44.955 › [Launch]   [Artifacts-and-natives] Finished check (93368ms)
+15:11:44.955 › [Launch] [Parallel-stages] Finished check (93369ms)
+15:11:44.962 › [Launch] Spawning JVM process with following configuration...
+15:11:44.962 ›          * Version: 1.8
+15:11:44.962 ›          * Subversion: 1.8.9
+15:11:44.962 ›          * Module: lunar
+15:11:44.962 ›          * Directory: /home/codespace/.minecraft
+15:11:44.963 ›          * Resolution: 854x480
+15:11:44.963 ›          * Fullscreen?: false
+15:11:44.963 ›          * Memory: 3072MB
+15:11:44.963 ›          * Branch: master
+15:11:44.963 ›          * Quick Join: N/A
+15:11:44.963 ›          * Profile ID: a81473b2-146a-45e7-ad8f-814f4335bc18
+15:11:44.963 ›          * Loader Version: automatic
+15:11:44.963 ›          * IPC Port: 28190
+15:11:44.964 ›          * Mods Directory: /home/codespace/.lunarclient/profiles/lunar/1.8/mods
+15:11:44.982 › [Launch] JVM process started with following outputs...
+15:11:44.982 ›          * PID: 7622
+15:11:44.983 ›          * Start Time: 9/30/2025, 3:11:44 PM
+LaunchProcess: failed to execvp:
+xdg-settings
+15:12:18.828 › [Window] Hiding all windows except mission-control...
+15:12:18.828 › [Window] Hiding all windows except mission-control...
+15:12:18.840 › [Window] [main] Window hidden
+15:12:18.840 › [Window] [main] Window hidden
+15:12:20.728 › [Window] [mission-control] Window focused
+15:12:20.728 › [Window] [mission-control] Window focused
+15:12:23.381 › [Window] [mission-control] Window focused
+15:12:23.390 › [Window] [mission-control] Window focused
+15:12:24.737 › [Window] [mission-control] Window focused
+15:12:24.738 › [Window] [mission-control] Window focused
+15:12:24.850 › [Window] [mission-control] Window focused
+15:12:24.850 › [Window] [mission-control] Window focused
+15:12:26.825 › [Window] [mission-control] Window focused
+15:12:26.826 › [Window] [mission-control] Window focused
+15:12:29.806 › [Window] [mission-control] Window focused
+15:12:29.806 › [Window] [mission-control] Window focused
+15:12:29.825 › [GameIPC] Received handshake from headers!
+15:12:29.843 › [GameIPC] Received handshake from headers!
+15:12:29.844 › [GameIPC] Registered 8 services
+15:12:29.845 › [GameIPC] Registered 8 services
+LaunchProcess: failed to execvp:
+xdg-settings
+15:12:36.142 › [Window] [mission-control] Window focused
+15:12:36.143 › [Window] [mission-control] Window focused
+15:12:36.261 › [Window] [mission-control] Window focused
+15:12:36.263 › [Window] [mission-control] Window focused
+15:12:41.331 › [Launch] Starting log file polling
+15:12:45.869 › [Window] [mission-control] Window focused
+15:12:45.870 › [Window] [mission-control] Window focused
+LaunchProcess: failed to execvp:
+xdg-settings
+LaunchProcess: failed to execvp:
+xdg-settings
+LaunchProcess: failed to execvp:
+xdg-settings
+15:14:29.268 › [DiscordRP] Updating activity status...
+15:14:30.822 › [DiscordRP] Updating activity status...
+LaunchProcess: failed to execvp:
+xdg-settings
+15:14:35.014 › [Window] [mission-control] Window focused
+15:14:35.015 › [Window] [mission-control] Window focused
+15:14:36.744 › [Window] [mission-control] Window focused
+15:14:36.746 › [Window] [mission-control] Window focused
+15:14:37.290 › [Window] [mission-control] Window focused
+15:14:37.291 › [Window] [mission-control] Window focused
+15:14:40.431 › [Window] [mission-control] Window focused
+15:14:40.433 › [Window] [mission-control] Window focused
+15:14:42.314 › [Window] [mission-control] Window focused
+15:14:42.314 › [Window] [mission-control] Window focused
+15:14:43.394 › [Window] [mission-control] Window focused
+15:14:43.394 › [Window] [mission-control] Window focused
+15:14:44.393 › [Window] [mission-control] Window focused
+15:14:44.393 › [Window] [mission-control] Window focused
+15:14:59.725 › [Window] [mission-control] Window focused
+15:14:59.725 › [Window] [mission-control] Window focused
+LaunchProcess: failed to execvp:
+xdg-settings
+15:15:07.810 › [Window] [mission-control] Window focused
+15:15:07.810 › [Window] [mission-control] Window focused
+15:15:10.750 › [Window] [mission-control] Window focused
+15:15:10.753 › [Window] [mission-control] Window focused
+15:15:19.162 › [Window] [mission-control] Window focused
+15:15:19.163 › [Window] [mission-control] Window focused
+15:15:19.640 › [Window] [mission-control] Window focused
+15:15:19.640 › [Window] [mission-control] Window focused
+15:15:31.865 › [Window] [mission-control] Window focused
+15:15:31.869 › [Window] [mission-control] Window focused
+LaunchProcess: failed to execvp:
+xdg-settings
+15:15:32.953 › [Window] [mission-control] Window focused
+15:15:32.953 › [Window] [mission-control] Window focused
+15:15:34.024 › [Window] [mission-control] Window focused
+15:15:34.024 › [Window] [mission-control] Window focused
+15:15:38.865 › [Window] [mission-control] Window focused
+15:15:38.865 › [Window] [mission-control] Window focused
+LaunchProcess: failed to execvp:
+xdg-settings
+LaunchProcess: failed to execvp:
+xdg-settings
+LaunchProcess: failed to execvp:
+xdg-settings
+LaunchProcess: failed to execvp:
+xdg-settings
+LaunchProcess: failed to execvp:
+xdg-settings
+15:18:20.502 › [Window] [mission-control] Window focused
+15:18:20.502 › [Window] [mission-control] Window focused
+15:18:30.097 › [Window] [mission-control] Window focused
+15:18:30.097 › [Window] [mission-control] Window focused
+LaunchProcess: failed to execvp:
+xdg-settings
+15:18:37.051 › [Window] [mission-control] Window focused
+15:18:37.051 › [Window] [mission-control] Window focused
+15:18:54.662 › [Library] APPIMAGE env is not defined, current application is not an AppImage
+LaunchProcess: failed to execvp:
+xdg-settings
+LaunchProcess: failed to execvp:
+xdg-settings
+LaunchProcess: failed to execvp:
+xdg-settings
+LaunchProcess: failed to execvp:
+xdg-settings
+15:20:33.748 › [Window] [mission-control] Window focused
+15:20:33.748 › [Window] [mission-control] Window focused
+15:20:36.686 › [Window] [mission-control] Window focused
+15:20:36.686 › [Window] [mission-control] Window focused
+15:20:46.483 › [Window] [mission-control] Window focused
+15:20:46.483 › [Window] [mission-control] Window focused
+LaunchProcess: failed to execvp:
+xdg-settings
+LaunchProcess: failed to execvp:
+xdg-settings
+LaunchProcess: failed to execvp:
+xdg-settings
+
+(Thunar:1908): thunar-WARNING **: 15:22:20.643: Name 'org.xfce.FileManager' lost on the message dbus.
+
+(Thunar:1908): thunar-WARNING **: 15:22:20.643: Name 'org.freedesktop.FileManager1' lost on the message dbus.
+[2454:0930/152220.660935:FATAL:bus.cc(1246)] D-Bus connection was disconnected. Aborting.
+[0930/152220.685879:ERROR:elf_dynamic_array_reader.h(64)] tag not found
+[0930/152220.709770:ERROR:file_io_posix.cc(145)] open /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq: No such file or directory (2)
+[0930/152220.709810:ERROR:file_io_posix.cc(145)] open /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq: No such file or directory (2)
+[3318:0100/000000.691142:ERROR:connection.cc(63)] X connection error received.
+_IceTransmkdir: Owner of /tmp/.ICE-unix should be set to root
+Another Window Manager (Xfwm4) is already running on screen :1.0
+To replace the current window manager, try "--replace"
+
+(xfwm4:12732): xfwm4-WARNING **: 15:22:25.042: Could not find a screen to manage, exiting
+xfsettingsd-Message: 15:22:25.072: Skipping screen 0, it already has an xsettings manager...
+
+(xfsettingsd:12779): libupower-glib-WARNING **: 15:22:25.072: Couldn't connect to proxy: Could not connect: No such file or directory
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:22:25.087: Failed to grab keycode 107
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:22:25.087: Failed to grab keycode 218
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:22:25.087: Failed to grab keycode 235
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:22:25.087: Failed to grab keycode 27
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:22:25.088: Failed to grab keycode 39
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:22:25.088: Failed to grab keycode 9
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:22:25.088: Failed to grab keycode 107
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:22:25.089: Failed to grab keycode 218
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:22:25.089: Failed to grab keycode 28
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:22:25.089: Failed to grab keycode 41
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:22:25.090: Failed to grab keycode 158
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:22:25.090: Failed to grab keycode 68
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:22:25.090: Failed to grab keycode 68
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:22:25.090: Failed to grab keycode 68
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:22:25.091: Failed to grab keycode 68
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:22:25.091: Failed to grab keycode 69
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:22:25.091: Failed to grab keycode 69
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:22:25.091: Failed to grab keycode 69
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:22:25.092: Failed to grab keycode 69
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:22:25.092: Failed to grab keycode 119
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:22:25.092: Failed to grab keycode 46
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:22:25.092: Failed to grab keycode 107
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:22:25.093: Failed to grab keycode 218
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:22:25.093: Failed to grab keycode 180
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:22:25.093: Failed to grab keycode 26
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:22:25.093: Failed to grab keycode 33
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:22:25.094: Failed to grab keycode 67
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:22:25.094: Failed to grab keycode 67
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:22:25.094: Failed to grab keycode 67
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:22:25.094: Failed to grab keycode 67
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:22:25.095: Failed to grab keycode 9
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:22:25.095: Failed to grab keycode 163
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:22:25.095: Failed to grab keycode 223
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:22:25.095: Failed to grab keycode 9
+xfsettingsd: Another clipboard manager is already running.
+libclock-Message: 15:22:33.462: could not get proxy for org.freedesktop.login1
+
+(xfce4-panel:13013): libclock-WARNING **: 15:22:33.462: could not instantiate a sleep monitor
+
+** (wrapper-2.0:13028): WARNING **: 15:22:33.941: Binding 'XF86AudioLowerVolume' failed!
+
+** (wrapper-2.0:13028): WARNING **: 15:22:33.941: Binding 'XF86AudioRaiseVolume' failed!
+
+** (wrapper-2.0:13028): WARNING **: 15:22:33.942: Binding 'XF86AudioMute' failed!
+
+** (wrapper-2.0:13028): WARNING **: 15:22:33.942: Binding 'XF86AudioMicMute' failed!
+
+(wrapper-2.0:13028): pulseaudio-plugin-WARNING **: 15:22:33.942: Could not have grabbed volume control keys. Is another volume control application (xfce4-volumed) running?
+
+** (wrapper-2.0:13028): WARNING **: 15:22:33.942: Binding 'XF86AudioPlay' failed!
+
+** (wrapper-2.0:13028): WARNING **: 15:22:33.943: Binding 'XF86AudioStop' failed!
+
+** (wrapper-2.0:13028): WARNING **: 15:22:33.943: Binding 'XF86AudioPrev' failed!
+
+** (wrapper-2.0:13028): WARNING **: 15:22:33.943: Binding 'XF86AudioNext' failed!
+
+(wrapper-2.0:13028): pulseaudio-plugin-WARNING **: 15:22:33.943: Could not have grabbed multimedia control keys.
+
+(xfce4-session:12672): xfce4-session-WARNING **: 15:22:33.987: failed to run script: Failed to execute child process “/usr/bin/pm-is-supported” (No such file or directory)
+
+(xfce4-session:12672): xfce4-session-WARNING **: 15:22:33.989: failed to run script: Failed to execute child process “/usr/bin/pm-is-supported” (No such file or directory)
+
+(xfce4-session:12672): xfce4-session-WARNING **: 15:22:33.991: failed to run script: Failed to execute child process “/usr/bin/pm-is-supported” (No such file or directory)
+
+** (xfdesktop:13187): CRITICAL **: 15:22:49.274: xfdesktop: already running, quitting.
+
+"systemd" is not running in this container due to its overhead.
+Use the "service" command to start services instead. e.g.: 
+
+service --status-all
+Connection failure: Connection refused
+pa_context_connect() failed: Connection refused
+
+** (xiccd:13195): CRITICAL **: 15:22:49.315: Failed to connect to colord: Could not connect: No such file or directory
+
+** (light-locker:13223): ERROR **: 15:22:49.394: session_id is not set, is /proc mounted with hidepid>0?
+
+(polkit-gnome-authentication-agent-1:13210): polkit-gnome-1-WARNING **: 15:22:49.395: Error getting authority: Error initializing authority: Could not connect: No such file or directory
+
+(nm-applet:13193): nm-applet-WARNING **: 15:22:49.489: Error connecting to system D-Bus: Could not connect: No such file or directory
+
+(nm-applet:13193): nm-applet-WARNING **: 15:22:49.491: Could not connect: No such file or directory
+
+(nm-applet:13193): nm-CRITICAL **: 15:22:49.494: ((src/libnm-client-impl/nm-client.c:4115)): assertion '<dropped>' failed
+
+(nm-applet:13193): nm-CRITICAL **: 15:22:49.495: ((src/libnm-client-impl/nm-client.c:4066)): assertion '<dropped>' failed
+
+(nm-applet:13193): nm-CRITICAL **: 15:22:49.497: ((src/libnm-client-impl/nm-client.c:4166)): assertion '<dropped>' failed
+
+(nm-applet:13193): nm-CRITICAL **: 15:22:49.498: ((src/libnm-client-impl/nm-client.c:4214)): assertion '<dropped>' failed
+
+(nm-applet:13193): nm-CRITICAL **: 15:22:49.498: ((src/libnm-client-impl/nm-client.c:4253)): assertion '<dropped>' failed
+
+(nm-applet:13193): nm-CRITICAL **: 15:22:49.498: ((src/libnm-client-impl/nm-client.c:4287)): assertion '<dropped>' failed
+
+(nm-applet:13193): nm-CRITICAL **: 15:22:49.498: ((src/libnm-client-impl/nm-client.c:4326)): assertion '<dropped>' failed
+
+(nm-applet:13193): nm-CRITICAL **: 15:22:49.498: ((src/libnm-client-impl/nm-client.c:4847)): assertion '<dropped>' failed
+
+(nm-applet:13193): nm-CRITICAL **: 15:22:49.498: ((src/libnm-client-impl/nm-client.c:4847)): assertion '<dropped>' failed
+[13192:0930/152249.499213:ERROR:bus.cc(407)] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+system-config-printer-applet: failed to connect to system D-Bus
+15:22:50.244 › [Electron] Starting application...
+15:22:50.247 › [Electron] Lunar Client directory permissions: 755
+15:22:50.247 › [Electron] Resources path: /workspaces/vmtest/squashfs-root/resources
+15:22:50.248 › [Electron] Launcher is running with standard permissions.
+15:22:50.248 › [Identifiers] Installation ID found, ID: 960bad97-0dcb-46bc-b218-89e350521f1b
+15:22:50.249 › [Identifiers] Installation ID first seen at: 2025-09-09T17:11:29.898Z
+15:22:50.249 › [Electron] Overwolf MUID: c764a5a8-1c69-8362-693c-734e86da3109
+15:22:50.250 › [Electron] Starting Lunar Client Launcher...
+15:22:50.250 ›          * Session ID: 835faa19-dbec-4b32-bd0a-d54af13c5ace
+15:22:50.250 ›          * Operating System: linux x64 6.8.0-1030-azure
+15:22:50.250 ›          * Electron Version: 34.5.7 (Chrome v132.0.6834.210, Node v20.19.1)
+15:22:50.250 ›          * Binaries Type: @overwolf/ow-electron
+15:22:50.251 ›          * Version: 3.4.11
+15:22:50.251 ›          * Stream: latest-ow
+15:22:50.251 ›          * Branch: master
+15:22:50.251 ›          * Build Number: 7053
+15:22:50.251 ›          * Commit Hash: 958478d8cfe1542f14ac213f1fd730c0bc3e7e99
+15:22:50.251 ›          * Short Commit Hash: 958478d
+15:22:50.251 ›          * Overwolf App UID: N/A
+15:22:50.291 › [Electron] Another instance of Lunar Client is already running... exiting.
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:28:17.968: Failed to grab keycode 163
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:28:17.972: Failed to grab keycode 223
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:28:17.972: Failed to grab keycode 68
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:28:17.974: Failed to grab keycode 68
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:28:17.982: Failed to grab keycode 68
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:28:17.983: Failed to grab keycode 68
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:28:17.987: Failed to grab keycode 33
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:28:17.988: Failed to grab keycode 158
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:28:17.988: Failed to grab keycode 41
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:28:17.989: Failed to grab keycode 26
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:28:17.991: Failed to grab keycode 28
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:28:17.991: Failed to grab keycode 9
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:28:17.995: Failed to grab keycode 46
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:28:17.996: Failed to grab keycode 235
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:28:17.997: Failed to grab keycode 180
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:28:17.998: Failed to grab keycode 69
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:28:17.998: Failed to grab keycode 69
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:28:17.999: Failed to grab keycode 69
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:28:17.999: Failed to grab keycode 69
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:28:18.000: Failed to grab keycode 9
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:28:18.000: Failed to grab keycode 107
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:28:18.001: Failed to grab keycode 218
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:28:18.002: Failed to grab keycode 107
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:28:18.003: Failed to grab keycode 218
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:28:18.005: Failed to grab keycode 39
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:28:18.005: Failed to grab keycode 9
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:28:18.005: Failed to grab keycode 27
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:28:18.006: Failed to grab keycode 107
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:28:18.006: Failed to grab keycode 218
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:28:18.007: Failed to grab keycode 119
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:28:18.007: Failed to grab keycode 67
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:28:18.007: Failed to grab keycode 67
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:28:18.008: Failed to grab keycode 67
+
+(xfsettingsd:12779): libxfce4kbd-private-WARNING **: 15:28:18.008: Failed to grab keycode 67

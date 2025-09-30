@@ -1,0 +1,41 @@
+/*
+ * noVNC core RFB CSS
+ * Prevent context menus and ensure proper mouse handling
+ */
+
+#noVNC_canvas, 
+canvas[id^="noVNC"] {
+    /* Prevent browser context menu */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    
+    /* Prevent touch callout on iOS */
+    -webkit-touch-callout: none;
+    
+    /* Ensure canvas can receive focus */
+    outline: none;
+    
+    /* Prevent right-click context menu */
+    -webkit-context-menu: none;
+    -moz-context-menu: none;
+}
+
+/* Prevent context menu on container as well */
+#noVNC_container {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+}
+
+/* Ensure screen div doesn't interfere */
+.noVNC_screen {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+}

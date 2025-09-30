@@ -426,6 +426,15 @@
             font-size: 14px;
         }
 
+        #clipboardText:focus {
+            border-color: var(--accent-primary) !important;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        #closeClipboard:hover {
+            background: rgba(255, 255, 255, 0.1) !important;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .top-bar {
@@ -446,6 +455,11 @@
             .glass-btn {
                 padding: 10px 16px;
                 font-size: 13px;
+            }
+
+            #floatingClipboard {
+                right: 10px !important;
+                width: 280px !important;
             }
         }
     </style>
@@ -490,7 +504,11 @@
                     <span>🔗</span>
                     <span id="connectBtnText">Connect</span>
                 </button>
-                    <button class="glass-btn" id="debugToggleBtn" title="Toggle mouse debug">🐞 Debug OFF</button>
+                <button class="glass-btn" id="clipboardBtn" title="Open clipboard panel">
+                    <span>📋</span>
+                    <span>Clipboard</span>
+                </button>
+                <button class="glass-btn" id="debugToggleBtn" title="Toggle mouse debug">🐞 Debug OFF</button>
                 <button class="glass-btn" id="mouseLockBtn">
                     <span>🖱️</span>
                     <span>Lock Mouse</span>
@@ -510,6 +528,84 @@
     <!-- Floating Mouse Lock Hint -->
     <div class="floating-hint" id="mouseLockHint">
         Click desktop to capture mouse • Press ESC to release
+    </div>
+
+    <!-- Floating Clipboard Panel -->
+    <div id="floatingClipboard" style="
+        position: fixed;
+        right: 20px;
+        top: 80px;
+        width: 300px;
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 16px;
+        backdrop-filter: blur(20px);
+        padding: 16px;
+        z-index: 1500;
+        pointer-events: auto;
+        display: none;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    ">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+            <span style="font-weight: 600; font-size: 14px; color: var(--text-primary);">📋 Clipboard</span>
+            <button id="closeClipboard" style="
+                background: none;
+                border: none;
+                color: var(--text-secondary);
+                font-size: 16px;
+                cursor: pointer;
+                padding: 4px;
+                border-radius: 4px;
+                transition: background 0.2s;
+            " title="Close clipboard">✕</button>
+        </div>
+        <textarea id="clipboardText" placeholder="Paste text here to send to the remote desktop..." style="
+            width: 100%;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 12px;
+            color: var(--text-primary);
+            font-size: 13px;
+            font-family: 'Inter', monospace;
+            resize: vertical;
+            min-height: 80px;
+            outline: none;
+            transition: border-color 0.2s;
+        "></textarea>
+        <div style="display: flex; gap: 8px; margin-top: 12px;">
+            <button id="pasteFromHost" style="
+                flex: 1;
+                padding: 8px 12px;
+                background: var(--glass-bg);
+                border: 1px solid var(--glass-border);
+                border-radius: 8px;
+                color: var(--text-primary);
+                font-size: 12px;
+                cursor: pointer;
+                transition: all 0.2s;
+            ">📥 Paste from Host</button>
+            <button id="sendToRemote" style="
+                flex: 1;
+                padding: 8px 12px;
+                background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+                border: 1px solid var(--accent-primary);
+                border-radius: 8px;
+                color: white;
+                font-size: 12px;
+                cursor: pointer;
+                transition: all 0.2s;
+            ">📤 Send to Remote</button>
+        </div>
+        <div id="clipboardStatus" style="
+            margin-top: 8px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        "></div>
     </div>
 
     <!-- Debug controls removed for production accuracy; mapping uses transformMouseCoordinates -->
@@ -1069,6 +1165,142 @@
             // Forcing scaling changes can disrupt mouse coordinate mapping
             console.log('Window resized - letting noVNC handle naturally');
         });
+
+        // Clipboard functionality
+        const floatingClipboard = document.getElementById('floatingClipboard');
+        const clipboardBtn = document.getElementById('clipboardBtn');
+        const closeClipboard = document.getElementById('closeClipboard');
+        const clipboardText = document.getElementById('clipboardText');
+        const pasteFromHost = document.getElementById('pasteFromHost');
+        const sendToRemote = document.getElementById('sendToRemote');
+        const clipboardStatus = document.getElementById('clipboardStatus');
+
+        function showClipboardStatus(message, isError = false) {
+            clipboardStatus.textContent = message;
+            clipboardStatus.style.color = isError ? '#ef4444' : '#10b981';
+            clipboardStatus.style.opacity = '1';
+            setTimeout(() => {
+                clipboardStatus.style.opacity = '0';
+            }, 3000);
+        }
+
+        function toggleClipboard() {
+            const isVisible = floatingClipboard.style.display === 'block';
+            if (isVisible) {
+                floatingClipboard.style.display = 'none';
+            } else {
+                floatingClipboard.style.display = 'block';
+                clipboardText.focus();
+            }
+        }
+
+        async function pasteFromHostClipboard() {
+            try {
+                if (!navigator.clipboard) {
+                    throw new Error('Clipboard API not available (needs HTTPS or localhost)');
+                }
+                const text = await navigator.clipboard.readText();
+                clipboardText.value = text;
+                showClipboardStatus('✓ Pasted from host clipboard');
+            } catch (err) {
+                console.warn('Failed to read from clipboard:', err);
+                showClipboardStatus('✗ Could not access host clipboard', true);
+                
+                // Fallback: Focus the textarea and suggest manual paste
+                clipboardText.focus();
+                clipboardText.placeholder = 'Clipboard access denied. Please paste manually (Ctrl+V)...';
+                setTimeout(() => {
+                    clipboardText.placeholder = 'Paste text here to send to the remote desktop...';
+                }, 5000);
+            }
+        }
+
+        function sendTextToRemote() {
+            const text = clipboardText.value.trim();
+            if (!text) {
+                showClipboardStatus('✗ No text to send', true);
+                return;
+            }
+
+            if (!isConnected || !rfb) {
+                showClipboardStatus('✗ Not connected to remote desktop', true);
+                return;
+            }
+
+            try {
+                // Send clipboard text to the remote desktop
+                rfb.clipboardPasteFrom(text);
+                showClipboardStatus('✓ Text sent to remote desktop');
+                clipboardText.value = ''; // Clear after sending
+            } catch (err) {
+                console.error('Failed to send clipboard:', err);
+                showClipboardStatus('✗ Failed to send to remote', true);
+            }
+        }
+
+        // Add hover effects for clipboard buttons
+        const clipboardButtons = [pasteFromHost, sendToRemote];
+        clipboardButtons.forEach(btn => {
+            btn.addEventListener('mouseenter', () => {
+                btn.style.background = 'var(--glass-hover)';
+                btn.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+            });
+            btn.addEventListener('mouseleave', () => {
+                if (btn === sendToRemote) {
+                    btn.style.background = 'linear-gradient(135deg, var(--accent-primary), var(--accent-secondary))';
+                    btn.style.borderColor = 'var(--accent-primary)';
+                } else {
+                    btn.style.background = 'var(--glass-bg)';
+                    btn.style.borderColor = 'var(--glass-border)';
+                }
+            });
+        });
+
+        // Clipboard button event listeners
+        clipboardBtn.addEventListener('click', toggleClipboard);
+        closeClipboard.addEventListener('click', () => {
+            floatingClipboard.style.display = 'none';
+        });
+        pasteFromHost.addEventListener('click', pasteFromHostClipboard);
+        sendToRemote.addEventListener('click', sendTextToRemote);
+
+        // Allow Enter to send text (with Ctrl+Enter for newlines)
+        clipboardText.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.ctrlKey && !e.shiftKey) {
+                e.preventDefault();
+                sendTextToRemote();
+            }
+        });
+
+        // Close clipboard with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && floatingClipboard.style.display === 'block') {
+                floatingClipboard.style.display = 'none';
+            }
+        });
+
+        // Add hover effect for close button
+        closeClipboard.addEventListener('mouseenter', () => {
+            closeClipboard.style.background = 'rgba(255, 255, 255, 0.1)';
+        });
+        closeClipboard.addEventListener('mouseleave', () => {
+            closeClipboard.style.background = 'none';
+        });
+
+        // Prevent context menu on the entire canvas area to avoid interfering with VNC
+        document.addEventListener('contextmenu', (e) => {
+            // Allow context menu in clipboard panel and other UI elements
+            if (floatingClipboard.contains(e.target) || glassUI.contains(e.target)) {
+                return; // Allow default context menu
+            }
+            
+            // Prevent context menu on canvas/viewport area
+            if (viewport.contains(e.target) || e.target === viewport || e.target.tagName === 'CANVAS') {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
+        }, { capture: true });
 
         // Button event listeners - mouse lock disabled for stability
         connectBtn.addEventListener('click', connectToDesktop);

@@ -230,6 +230,13 @@ html {
 }
 :root.noVNC_connected #noVNC_control_bar_anchor.noVNC_idle {
     opacity: 0.8;
+    pointer-events: none;
+}
+
+/* Re-enable pointer events when hovering over the idle control bar */
+:root.noVNC_connected #noVNC_control_bar_anchor.noVNC_idle:hover {
+    pointer-events: auto;
+    opacity: 1.0;
 }
 #noVNC_control_bar_anchor.noVNC_right {
     left: auto;

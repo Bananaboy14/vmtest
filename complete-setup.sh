@@ -72,7 +72,7 @@ echo "Choose installation options (press Enter for defaults):"
 # Ask for Linux games installation
 echo -n "Install additional Linux games? (y/N): "
 read -r INSTALL_GAMES
-if [[ "$INSTALL_GAMES" =~ ^[Yy]$ ]]; then
+if [ "$INSTALL_GAMES" = "y" ] || [ "$INSTALL_GAMES" = "Y" ]; then
     export INSTALL_LINUX_GAMES="true"
     log_info "Will install additional Linux games"
 else
@@ -83,7 +83,7 @@ fi
 # Ask for Minecraft server setup
 echo -n "Set up local Minecraft server? (y/N): "
 read -r SETUP_MC_SERVER
-if [[ "$SETUP_MC_SERVER" =~ ^[Yy]$ ]]; then
+if [ "$SETUP_MC_SERVER" = "y" ] || [ "$SETUP_MC_SERVER" = "Y" ]; then
     SETUP_MINECRAFT_SERVER="true"
     log_info "Will set up Minecraft server"
 else
@@ -123,7 +123,7 @@ if [ -d "$INSTALL_DIR" ]; then
     log_warning "Directory $INSTALL_DIR already exists"
     echo -n "Remove existing directory and clone fresh? (y/N): "
     read -r REMOVE_EXISTING
-    if [[ "$REMOVE_EXISTING" =~ ^[Yy]$ ]]; then
+    if [ "$REMOVE_EXISTING" = "y" ] || [ "$REMOVE_EXISTING" = "Y" ]; then
         log_step "Removing existing directory"
         rm -rf "$INSTALL_DIR"
     else

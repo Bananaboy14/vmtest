@@ -1,4 +1,19 @@
-# 🎮 VNC Gaming Desktop for GitHub Codespaces
+# 🎮## 🚀 One-Command Setup (Recommended)
+
+**Complete installation from scratch:**
+```bash
+curl -sSL https://raw.githubusercontent.com/Bananaboy14/vmtest/main/complete-setup.sh | bash
+```
+
+**Alternative with wget:**
+```bash
+wget -qO- https://raw.githubusercontent.com/Bananaboy14/vmtest/main/complete-setup.sh | bash
+```
+
+**If you get syntax errors, try the simple version:**
+```bash
+curl -sSL https://raw.githubusercontent.com/Bananaboy14/vmtest/main/simple-setup.sh | bash
+``` Desktop for GitHub Codespaces
 
 A complete self-contained virtual desktop environment running in GitHub Codespaces with gaming optimizations, specifically designed for Minecraft with Lunar Client support. **Everything downloads automatically - just run one command!**
 

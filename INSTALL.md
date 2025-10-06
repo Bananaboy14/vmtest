@@ -5,12 +5,16 @@
 **Copy and paste this single command:**
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/Bananaboy14/vmtest/main/ultra-compatible-setup.sh | bash
+curl -sSL https://raw.githubusercontent.com/Bananaboy14/vmtest/main/minimal-setup.sh | bash
 ```
 
-**If you get syntax errors, this version works on any system:**
+**If you get syntax errors, try alternatives:**
 ```bash
+# Ultra-compatible version
 curl -sSL https://raw.githubusercontent.com/Bananaboy14/vmtest/main/ultra-compatible-setup.sh | bash
+
+# Manual installation
+git clone https://github.com/Bananaboy14/vmtest.git && cd vmtest && ./setup-fresh-codespace.sh
 ```
 
 That's it! The script will:

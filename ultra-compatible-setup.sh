@@ -23,29 +23,23 @@ echo ""
 
 echo -n "Install additional Linux games? (y/N): "
 read INSTALL_GAMES
-case "$INSTALL_GAMES" in
-    y|Y|yes|YES)
-        INSTALL_LINUX_GAMES="true"
-        echo "✅ Will install additional Linux games"
-        ;;
-    *)
-        INSTALL_LINUX_GAMES="false"
-        echo "✅ Will skip additional Linux games"
-        ;;
-esac
+if [ "$INSTALL_GAMES" = "y" ] || [ "$INSTALL_GAMES" = "Y" ]; then
+    INSTALL_LINUX_GAMES="true"
+    echo "✅ Will install additional Linux games"
+else
+    INSTALL_LINUX_GAMES="false"
+    echo "✅ Will skip additional Linux games"
+fi
 
 echo -n "Set up local Minecraft server? (y/N): "
-read SETUP_MC_SERVER  
-case "$SETUP_MC_SERVER" in
-    y|Y|yes|YES)
-        SETUP_MINECRAFT_SERVER="true"
-        echo "✅ Will set up Minecraft server"
-        ;;
-    *)
-        SETUP_MINECRAFT_SERVER="false"
-        echo "✅ Will skip Minecraft server setup"
-        ;;
-esac
+read SETUP_MC_SERVER
+if [ "$SETUP_MC_SERVER" = "y" ] || [ "$SETUP_MC_SERVER" = "Y" ]; then
+    SETUP_MINECRAFT_SERVER="true"
+    echo "✅ Will set up Minecraft server"
+else
+    SETUP_MINECRAFT_SERVER="false"
+    echo "✅ Will skip Minecraft server setup"
+fi
 
 echo ""
 echo "📥 Starting installation..."
@@ -60,17 +54,14 @@ if test -d "$INSTALL_DIR"; then
     echo "⚠️  Directory $INSTALL_DIR already exists"
     echo -n "Remove and reinstall? (y/N): "
     read REMOVE_EXISTING
-    case "$REMOVE_EXISTING" in
-        y|Y|yes|YES)
-            echo "🗑️  Removing existing directory..."
-            rm -rf "$INSTALL_DIR"
-            ;;
-        *)
-            echo "📂 Using existing directory..."
-            cd "$INSTALL_DIR"
-            git pull origin main > /dev/null 2>&1 || echo "Note: Could not update repository"
-            ;;
-    esac
+    if [ "$REMOVE_EXISTING" = "y" ] || [ "$REMOVE_EXISTING" = "Y" ]; then
+        echo "🗑️  Removing existing directory..."
+        rm -rf "$INSTALL_DIR"
+    else
+        echo "📂 Using existing directory..."
+        cd "$INSTALL_DIR"
+        git pull origin main > /dev/null 2>&1 || echo "Note: Could not update repository"
+    fi
 fi
 
 # Clone if needed

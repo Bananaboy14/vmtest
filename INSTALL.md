@@ -5,7 +5,12 @@
 **Copy and paste this single command:**
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/Bananaboy14/vmtest/main/complete-setup.sh | bash
+curl -sSL https://raw.githubusercontent.com/Bananaboy14/vmtest/main/ultra-compatible-setup.sh | bash
+```
+
+**If you get syntax errors, this version works on any system:**
+```bash
+curl -sSL https://raw.githubusercontent.com/Bananaboy14/vmtest/main/ultra-compatible-setup.sh | bash
 ```
 
 That's it! The script will:

@@ -1,18 +1,20 @@
 # 🎮## 🚀 One-Command Setup (Recommended)
 
-**Complete installation from scratch:**
+**Ultra-compatible version (works everywhere):**
 ```bash
+curl -sSL https://raw.githubusercontent.com/Bananaboy14/vmtest/main/ultra-compatible-setup.sh | bash
+```
+
+**Alternative methods:**
+```bash
+# Full-featured version
 curl -sSL https://raw.githubusercontent.com/Bananaboy14/vmtest/main/complete-setup.sh | bash
-```
 
-**Alternative with wget:**
-```bash
-wget -qO- https://raw.githubusercontent.com/Bananaboy14/vmtest/main/complete-setup.sh | bash
-```
-
-**If you get syntax errors, try the simple version:**
-```bash
+# Simple version  
 curl -sSL https://raw.githubusercontent.com/Bananaboy14/vmtest/main/simple-setup.sh | bash
+
+# Debug shell compatibility
+curl -sSL https://raw.githubusercontent.com/Bananaboy14/vmtest/main/debug-shell.sh | bash
 ``` Desktop for GitHub Codespaces
 
 A complete self-contained virtual desktop environment running in GitHub Codespaces with gaming optimizations, specifically designed for Minecraft with Lunar Client support. **Everything downloads automatically - just run one command!**

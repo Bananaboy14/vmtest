@@ -83,18 +83,52 @@ EOF
 chmod +x ~/.vnc/xstartup
 log_success "VNC configuration created"
 
+log_step "Setting up downloads and dependencies"
+# Run download script if it exists
+if [ -f "download-dependencies.sh" ]; then
+    log_step "Downloading required files automatically"
+    ./download-dependencies.sh
+    log_success "All dependencies downloaded"
+else
+    log_warning "Download script not found - some features may be limited"
+fi
+
 log_step "Setting up Lunar Client"
-if [ -f "Lunar Client-3.4.11-ow.AppImage" ]; then
-    log_step "Extracting Lunar Client AppImage"
-    chmod +x "Lunar Client-3.4.11-ow.AppImage"
+# Try multiple possible Lunar Client files
+LUNAR_CLIENT=""
+for lc_file in "Lunar Client-3.2.17.AppImage" "Lunar Client-3.4.11-ow.AppImage" "lunarclient.AppImage"; do
+    if [ -f "$lc_file" ]; then
+        LUNAR_CLIENT="$lc_file"
+        break
+    fi
+done
+
+if [ -n "$LUNAR_CLIENT" ]; then
+    log_step "Extracting Lunar Client AppImage: $LUNAR_CLIENT"
+    chmod +x "$LUNAR_CLIENT"
     if [ ! -d "squashfs-root" ]; then
-        ./"Lunar Client-3.4.11-ow.AppImage" --appimage-extract
+        ./"$LUNAR_CLIENT" --appimage-extract
         log_success "Lunar Client extracted"
     else
         log_success "Lunar Client already extracted"
     fi
+    
+    # Create consistent symlinks
+    ln -sf "$LUNAR_CLIENT" "lunarclient.AppImage" 2>/dev/null || true
+    ln -sf "$LUNAR_CLIENT" "Lunar Client-3.4.11-ow.AppImage" 2>/dev/null || true
 else
-    log_warning "Lunar Client AppImage not found - you may need to download it"
+    log_warning "Lunar Client AppImage not found - downloading now..."
+    # Fallback download
+    if command -v wget >/dev/null 2>&1; then
+        log_step "Downloading Lunar Client as fallback"
+        wget -O "Lunar Client-3.2.17.AppImage" "https://launcherupdates.lunarclientcdn.com/Lunar%20Client-3.2.17.AppImage" && \
+        chmod +x "Lunar Client-3.2.17.AppImage" && \
+        ./"Lunar Client-3.2.17.AppImage" --appimage-extract && \
+        log_success "Lunar Client downloaded and extracted" || \
+        log_warning "Lunar Client download failed - manual installation may be required"
+    else
+        log_error "wget not available - cannot download Lunar Client automatically"
+    fi
 fi
 
 log_step "Creating desktop shortcuts"
@@ -179,6 +213,18 @@ fi
 log_step "Applying gaming optimizations"
 ./gaming-optimize.sh
 
+# Apply additional downloaded optimizations
+if [ -f "downloads/xfce-gaming-theme.sh" ]; then
+    log_step "Applying gaming theme optimizations"
+    ./downloads/xfce-gaming-theme.sh
+fi
+
+# Install additional Linux games if requested
+if [ "$INSTALL_LINUX_GAMES" = "true" ] && [ -f "downloads/install-linux-games.sh" ]; then
+    log_step "Installing additional Linux games"
+    ./downloads/install-linux-games.sh
+fi
+
 log_step "Verifying setup"
 echo "Checking running processes..."
 pgrep -fl Xtigervnc && log_success "VNC server running" || log_error "VNC server not running"
@@ -204,11 +250,14 @@ echo "   • Right-click context menus are disabled for gaming"
 echo ""
 echo "🚀 Lunar Client should be available on the desktop"
 echo "📱 Firefox shortcut available for easy web access"
+echo "🎮 Web Gaming Hub available at downloads/web-games.html"
 echo ""
 echo "📋 Useful commands:"
-echo "   • ./start_all.sh          - Restart all services"
-echo "   • ./kick_user.sh          - Disconnect users without stopping services"
-echo "   • ./gaming-optimize.sh    - Apply gaming optimizations"
+echo "   • ./start_all.sh                    - Restart all services"
+echo "   • ./kick_user.sh                   - Disconnect users without stopping services"
+echo "   • ./gaming-optimize.sh             - Apply gaming optimizations"
+echo "   • ./downloads/performance-monitor.sh - Check gaming performance"
+echo "   • ./downloads/install-linux-games.sh - Install additional Linux games"
 echo ""
 echo "🔧 Troubleshooting:"
 echo "   • Check logs/ directory for error messages"

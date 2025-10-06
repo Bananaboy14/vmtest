@@ -1,4 +1,54 @@
-# 🖥️ Minecraft VNC Desktop - Ultimate Persistent Setup
+# 🎮 VNC Gaming Desktop for GitHub Codespaces
+
+A complete self-contained virtual desktop environment running in GitHub Codespaces with gaming optimizations, specifically designed for Minecraft with Lunar Client support. **Everything downloads automatically - just run one command!**
+
+## � One-Command Setup (Recommended)
+
+**Complete installation from scratch:**
+```bash
+curl -sSL https://raw.githubusercontent.com/Bananaboy14/vmtest/main/complete-setup.sh | bash
+```
+
+**Alternative with wget:**
+```bash
+wget -qO- https://raw.githubusercontent.com/Bananaboy14/vmtest/main/complete-setup.sh | bash
+```
+
+**Manual clone method:**
+```bash
+git clone https://github.com/Bananaboy14/vmtest.git
+cd vmtest
+./setup-fresh-codespace.sh
+```
+
+**Then access your desktop at:** `http://localhost:8080`
+
+### 🎯 What Gets Downloaded Automatically
+
+The setup script automatically downloads and configures:
+
+- ✅ **Lunar Client AppImage** - Latest Minecraft client with performance mods
+- ✅ **System Packages** - VNC server, XFCE desktop, Firefox, development tools
+- ✅ **Gaming Optimizations** - Mouse controls, performance tweaks, themes
+- ✅ **Web Gaming Hub** - Collection of browser-based games
+- ✅ **Performance Monitor** - System resource monitoring tools
+- ✅ **Linux Games** - Optional collection of native Linux games
+- ✅ **Minecraft Server** - Optional local server setup
+- ✅ **Desktop Shortcuts** - Quick access to all applications
+
+**Total download size:** ~200MB (varies by options selected)
+
+## 🔧 If Something Goes Wrong
+
+**Recovery options:**
+```bash
+./recovery-fallback.sh    # Interactive recovery menu
+./download-dependencies.sh # Re-download all files
+```
+
+---
+
+## 🖥️ Advanced Features - Ultimate Persistent Setup
 
 A robust, self-healing VNC desktop environment with Minecraft Lunar Client, featuring **automatic reconnection, session persistence, and comprehensive monitoring**. This evolved from a simple noVNC setup into an enterprise-grade persistent desktop solution.
 
